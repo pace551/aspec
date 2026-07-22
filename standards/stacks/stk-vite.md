@@ -2,14 +2,14 @@
 id: STK-VITE
 title: Vite + React SPA Stack
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
-stacks: [vite-react, typescript, web]
+stacks: [vite-react]
 triggers:
   - vite
   - spa
@@ -218,5 +218,7 @@ return <ul>{data.map((t) => <li key={t.id}>{t.title}</li>)}</ul>;
 - Vite docs, env variables and modes — `VITE_` inlining semantics behind STK-VITE-07.
 
 ## Changelog
+
+- **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

@@ -76,8 +76,8 @@
     "version": "1.0.0"
   },
   "INF-CONTAINERS": {
-    "hash": "7b8bba36711db0a5998a9a2beabb6eec8591c1fac0d8def595fffcd1c80c9287",
-    "version": "1.0.0"
+    "hash": "44aac3406f1fa79ef43952a5866131634d1f57c86c217e983f5d240f97478422",
+    "version": "1.0.1"
   },
   "INF-EDGE": {
     "hash": "c24ae6491beaa0de45ed295152d347d981d96df6cf2a92cffed603875e45bf65",
@@ -88,8 +88,8 @@
     "version": "1.0.0"
   },
   "INF-SERVERLESS": {
-    "hash": "7aa92e2f367a54f44a40d8aff6957d8165efc58a9f5a183fbb15e62f38740457",
-    "version": "1.0.0"
+    "hash": "2fd7ca1671964b2907658845c2820c58a4ca2cf83667ae6f3b0694d73f2797d1",
+    "version": "1.0.1"
   },
   "INF-TF": {
     "hash": "165cf736cc33d9ca79c7aea4b27800a98e8469ae8cd029eb277d11767ce08e15",
@@ -172,20 +172,20 @@
     "version": "1.0.0"
   },
   "STK-DDB": {
-    "hash": "b320e8625e3428fa021a72b93d9e4486f9354bb1729497bd29978522968c031f",
-    "version": "1.0.0"
+    "hash": "cf9f37645fa75d263747bc1fdad4f33b44ce59bae071b4fd24e53d4725e88af5",
+    "version": "1.0.1"
   },
   "STK-GO": {
     "hash": "d7287f86dfd95f1b80b368d8f1e454aa7a77c68a15ba21250a47866667b056ff",
     "version": "1.0.0"
   },
   "STK-HTMX": {
-    "hash": "936355bafb0d09546c1919e2fd595fbd6545ff361da8883385a969220a1372e6",
-    "version": "1.0.0"
+    "hash": "e81d8266b448967eadc09ac9d8d9cfbcfe6e71980e125ce1fa12e9c1f3cefd4d",
+    "version": "1.0.1"
   },
   "STK-NEXT": {
-    "hash": "b8d30de7ae87fd8ee42ae5b3d0fcc57ad22cf64caf463a181aecce65076cf2e5",
-    "version": "1.0.0"
+    "hash": "124845c0cd76d7bb45164c4703c9cf0e163fa1c560780eb0a314332dbba87b37",
+    "version": "1.0.1"
   },
   "STK-PG": {
     "hash": "c2f352f755b03521e58e23354102e06262539fca109ca6202ebc81051c267e26",
@@ -216,8 +216,8 @@
     "version": "1.0.0"
   },
   "STK-VITE": {
-    "hash": "fe87f26d8da8490ae03d0d9ff751c9d42ac71037edb384c8d7ffc775ae0da767",
-    "version": "1.0.0"
+    "hash": "30db2d8c632c8710126f19aef68f4bcaa020542f7ef042fa3c05094350d1f235",
+    "version": "1.0.1"
   },
   "TST-FIXTURES": {
     "hash": "b1eb8f289a26a964608084bbf8b068def0c3140301459f7c6f1f496700755609",

@@ -16,12 +16,15 @@ We will generate `index.json` from standards frontmatter (`checks/build-index.py
 it `/govern`'s sole entry point: constitution always loads; standards load only when the
 index filter matches the task's tier, detected stacks, or trigger keywords (plus transitive
 `requires`, two hops max). `/govern` never reads `index.json` wholesale — at 67 standards
-the raw index alone is ~10k+ tokens — it filters it with a script and receives only the
-matching entries. Selected standards load in **brief mode** (frontmatter + Abstract +
-Normative Rules + Verification, ~60-70% of a doc's bytes stay unloaded); Worked Examples
-and Anti-Patterns are pulled on demand while implementing in that area. Budget:
-constitution + filtered index slice + brief-mode selected set ≤ ~15k tokens, enforced by a
-Phase-4 measurement. The generator refuses to index content changes without a version
+the raw index alone is ~10k+ tokens — it filters it with `checks/select-standards.py`.
+The tool has two modes: **pins** (everything applicable at the tier → GOVERNANCE.md;
+all of it enforced by /verify-compliance) and **brief** (the in-context subset: parsed
+rule-level detail only for stack-scoped matches, trigger matches, their requires
+closure, and a small always-on core — everything else as id+title one-liners, loaded on
+demand while working in that area). Enforcement scope is deliberately wider than context
+scope: the gate runs what the context never saw. Budget: constitution + brief-mode JSON
+≤ ~15k tokens, enforced by a Phase-4 measurement (measured worst case ≈ 10.8k at T4
+full-stack). The generator refuses to index content changes without a version
 bump, making the index double as the evolution gate.
 
 ## Alternatives considered

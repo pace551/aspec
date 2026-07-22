@@ -32,20 +32,26 @@ surface→web. Allowed keys are the lint allowlist in `$GOV/templates/AUTHORING.
 
 ### 3. Select standards (deterministic — do not browse standards/ by hand)
 
+Two runs of the same tool:
+
 ```bash
+# a) the pin set — everything applicable at this tier, for GOVERNANCE.md
 python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> \
-  --brief-text "<the task description, verbatim>" --rules
+  --brief-text "<the task description, verbatim>" --mode pins
+# b) the context brief — rule detail only where this task needs it (≤~15k tokens)
+python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> \
+  --brief-text "<the task description, verbatim>" --mode brief
 ```
 
-The output is the selected set with parsed rules. Do NOT load `index.json` or unselected
-standards into context. If `token_estimate` is huge (T3/T4 full product), that's expected —
-you will load full docs only per-area while implementing; the brief below stays compact.
+Do NOT load `index.json` or unselected standards into context. `brief` gives `detailed`
+(with parsed rules) + `listed` (id/title one-liners) — **both are pinned and enforced**;
+`listed` standards load on demand while working in their area.
 
 ### 4. Write or update `GOVERNANCE.md`
 
 Format: `$GOV/templates/GOVERNANCE-template.md`. New project → create from template.
 Existing → update `tier`, `classified`, `stacks`, and `standards` pins (id+version from
-the selection output). **Preserve** existing waivers, approvals, attestations,
+the **pins** run — the full applicable set, not just the brief's detailed subset). **Preserve** existing waivers, approvals, attestations,
 `last_verified`. If pins changed versions, list the changes to the user (upgrades are
 deliberate, never silent).
 
@@ -54,9 +60,9 @@ deliberate, never silent).
 Compact, in your reply — not a file:
 
 - Tier + one-line why (which rubric line fired).
-- Selected standards: `ID vX.Y.Z — title` grouped required/advisory-triggered.
-- **Hard rules for this task**: the rule IDs + one-line statements (from `--rules` output)
-  that are `required` at this tier — this is what the session must honor.
+- **Hard rules for this task**: from the brief's `detailed` entries, the rule IDs +
+  one-line statements that are `required` at this tier — what the session must honor.
+- The `listed` standards as a one-line-each roll call (also pinned; loaded on demand).
 - Reminder line: "Done = `/verify-compliance` green (Constitution C2)."
 
 Constitution articles are assumed known (global CLAUDE.md loads them); don't restate.

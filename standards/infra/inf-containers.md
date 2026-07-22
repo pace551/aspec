@@ -2,14 +2,14 @@
 id: INF-CONTAINERS
 title: Containers & ECS
 family: INF
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
-stacks: [containers, aws]
+stacks: [containers]
 triggers:
   - docker
   - dockerfile
@@ -236,5 +236,7 @@ plus `awslogs` logConfiguration, `readonlyRootFilesystem`, a `healthCheck`, and
   small sizes.
 
 ## Changelog
+
+- **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

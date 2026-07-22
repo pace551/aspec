@@ -459,7 +459,7 @@
       "id": "INF-CONTAINERS",
       "title": "Containers & ECS",
       "family": "INF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -468,8 +468,7 @@
         "T4": "required"
       },
       "stacks": [
-        "containers",
-        "aws"
+        "containers"
       ],
       "triggers": [
         "docker",
@@ -490,7 +489,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-containers.md",
-      "tokens_est": 2973
+      "tokens_est": 3023
     },
     {
       "id": "INF-EDGE",
@@ -574,7 +573,7 @@
       "id": "INF-SERVERLESS",
       "title": "Serverless (Lambda + API Gateway)",
       "family": "INF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -583,8 +582,7 @@
         "T4": "required"
       },
       "stacks": [
-        "serverless",
-        "aws"
+        "serverless"
       ],
       "triggers": [
         "lambda",
@@ -607,7 +605,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-serverless.md",
-      "tokens_est": 3286
+      "tokens_est": 3336
     },
     {
       "id": "INF-TF",
@@ -1504,7 +1502,7 @@
       "id": "STK-DDB",
       "title": "DynamoDB",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1513,8 +1511,7 @@
         "T4": "required"
       },
       "stacks": [
-        "dynamodb",
-        "aws"
+        "dynamodb"
       ],
       "triggers": [
         "dynamodb",
@@ -1533,7 +1530,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-ddb.md",
-      "tokens_est": 2621
+      "tokens_est": 2670
     },
     {
       "id": "STK-GO",
@@ -1575,7 +1572,7 @@
       "id": "STK-HTMX",
       "title": "Server-Rendered + htmx Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1584,9 +1581,7 @@
         "T4": "required"
       },
       "stacks": [
-        "htmx",
-        "python",
-        "web"
+        "htmx"
       ],
       "triggers": [
         "htmx",
@@ -1609,13 +1604,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-htmx.md",
-      "tokens_est": 2476
+      "tokens_est": 2524
     },
     {
       "id": "STK-NEXT",
       "title": "Next.js Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1624,9 +1619,7 @@
         "T4": "required"
       },
       "stacks": [
-        "nextjs",
-        "typescript",
-        "web"
+        "nextjs"
       ],
       "triggers": [
         "nextjs",
@@ -1648,7 +1641,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-next.md",
-      "tokens_est": 2915
+      "tokens_est": 2962
     },
     {
       "id": "STK-PG",
@@ -1907,7 +1900,7 @@
       "id": "STK-VITE",
       "title": "Vite + React SPA Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1916,9 +1909,7 @@
         "T4": "required"
       },
       "stacks": [
-        "vite-react",
-        "typescript",
-        "web"
+        "vite-react"
       ],
       "triggers": [
         "vite",
@@ -1940,7 +1931,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-vite.md",
-      "tokens_est": 2618
+      "tokens_est": 2665
     },
     {
       "id": "TST-FIXTURES",

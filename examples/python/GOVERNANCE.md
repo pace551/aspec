@@ -11,7 +11,7 @@ standards:
 waivers: []
 external_action_approvals: []
 pii_inventory: n/a
-last_verified: null
+last_verified: 2026-07-22
 attestations: []
 ```
 

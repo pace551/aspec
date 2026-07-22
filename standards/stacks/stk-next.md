@@ -2,14 +2,14 @@
 id: STK-NEXT
 title: Next.js Stack
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
-stacks: [nextjs, typescript, web]
+stacks: [nextjs]
 triggers:
   - nextjs
   - next.js
@@ -242,5 +242,7 @@ export async function signGuestbook(_prev: unknown, formData: FormData) {
   (STK-NEXT-06, enforced via OPS-PERF budgets).
 
 ## Changelog
+
+- **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

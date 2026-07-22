@@ -2,14 +2,14 @@
 id: STK-DDB
 title: DynamoDB
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
-stacks: [dynamodb, aws]
+stacks: [dynamodb]
 triggers:
   - dynamodb
   - dynamo
@@ -204,5 +204,7 @@ fragment sit beside it.
 - `amazon/dynamodb-local` image docs — the test backend for STK-DDB-06.
 
 ## Changelog
+
+- **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

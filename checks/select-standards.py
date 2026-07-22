@@ -9,13 +9,21 @@ Filters index.json without ever loading it into agent context. Selection semanti
   - `advisory` at the tier → selected only when a trigger keyword matches the brief
   - transitive `requires` pulled in, capped at two hops
 
+Two modes (--mode):
+  pins   (default) everything applicable at the tier — feeds GOVERNANCE.md pins; all of
+         it is enforced by /verify-compliance whether or not it was in context.
+  brief  the in-context subset: rule-level detail ONLY for stack-scoped matches,
+         trigger matches, their requires closure, and the always-on core
+         (SEC-SECRETS, TST-VERIFY, DEV-GIT); every other applicable standard appears
+         as an id+title one-liner. This is what keeps T3/T4 intakes inside the ~15k
+         token budget (ADR-0003).
+
 Usage:
   select-standards.py --tier T1 --stacks python,sqlite --brief-text "words of the task"
-                      [--rules] [--governance-dir DIR]
+                      [--mode pins|brief] [--rules] [--governance-dir DIR]
 
-Output: JSON to stdout — {selected: [...], token_estimate, excluded_count}.
-With --rules, each entry also carries its normative rule list (id, statement, tiers,
-layer) parsed from the doc, so /govern can emit a compliance brief without loading docs.
+Output: JSON to stdout — pins: {selected, token_estimate, excluded_count};
+brief: {detailed (with rules), listed, context_tokens}.
 """
 
 from __future__ import annotations
@@ -47,6 +55,7 @@ def main() -> int:
     ap.add_argument("--stacks", default="", help="comma-separated stack keys")
     ap.add_argument("--brief-text", default="", help="task description for trigger matching")
     ap.add_argument("--rules", action="store_true", help="include parsed rules per standard")
+    ap.add_argument("--mode", choices=["pins", "brief"], default="pins")
     ap.add_argument("--governance-dir",
                     default=str(Path(__file__).resolve().parent.parent))
     args = ap.parse_args()
@@ -99,6 +108,39 @@ def main() -> int:
         frontier = pulled
         if not frontier:
             break
+
+    if args.mode == "brief":
+        core = {"SEC-SECRETS", "TST-VERIFY", "DEV-GIT"}
+        detailed_ids = set()
+        for sid, entry in selected.items():
+            e = by_id[sid]
+            stack_scoped = e["stacks"] != "all" and bool(set(e["stacks"]) & stacks)
+            triggered = entry["matched_on"].startswith("triggers")
+            pulled = entry["matched_on"].startswith("required-by")
+            if stack_scoped or triggered or pulled or sid in core:
+                detailed_ids.add(sid)
+        detailed, listed = [], []
+        for sid, entry in sorted(selected.items()):
+            if sid in detailed_ids:
+                entry["rules"] = load_rules(gov / entry["path"])
+                detailed.append(entry)
+            else:
+                listed.append({"id": sid, "title": entry["title"],
+                               "applicability": entry["applicability"]})
+        out = {
+            "tier": args.tier,
+            "stacks": sorted(stacks),
+            "detailed": detailed,
+            "listed": listed,
+            "note": "ALL standards above are pinned+enforced; `listed` ones load on "
+                    "demand while working in their area (/verify-compliance runs them "
+                    "regardless).",
+        }
+        payload = json.dumps(out, indent=2)
+        out["context_tokens"] = len(payload) // 4
+        json.dump(out, sys.stdout, indent=2)
+        print()
+        return 0
 
     if args.rules:
         for entry in selected.values():
