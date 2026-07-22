@@ -1,0 +1,17 @@
+# stack-specific; /bootstrap-repo appends _common/gitignore-base
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.json
+*.egg-info/
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

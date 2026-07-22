@@ -1,0 +1,9 @@
+.next/
+coverage/
+playwright-report/
+test-results/
+node_modules/
+package-lock.json
+next-env.d.ts
+GOVERNANCE.md
+CLAUDE.md

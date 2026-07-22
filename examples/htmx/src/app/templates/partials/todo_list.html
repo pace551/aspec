@@ -1,0 +1,26 @@
+<!-- The ONE list markup (STK-HTMX-02): htmx swaps this fragment into #todo-region;
+     index.html includes the same file for full-page renders. Never duplicated. -->
+<ul id="todo-list">
+  {% for todo in todos %}
+    <li>
+      <form
+        method="post"
+        action="/todos/{{ todo.id }}/toggle"
+        hx-post="/todos/{{ todo.id }}/toggle"
+        hx-target="#todo-region"
+        hx-swap="innerHTML"
+        hx-indicator="this"
+        style="display:inline"
+      >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <button type="submit" aria-label="Toggle {{ todo.title }}">
+          {{ "☑" if todo.done else "☐" }}
+        </button>
+        <span class="htmx-indicator" role="status">…</span>
+      </form>
+      <span class="{{ 'done' if todo.done else '' }}">{{ todo.title }}</span>
+    </li>
+  {% else %}
+    <li><em>Nothing yet — add one above.</em></li>
+  {% endfor %}
+</ul>

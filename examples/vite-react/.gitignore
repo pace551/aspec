@@ -1,0 +1,15 @@
+# stack-specific (vite-react)
+node_modules/
+dist/
+coverage/
+.lighthouseci/
+*.tsbuildinfo
+
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

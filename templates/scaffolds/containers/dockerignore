@@ -1,0 +1,28 @@
+# .dockerignore (INF-CONTAINERS-04) — what never enters the build context.
+# Secrets and git history first (SEC-SECRETS): a COPY . . must not be able to leak them.
+.git
+.env
+.env.*
+**/*.pem
+**/*.key
+**/id_rsa*
+
+# Host-side dependency/build state — rebuilt inside the container
+.venv
+node_modules
+dist
+build
+__pycache__
+*.pyc
+
+# Never useful in an image
+.github
+.githooks
+.governance
+tests
+*.log
+.DS_Store
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+README.md

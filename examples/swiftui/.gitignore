@@ -1,0 +1,13 @@
+# stack-specific; /bootstrap-repo appends _common/gitignore-base
+.build/
+.swiftpm/
+xcuserdata/
+DerivedData/
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

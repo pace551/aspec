@@ -1,0 +1,19 @@
+# stack-specific (nextjs)
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+next-env.d.ts
+*.tsbuildinfo
+
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

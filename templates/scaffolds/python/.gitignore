@@ -1,0 +1,11 @@
+# --- stack: python (bootstrap appends _common/gitignore-base below) ---
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.json

@@ -1,0 +1,46 @@
+{
+  "family": "{{PROJECT}}-{{ENV}}",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512",
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "arn:aws:iam::{{ACCOUNT_ID}}:role/{{PROJECT}}-{{ENV}}-exec",
+  "taskRoleArn": "arn:aws:iam::{{ACCOUNT_ID}}:role/{{PROJECT}}-{{ENV}}-task",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "{{ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/{{PROJECT}}:{{GIT_SHA}}",
+      "essential": true,
+      "portMappings": [{ "containerPort": 8000, "protocol": "tcp" }],
+      "environment": [
+        { "name": "ENV", "value": "{{ENV}}" }
+      ],
+      "secrets": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:{{ACCOUNT_ID}}:parameter/{{PROJECT}}/{{ENV}}/anthropic-api-key"
+        }
+      ],
+      "readonlyRootFilesystem": true,
+      "healthCheck": {
+        "command": ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2).status == 200 else 1)\""],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/{{PROJECT}}-{{ENV}}",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "app"
+        }
+      }
+    }
+  ]
+}

@@ -6,6 +6,20 @@
 .idea/
 .vscode/
 
+# toolchains inside examples (recreated by their READMEs)
+examples/*/.venv/
+examples/*/node_modules/
+examples/*/.next/
+examples/*/dist/
+examples/*/coverage/
+examples/*/coverage.json
+examples/*/playwright-report/
+examples/*/test-results/
+examples/*/target/
+examples/*/.build/
+examples/*/.pytest_cache/
+examples/htmx/.venv/
+
 # python
 __pycache__/
 *.pyc

@@ -7,6 +7,1363 @@
   ],
   "standards": [
     {
+      "id": "AI-ARCH",
+      "title": "LLM Application Architecture",
+      "family": "AI",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "prompt",
+        "llm",
+        "eval",
+        "agent",
+        "context window",
+        "token budget",
+        "structured output",
+        "rag",
+        "completion",
+        "temperature"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ai/ai-arch.md",
+      "tokens_est": 2694
+    },
+    {
+      "id": "AI-MODELS",
+      "title": "Model Selection",
+      "family": "AI",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "model selection",
+        "which model",
+        "claude",
+        "llm",
+        "model id",
+        "pricing",
+        "opus",
+        "sonnet",
+        "haiku",
+        "token cost",
+        "anthropic"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ai/ai-models.md",
+      "tokens_est": 2123
+    },
+    {
+      "id": "AI-SECURITY",
+      "title": "LLM Security",
+      "family": "AI",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "prompt injection",
+        "llm",
+        "agent",
+        "untrusted content",
+        "tool permissions",
+        "jailbreak",
+        "system prompt",
+        "generated code",
+        "rag",
+        "scraping"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ai/ai-security.md",
+      "tokens_est": 2288
+    },
+    {
+      "id": "ARC-API",
+      "title": "API Design",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "api",
+        "rest",
+        "endpoint",
+        "http",
+        "route",
+        "openapi",
+        "swagger",
+        "pagination",
+        "versioning",
+        "fastapi",
+        "json api",
+        "status code"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-api.md",
+      "tokens_est": 2356
+    },
+    {
+      "id": "ARC-CONCURRENCY",
+      "title": "Concurrency & Background Jobs",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "background job",
+        "cron",
+        "launchd",
+        "scheduler",
+        "scheduled task",
+        "queue",
+        "sqs",
+        "worker",
+        "lock",
+        "race condition",
+        "async",
+        "concurrency",
+        "dlq"
+      ],
+      "requires": [
+        "ARC-IDEMPOTENCY"
+      ],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-concurrency.md",
+      "tokens_est": 2387
+    },
+    {
+      "id": "ARC-CONFIG",
+      "title": "Configuration",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "config",
+        "configuration",
+        "settings.yaml",
+        "environment variable",
+        "env var",
+        "dotenv",
+        "feature flag",
+        "pydantic settings",
+        "12-factor",
+        "startup validation"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-config.md",
+      "tokens_est": 2048
+    },
+    {
+      "id": "ARC-ERRORS",
+      "title": "Error Handling & Resilience",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "error handling",
+        "exception",
+        "retry",
+        "timeout",
+        "resilience",
+        "backoff",
+        "circuit breaker",
+        "failure",
+        "try except",
+        "crash",
+        "degradation"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-errors.md",
+      "tokens_est": 2524
+    },
+    {
+      "id": "ARC-IDEMPOTENCY",
+      "title": "Idempotency",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "idempotency",
+        "idempotent",
+        "webhook",
+        "retry",
+        "queue consumer",
+        "dedup",
+        "replay",
+        "at-least-once",
+        "exactly-once",
+        "payment",
+        "cron job",
+        "redelivery"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-idempotency.md",
+      "tokens_est": 2087
+    },
+    {
+      "id": "ARC-MODULARITY",
+      "title": "Modularity & Boundaries",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "module",
+        "package structure",
+        "imports",
+        "circular import",
+        "boundaries",
+        "layering",
+        "project layout",
+        "coupling",
+        "code organization",
+        "refactor",
+        "shared code"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-modularity.md",
+      "tokens_est": 2278
+    },
+    {
+      "id": "ARC-PATTERNS",
+      "title": "Patterns & Anti-Patterns",
+      "family": "ARC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "advisory",
+        "T4": "advisory"
+      },
+      "stacks": "all",
+      "triggers": [
+        "architecture",
+        "design",
+        "microservices",
+        "monolith",
+        "service extraction",
+        "refactor",
+        "rewrite",
+        "abstraction",
+        "queue",
+        "event-driven",
+        "framework choice",
+        "new project",
+        "tech choice"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/architecture/arc-patterns.md",
+      "tokens_est": 2229
+    },
+    {
+      "id": "DATA-MODELING",
+      "title": "Data Modeling & Migrations",
+      "family": "DATA",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "migration",
+        "schema",
+        "database",
+        "table",
+        "column",
+        "alembic",
+        "dbmate",
+        "drizzle",
+        "backfill",
+        "alter table"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/data/data-modeling.md",
+      "tokens_est": 2516
+    },
+    {
+      "id": "DATA-PRIVACY",
+      "title": "Privacy & PII",
+      "family": "DATA",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "pii",
+        "privacy",
+        "personal data",
+        "email address",
+        "user data",
+        "anonymize",
+        "gdpr",
+        "signup",
+        "user account"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/data/data-privacy.md",
+      "tokens_est": 1982
+    },
+    {
+      "id": "DATA-RETENTION",
+      "title": "Retention & Lifecycle",
+      "family": "DATA",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "retention",
+        "delete",
+        "deletion",
+        "lifecycle",
+        "purge",
+        "archive",
+        "ttl",
+        "expiry",
+        "log retention"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/data/data-retention.md",
+      "tokens_est": 1848
+    },
+    {
+      "id": "INF-CONTAINERS",
+      "title": "Containers & ECS",
+      "family": "INF",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "containers",
+        "aws"
+      ],
+      "triggers": [
+        "docker",
+        "dockerfile",
+        "container",
+        "image",
+        "ecs",
+        "fargate",
+        "ecr",
+        "task definition",
+        "docker compose",
+        "containerize"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/infra/inf-containers.md",
+      "tokens_est": 2973
+    },
+    {
+      "id": "INF-EDGE",
+      "title": "Networking & Edge",
+      "family": "INF",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "aws",
+        "web"
+      ],
+      "triggers": [
+        "dns",
+        "route53",
+        "domain",
+        "tls",
+        "certificate",
+        "https",
+        "cloudfront",
+        "cdn",
+        "waf",
+        "security group",
+        "vpc",
+        "nat gateway",
+        "load balancer",
+        "public bucket"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/infra/inf-edge.md",
+      "tokens_est": 2767
+    },
+    {
+      "id": "INF-ENVS",
+      "title": "Environments & Promotion",
+      "family": "INF",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "aws"
+      ],
+      "triggers": [
+        "environment",
+        "staging",
+        "prod",
+        "promotion",
+        "promote",
+        "deploy to prod",
+        "oidc",
+        "aws credentials",
+        "github actions aws",
+        "deploy role",
+        "dev environment"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/infra/inf-envs.md",
+      "tokens_est": 2958
+    },
+    {
+      "id": "INF-SERVERLESS",
+      "title": "Serverless (Lambda + API Gateway)",
+      "family": "INF",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "serverless",
+        "aws"
+      ],
+      "triggers": [
+        "lambda",
+        "serverless",
+        "api gateway",
+        "function",
+        "event-driven",
+        "cron job aws",
+        "eventbridge",
+        "sqs",
+        "webhook handler",
+        "cold start"
+      ],
+      "requires": [
+        "INF-TF"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/infra/inf-serverless.md",
+      "tokens_est": 3286
+    },
+    {
+      "id": "INF-TF",
+      "title": "Terraform/OpenTofu on AWS",
+      "family": "INF",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "terraform",
+        "aws"
+      ],
+      "triggers": [
+        "terraform",
+        "opentofu",
+        "tofu",
+        "iac",
+        "infrastructure as code",
+        "provision",
+        "tfstate",
+        "hcl",
+        "tflint",
+        "checkov",
+        "aws resources",
+        "state bucket"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/infra/inf-tf.md",
+      "tokens_est": 3014
+    },
+    {
+      "id": "LEG-COMMERCIAL",
+      "title": "Commercial Baseline",
+      "family": "LEG",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "n/a",
+        "T2": "n/a",
+        "T3": "advisory",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "launch",
+        "public launch",
+        "terms of service",
+        "privacy policy",
+        "payments",
+        "stripe",
+        "refund",
+        "dmarc",
+        "commercial",
+        "sell",
+        "customer"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/legal/leg-commercial.md",
+      "tokens_est": 2270
+    },
+    {
+      "id": "LEG-LICENSING",
+      "title": "Licensing",
+      "family": "LEG",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "license",
+        "licensing",
+        "gpl",
+        "agpl",
+        "copyleft",
+        "open source",
+        "dependency audit",
+        "font",
+        "icon",
+        "asset"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/legal/leg-licensing.md",
+      "tokens_est": 1778
+    },
+    {
+      "id": "OPS-ALERTS",
+      "title": "Monitoring & Alerting",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "alert",
+        "alarm",
+        "monitoring",
+        "uptime",
+        "healthcheck",
+        "health check",
+        "sns",
+        "launchd",
+        "cron",
+        "scheduled job",
+        "silent failure",
+        "synthetics",
+        "on-call"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-alerts.md",
+      "tokens_est": 2127
+    },
+    {
+      "id": "OPS-BACKUP",
+      "title": "Backup & Disaster Recovery",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "backup",
+        "restore",
+        "disaster recovery",
+        "snapshot",
+        "litestream",
+        "rpo",
+        "rto",
+        "time machine",
+        "data loss",
+        "sqlite",
+        "rds"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-backup.md",
+      "tokens_est": 2145
+    },
+    {
+      "id": "OPS-DEPLOY",
+      "title": "Deployment Pipelines",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "deploy",
+        "deployment",
+        "pipeline",
+        "rollback",
+        "staging",
+        "promote",
+        "ship",
+        "release to prod",
+        "github actions",
+        "migration",
+        "ecs",
+        "lambda"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-deploy.md",
+      "tokens_est": 2267
+    },
+    {
+      "id": "OPS-FINOPS",
+      "title": "Cost Management",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "cost",
+        "budget",
+        "billing",
+        "spend",
+        "aws budgets",
+        "free tier",
+        "nat gateway",
+        "llm cost",
+        "api spend",
+        "tags",
+        "pricing"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-finops.md",
+      "tokens_est": 2317
+    },
+    {
+      "id": "OPS-INCIDENT",
+      "title": "Incident Response",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "incident",
+        "outage",
+        "postmortem",
+        "leak",
+        "leaked secret",
+        "exposed key",
+        "compromise",
+        "rotate",
+        "breach",
+        "root cause",
+        "filter-repo"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-incident.md",
+      "tokens_est": 2235
+    },
+    {
+      "id": "OPS-OBS",
+      "title": "Observability",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "logging",
+        "logs",
+        "structured logs",
+        "observability",
+        "tracing",
+        "opentelemetry",
+        "cloudwatch",
+        "log retention",
+        "correlation id",
+        "request id",
+        "debug output"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-obs.md",
+      "tokens_est": 2271
+    },
+    {
+      "id": "OPS-PERF",
+      "title": "Performance Budgets",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "performance",
+        "latency",
+        "p95",
+        "slow",
+        "optimize",
+        "lighthouse",
+        "core web vitals",
+        "load test",
+        "pagination",
+        "n+1",
+        "profiling"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-perf.md",
+      "tokens_est": 2266
+    },
+    {
+      "id": "OPS-RELEASE",
+      "title": "Versioning & Release",
+      "family": "OPS",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "release",
+        "version",
+        "semver",
+        "changelog",
+        "tag",
+        "conventional commits",
+        "release-please",
+        "publish",
+        "artifact"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/operations/ops-release.md",
+      "tokens_est": 1987
+    },
+    {
+      "id": "DEV-BOOTSTRAP",
+      "title": "Repository Bootstrap",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "new repo",
+        "new project",
+        "bootstrap",
+        "scaffold",
+        "git init",
+        "readme",
+        "claude.md",
+        "governance.md",
+        "gitignore",
+        "license",
+        "git hooks"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-bootstrap.md",
+      "tokens_est": 2477
+    },
+    {
+      "id": "DEV-CI",
+      "title": "CI Baseline",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "n/a",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "ci",
+        "github actions",
+        "workflow",
+        "pipeline",
+        "continuous integration",
+        "branch protection",
+        "status checks",
+        "merge gate",
+        "red build"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-ci.md",
+      "tokens_est": 2200
+    },
+    {
+      "id": "DEV-DEPS",
+      "title": "Dependency Management",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "dependency",
+        "dependencies",
+        "upgrade",
+        "update",
+        "renovate",
+        "dependabot",
+        "lockfile",
+        "package",
+        "version bump",
+        "npm install",
+        "pip install",
+        "sdk version",
+        "model version"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-deps.md",
+      "tokens_est": 2292
+    },
+    {
+      "id": "DEV-DOCS",
+      "title": "Documentation & ADRs",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "readme",
+        "documentation",
+        "docs",
+        "adr",
+        "decision record",
+        "claude.md",
+        "comments",
+        "onboarding"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-docs.md",
+      "tokens_est": 2004
+    },
+    {
+      "id": "DEV-GIT",
+      "title": "Git & PR Conventions",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "commit",
+        "branch",
+        "merge",
+        "rebase",
+        "pull request",
+        "pr",
+        "force-push",
+        "git history",
+        "conventional commits",
+        "pr description"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-git.md",
+      "tokens_est": 2317
+    },
+    {
+      "id": "DEV-REVIEW",
+      "title": "Code Review",
+      "family": "DEV",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "code review",
+        "review",
+        "pull request",
+        "pr review",
+        "security review",
+        "simplify",
+        "bugfix",
+        "merge"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/process/dev-review.md",
+      "tokens_est": 1879
+    },
+    {
+      "id": "SEC-AUTHN",
+      "title": "Authentication",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "login",
+        "authentication",
+        "password",
+        "session",
+        "jwt",
+        "oauth",
+        "mfa",
+        "signup",
+        "sso",
+        "cognito"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-authn.md",
+      "tokens_est": 2361
+    },
+    {
+      "id": "SEC-AUTHZ",
+      "title": "Authorization",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "authorization",
+        "permissions",
+        "access control",
+        "idor",
+        "roles",
+        "admin",
+        "ownership",
+        "multi-tenant",
+        "iam"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-authz.md",
+      "tokens_est": 2340
+    },
+    {
+      "id": "SEC-CRYPTO",
+      "title": "Cryptography & Transport",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "encryption",
+        "tls",
+        "https",
+        "hashing",
+        "md5",
+        "sha",
+        "crypto",
+        "certificate",
+        "random token",
+        "at rest"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-crypto.md",
+      "tokens_est": 2688
+    },
+    {
+      "id": "SEC-INPUT",
+      "title": "Input Validation & Injection Defense",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "input validation",
+        "sql",
+        "injection",
+        "subprocess",
+        "shell",
+        "file upload",
+        "path traversal",
+        "ssrf",
+        "xss",
+        "user input",
+        "pydantic",
+        "zod"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-input.md",
+      "tokens_est": 2990
+    },
+    {
+      "id": "SEC-SAST",
+      "title": "Static Application Security Testing",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "sast",
+        "static analysis",
+        "bandit",
+        "semgrep",
+        "gosec",
+        "clippy",
+        "eslint security",
+        "security scan",
+        "code scanning"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-sast.md",
+      "tokens_est": 2156
+    },
+    {
       "id": "SEC-SECRETS",
       "title": "Secrets Management",
       "family": "SEC",
@@ -38,6 +1395,297 @@
       "last_review": "2026-07-22",
       "path": "standards/security/sec-secrets.md",
       "tokens_est": 2106
+    },
+    {
+      "id": "SEC-SUPPLY",
+      "title": "Supply Chain Security",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "dependency",
+        "supply chain",
+        "lockfile",
+        "pip-audit",
+        "npm audit",
+        "cargo audit",
+        "osv",
+        "github actions",
+        "new package",
+        "install script"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-supply.md",
+      "tokens_est": 2469
+    },
+    {
+      "id": "SEC-THREAT",
+      "title": "Threat Modeling",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "threat model",
+        "stride",
+        "attack surface",
+        "trust boundary",
+        "abuse case",
+        "public endpoint",
+        "webhook",
+        "third-party integration",
+        "security design"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-threat.md",
+      "tokens_est": 2131
+    },
+    {
+      "id": "SEC-WEB",
+      "title": "Web Hardening",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "security headers",
+        "csp",
+        "hsts",
+        "cors",
+        "rate limit",
+        "cookies",
+        "clickjacking",
+        "web app",
+        "frontend",
+        "browser"
+      ],
+      "requires": [
+        "SEC-INPUT"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-web.md",
+      "tokens_est": 2353
+    },
+    {
+      "id": "STK-DDB",
+      "title": "DynamoDB",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "dynamodb",
+        "aws"
+      ],
+      "triggers": [
+        "dynamodb",
+        "dynamo",
+        "single-table",
+        "single table design",
+        "gsi",
+        "access pattern",
+        "on-demand capacity",
+        "dynamodb local"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-ddb.md",
+      "tokens_est": 2621
+    },
+    {
+      "id": "STK-GO",
+      "title": "Go Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "go"
+      ],
+      "triggers": [
+        "go",
+        "golang",
+        "go.mod",
+        "gofmt",
+        "goroutine",
+        "go test",
+        "staticcheck",
+        "golangci-lint"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-go.md",
+      "tokens_est": 2741
+    },
+    {
+      "id": "STK-HTMX",
+      "title": "Server-Rendered + htmx Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "htmx",
+        "python",
+        "web"
+      ],
+      "triggers": [
+        "htmx",
+        "hypermedia",
+        "jinja",
+        "jinja2",
+        "fastapi",
+        "server-rendered",
+        "crud",
+        "form",
+        "partial",
+        "template"
+      ],
+      "requires": [
+        "STK-PY"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-htmx.md",
+      "tokens_est": 2476
+    },
+    {
+      "id": "STK-NEXT",
+      "title": "Next.js Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "nextjs",
+        "typescript",
+        "web"
+      ],
+      "triggers": [
+        "nextjs",
+        "next.js",
+        "app router",
+        "server component",
+        "server action",
+        "react",
+        "ssr",
+        "vercel",
+        "next/image"
+      ],
+      "requires": [
+        "STK-TS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-next.md",
+      "tokens_est": 2915
+    },
+    {
+      "id": "STK-PG",
+      "title": "PostgreSQL",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "postgresql"
+      ],
+      "triggers": [
+        "postgres",
+        "postgresql",
+        "rds",
+        "neon",
+        "supabase",
+        "alembic",
+        "dbmate",
+        "drizzle",
+        "pgbouncer",
+        "connection pool",
+        "jsonb"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-pg.md",
+      "tokens_est": 2635
     },
     {
       "id": "STK-PY",
@@ -74,6 +1722,644 @@
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-py.md",
       "tokens_est": 2693
+    },
+    {
+      "id": "STK-REDIS",
+      "title": "Redis/Valkey",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "redis"
+      ],
+      "triggers": [
+        "redis",
+        "valkey",
+        "elasticache",
+        "cache",
+        "caching",
+        "cache-aside",
+        "ttl",
+        "rate limit",
+        "session store",
+        "distributed lock"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-redis.md",
+      "tokens_est": 2896
+    },
+    {
+      "id": "STK-RUST",
+      "title": "Rust Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "rust"
+      ],
+      "triggers": [
+        "rust",
+        "cargo",
+        "clippy",
+        "rustfmt",
+        "crate",
+        "unwrap",
+        "thiserror",
+        "anyhow"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-rust.md",
+      "tokens_est": 2963
+    },
+    {
+      "id": "STK-SQLITE",
+      "title": "SQLite",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "sqlite"
+      ],
+      "triggers": [
+        "sqlite",
+        "sqlite3",
+        "litestream",
+        "wal",
+        "local database",
+        "embedded database",
+        "db file",
+        "schema_migrations"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-sqlite.md",
+      "tokens_est": 2640
+    },
+    {
+      "id": "STK-SWIFT",
+      "title": "Apple SwiftUI Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "swiftui"
+      ],
+      "triggers": [
+        "swift",
+        "swiftui",
+        "ios",
+        "macos",
+        "xcode",
+        "spm",
+        "observable",
+        "xctest",
+        "swift testing",
+        "keychain"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-swift.md",
+      "tokens_est": 2792
+    },
+    {
+      "id": "STK-TS",
+      "title": "TypeScript/Node Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "typescript"
+      ],
+      "triggers": [
+        "typescript",
+        "node",
+        "npm",
+        "tsconfig",
+        "vitest",
+        "eslint",
+        "prettier",
+        "zod",
+        "esm",
+        "package.json"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-ts.md",
+      "tokens_est": 3139
+    },
+    {
+      "id": "STK-VITE",
+      "title": "Vite + React SPA Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "vite-react",
+        "typescript",
+        "web"
+      ],
+      "triggers": [
+        "vite",
+        "spa",
+        "react",
+        "dashboard",
+        "internal tool",
+        "tanstack",
+        "react query",
+        "react-router",
+        "single-page"
+      ],
+      "requires": [
+        "STK-TS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-vite.md",
+      "tokens_est": 2618
+    },
+    {
+      "id": "TST-FIXTURES",
+      "title": "Test Data & Fixtures",
+      "family": "TST",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "fixture",
+        "test data",
+        "factory",
+        "faker",
+        "seed",
+        "flaky",
+        "freezegun",
+        "fake timers",
+        "deterministic",
+        "mock data"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/testing/tst-fixtures.md",
+      "tokens_est": 2437
+    },
+    {
+      "id": "TST-INTEG",
+      "title": "Integration & E2E Testing",
+      "family": "TST",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "integration test",
+        "e2e",
+        "end-to-end",
+        "playwright",
+        "testcontainers",
+        "smoke test",
+        "contract test",
+        "mock",
+        "fixture recording",
+        "critical path"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/testing/tst-integ.md",
+      "tokens_est": 2225
+    },
+    {
+      "id": "TST-POLICY",
+      "title": "Test Policy",
+      "family": "TST",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "test",
+        "tests",
+        "tdd",
+        "test-first",
+        "bugfix",
+        "bug fix",
+        "regression",
+        "unit test",
+        "coverage",
+        "business logic"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/testing/tst-policy.md",
+      "tokens_est": 2234
+    },
+    {
+      "id": "TST-RATCHET",
+      "title": "Coverage Ratchet",
+      "family": "TST",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "coverage",
+        "ratchet",
+        "baseline",
+        "coverage-baseline",
+        "pytest-cov",
+        "istanbul",
+        "lcov",
+        "coverage.json"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/testing/tst-ratchet.md",
+      "tokens_est": 2191
+    },
+    {
+      "id": "TST-VERIFY",
+      "title": "Verification-First Delivery",
+      "family": "TST",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "verify",
+        "verification",
+        "done",
+        "ship",
+        "completion",
+        "gate",
+        "smoke test",
+        "it works",
+        "end-to-end",
+        "checklist"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/testing/tst-verify.md",
+      "tokens_est": 2261
+    },
+    {
+      "id": "UX-A11Y",
+      "title": "Accessibility",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "accessibility",
+        "a11y",
+        "wcag",
+        "aria",
+        "screen reader",
+        "keyboard",
+        "focus",
+        "contrast",
+        "alt text",
+        "semantic html",
+        "form label"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-a11y.md",
+      "tokens_est": 2217
+    },
+    {
+      "id": "UX-DESIGN",
+      "title": "Design System",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "design system",
+        "design tokens",
+        "css variables",
+        "color palette",
+        "spacing",
+        "typography",
+        "dark mode",
+        "theme",
+        "icons",
+        "fonts",
+        "hover",
+        "styling"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-design.md",
+      "tokens_est": 2337
+    },
+    {
+      "id": "UX-EMAIL",
+      "title": "Transactional Email & Notifications",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "email",
+        "transactional email",
+        "notification",
+        "ses",
+        "smtp",
+        "dkim",
+        "spf",
+        "dmarc",
+        "unsubscribe",
+        "email template",
+        "mailer",
+        "alert"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-email.md",
+      "tokens_est": 2948
+    },
+    {
+      "id": "UX-FORMS",
+      "title": "Forms, Validation & Feedback States",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "form",
+        "validation",
+        "submit",
+        "loading state",
+        "empty state",
+        "error state",
+        "spinner",
+        "skeleton",
+        "feedback",
+        "toast",
+        "optimistic ui",
+        "double submit"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-forms.md",
+      "tokens_est": 2698
+    },
+    {
+      "id": "UX-I18N",
+      "title": "Internationalization",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "n/a",
+        "T2": "n/a",
+        "T3": "n/a",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "i18n",
+        "internationalization",
+        "localization",
+        "locale",
+        "translation",
+        "currency",
+        "timezone",
+        "date format",
+        "rtl"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-i18n.md",
+      "tokens_est": 1816
+    },
+    {
+      "id": "UX-RESPONSIVE",
+      "title": "Responsive Design",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "advisory",
+        "T2": "advisory",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "responsive",
+        "mobile",
+        "viewport",
+        "breakpoint",
+        "layout",
+        "media query",
+        "flexbox",
+        "grid",
+        "touch target",
+        "horizontal scroll",
+        "css"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-responsive.md",
+      "tokens_est": 2082
+    },
+    {
+      "id": "UX-SEO",
+      "title": "SEO & Web Metadata",
+      "family": "UX",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "n/a",
+        "T2": "n/a",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "web"
+      ],
+      "triggers": [
+        "seo",
+        "metadata",
+        "meta description",
+        "open graph",
+        "og tags",
+        "sitemap",
+        "robots.txt",
+        "canonical",
+        "structured data",
+        "json-ld",
+        "search ranking",
+        "indexing"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/ux/ux-seo.md",
+      "tokens_est": 2476
     }
   ]
 }

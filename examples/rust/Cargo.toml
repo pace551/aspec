@@ -1,0 +1,17 @@
+# rpn — house Cargo config (STK-RUST worked example).
+[package]
+name = "rpn"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Reverse-polish-notation calculator (STK-RUST worked example)"
+
+[dependencies]
+# Libraries type their errors, binaries chain them (STK-RUST-03).
+anyhow = "1"
+thiserror = "2"
+
+# Mechanical unwrap/expect ban (STK-RUST-03); tests carve out with an inner allow.
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

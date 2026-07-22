@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{PROJECT_NAME}}</h1>
+
+  <!-- Progressive enhancement (STK-HTMX-03): a real form that works without JS;
+       hx-* attributes enhance it. hx-indicator + disabled submit = STK-HTMX-05. -->
+  <form
+    method="post"
+    action="/echo"
+    hx-post="/echo"
+    hx-target="#echo-region"
+    hx-swap="innerHTML"
+    hx-disabled-elt="find button"
+    hx-indicator="#echo-spinner"
+  >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <label for="message">Message</label>
+    <input id="message" name="message" required />
+    <button type="submit">Send</button>
+    <span id="echo-spinner" class="htmx-indicator" role="status">Sending…</span>
+  </form>
+
+  <div id="echo-region">
+    {% include "partials/echo.html" ignore missing %}
+  </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+  // House baseline (STK-TS-02). strict + noUncheckedIndexedAccess are non-negotiable.
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2023",
+    "verbatimModuleSyntax": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "tests", "vitest.config.ts", "eslint.config.js"]
+}

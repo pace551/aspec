@@ -1,0 +1,5 @@
+# stack-specific; /bootstrap-repo appends _common/gitignore-base
+.build/
+.swiftpm/
+xcuserdata/
+DerivedData/

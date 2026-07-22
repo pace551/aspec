@@ -1,0 +1,5 @@
+# --- stack: typescript (bootstrap appends _common/gitignore-base below) ---
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo

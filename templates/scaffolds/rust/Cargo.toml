@@ -1,0 +1,18 @@
+# {{PROJECT_NAME}} — house Cargo config (STK-RUST).
+[package]
+name = "{{PROJECT_NAME}}"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "{{ONE_LINE_DESCRIPTION}}"
+
+[dependencies]
+# Libraries type their errors, binaries chain them (STK-RUST-03, canonical table).
+anyhow = "1"
+thiserror = "2"
+
+# Mechanical unwrap/expect ban (STK-RUST-03). Test modules carve out with an inner
+# #![allow(clippy::unwrap_used, clippy::expect_used)].
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

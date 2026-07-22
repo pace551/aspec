@@ -1,0 +1,47 @@
+# csvsum — single configuration home (STK-PY-01): metadata, deps, tool config.
+[project]
+name = "csvsum"
+version = "0.1.0"
+description = "CSV-to-summary CLI with SQLite persistence (STK-PY worked example)"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+csvsum = "csvsum.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+  "pytest-cov>=4",
+  "ruff>=0.4",
+  "bandit>=1.7",
+  "pip-audit>=2.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+csvsum = ["migrations/*.sql"]
+
+# House ruff config, verbatim per STK-PY-03.
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+show_missing = true

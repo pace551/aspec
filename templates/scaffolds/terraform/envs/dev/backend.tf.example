@@ -1,0 +1,16 @@
+# Remote state (INF-TF-03). Copy to backend.tf after the state bucket exists
+# (see scaffold README, "First-apply order"), then run: tofu init
+#
+# The state bucket is created once per AWS account, by hand — it cannot manage itself.
+terraform {
+  backend "s3" {
+    bucket       = "{{PROJECT}}-tofu-state"
+    key          = "{{PROJECT}}/dev/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true # native S3 lockfile (OpenTofu/Terraform >= 1.10) — no DynamoDB cost
+
+    # Fallback for CLIs < 1.10 (INF-TF-03): a DynamoDB lock table instead.
+    # dynamodb_table = "tofu-locks"
+  }
+}

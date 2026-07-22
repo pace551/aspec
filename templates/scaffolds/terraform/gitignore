@@ -1,0 +1,12 @@
+# --- terraform scaffold (INF-TF: state and secret-bearing var files never tracked) ---
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+# tfvars may carry secrets (INF-TF-07); commit only *.tfvars.example
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+# NOTE: .terraform.lock.hcl is COMMITTED (INF-TF-08) — do not ignore it

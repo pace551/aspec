@@ -1,0 +1,11 @@
+# --- stack: rust (bootstrap appends _common/gitignore-base below) ---
+/target
+lcov.info
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

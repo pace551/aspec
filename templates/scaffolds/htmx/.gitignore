@@ -1,0 +1,9 @@
+# stack-specific; /bootstrap-repo appends _common/gitignore-base
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.json
+*.egg-info/

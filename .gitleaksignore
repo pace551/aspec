@@ -1,0 +1,3 @@
+# Canonical fake credentials used as worked-example fixtures in standards docs.
+# Real findings never land here — additions require the same review as a waiver.
+standards/security/sec-secrets.md:aws-access-key-id:78

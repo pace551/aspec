@@ -1,0 +1,10 @@
+# stack-specific (nextjs); /bootstrap-repo appends _common/gitignore-base
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+.lighthouseci/
+next-env.d.ts
+*.tsbuildinfo

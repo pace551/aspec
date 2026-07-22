@@ -1,0 +1,3 @@
+# --- stack: rust (bootstrap appends _common/gitignore-base below) ---
+/target
+lcov.info

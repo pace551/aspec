@@ -1,10 +1,270 @@
 {
+  "AI-ARCH": {
+    "hash": "487915c495468e0c0fccb2001e8c6413cf41acde82bbc717b4ab255866df7a3e",
+    "version": "1.0.0"
+  },
+  "AI-MODELS": {
+    "hash": "347493e0ad8677b0d8444ab814b7155613a9844f110c1f68a074e04dbd298230",
+    "version": "1.0.0"
+  },
+  "AI-SECURITY": {
+    "hash": "6b8eaa9a441bad97deea9e02112bee801f247b3f708042b91c24e0afca4fae0c",
+    "version": "1.0.0"
+  },
+  "ARC-API": {
+    "hash": "f4357e74f5fab44bea243997ff8bca1dd0bb2139be5266cb6aa40fe9c46e4cb1",
+    "version": "1.0.0"
+  },
+  "ARC-CONCURRENCY": {
+    "hash": "02aa9c281015d7476704c25c8c08dd21902296bfc78802406860357b08ea75af",
+    "version": "1.0.0"
+  },
+  "ARC-CONFIG": {
+    "hash": "7d5c4928253263fd0d52389204d33f27ef21697d7e68c7fc57ed663b7452921c",
+    "version": "1.0.0"
+  },
+  "ARC-ERRORS": {
+    "hash": "3d16a5f7a4ebb6f9669e8851c1d929ea2e40d923c4f85f57bea0ab6030414037",
+    "version": "1.0.0"
+  },
+  "ARC-IDEMPOTENCY": {
+    "hash": "d8746f24da78cf44779efa5379cb088b6eb6d64f1a5a26d722540a04ae63f573",
+    "version": "1.0.0"
+  },
+  "ARC-MODULARITY": {
+    "hash": "ebe605fff49b96280c7866950499f154e6967837ce6d31898aa16a13ab29d5f3",
+    "version": "1.0.0"
+  },
+  "ARC-PATTERNS": {
+    "hash": "1806a674cc2ee3cd3a490ddde75ce59b223311e4ea003968a529cab091abd318",
+    "version": "1.0.0"
+  },
+  "DATA-MODELING": {
+    "hash": "de57ce8e880994df0736d54946028e3f210af140fc201eece8d84de92a3dc5c0",
+    "version": "1.0.0"
+  },
+  "DATA-PRIVACY": {
+    "hash": "bd2dc29ce85cdc49ee5d3c426b8473eb9d94dba7bc9013a6dd3af016e57e2935",
+    "version": "1.0.0"
+  },
+  "DATA-RETENTION": {
+    "hash": "c470876752eaf79bc05feb15203361ac651f8fb9134fa8f396981ea5aaa57a29",
+    "version": "1.0.0"
+  },
+  "DEV-BOOTSTRAP": {
+    "hash": "38c2694a118c1140c7da22416944f3c3a242d03227b09bfbecaee98dabed8a99",
+    "version": "1.0.0"
+  },
+  "DEV-CI": {
+    "hash": "3878e33ed2a44fb477c7e0258f5dba7251d4d3139c397b6cb2bd1b2f0ac37cef",
+    "version": "1.0.0"
+  },
+  "DEV-DEPS": {
+    "hash": "b438630e1fdf37700386302e125bee4081bbbb275704285da8be0af197e13829",
+    "version": "1.0.0"
+  },
+  "DEV-DOCS": {
+    "hash": "cb9b24b1505020f24253eaa9cc4319e9930dc798bfaaba4663c5dd3137e507e3",
+    "version": "1.0.0"
+  },
+  "DEV-GIT": {
+    "hash": "a358088d49ade65fc19b4d2853f144c8259984ebc7c12418ff10d6acc04063c5",
+    "version": "1.0.0"
+  },
+  "DEV-REVIEW": {
+    "hash": "989129878090003d08181291477825276bb1e201f6f95ef229797824ef8fa0b3",
+    "version": "1.0.0"
+  },
+  "INF-CONTAINERS": {
+    "hash": "7b8bba36711db0a5998a9a2beabb6eec8591c1fac0d8def595fffcd1c80c9287",
+    "version": "1.0.0"
+  },
+  "INF-EDGE": {
+    "hash": "c24ae6491beaa0de45ed295152d347d981d96df6cf2a92cffed603875e45bf65",
+    "version": "1.0.0"
+  },
+  "INF-ENVS": {
+    "hash": "dabfeccdadcebc23062d38a868dc8b4a1997cdec35d0bb5266f8d6e465ed4247",
+    "version": "1.0.0"
+  },
+  "INF-SERVERLESS": {
+    "hash": "7aa92e2f367a54f44a40d8aff6957d8165efc58a9f5a183fbb15e62f38740457",
+    "version": "1.0.0"
+  },
+  "INF-TF": {
+    "hash": "165cf736cc33d9ca79c7aea4b27800a98e8469ae8cd029eb277d11767ce08e15",
+    "version": "1.0.0"
+  },
+  "LEG-COMMERCIAL": {
+    "hash": "5795ea67f005a07aa62ee4e59ffced2d2835ad23ba55f0947f87a2498ee4552a",
+    "version": "1.0.0"
+  },
+  "LEG-LICENSING": {
+    "hash": "d618e069f5ef7b4284b4d8480b1875d724ecee6e9c48a9ee1800674851796f20",
+    "version": "1.0.0"
+  },
+  "OPS-ALERTS": {
+    "hash": "de6f1aaff05c986b88ae1c07606f112333532d1acc5d88a878a3a2183971be71",
+    "version": "1.0.0"
+  },
+  "OPS-BACKUP": {
+    "hash": "96afb5fd3913bd4a402b8e1f6a6f6086aeb585c2346cc6f280dac43e59a34a40",
+    "version": "1.0.0"
+  },
+  "OPS-DEPLOY": {
+    "hash": "f9c5d2e1528452dd144771382c09f2e219651d262ae62f5c6101a6b05f7839bd",
+    "version": "1.0.0"
+  },
+  "OPS-FINOPS": {
+    "hash": "95cb1b4fa64ab640fb0fd9d3887ca2023a47e9fddeff62372587464e20673cfa",
+    "version": "1.0.0"
+  },
+  "OPS-INCIDENT": {
+    "hash": "f936976dee2e7e522cbb6e9e100373bec7c3ae71b03952a7a51ed25e0a422fee",
+    "version": "1.0.0"
+  },
+  "OPS-OBS": {
+    "hash": "b79add10cc4c5cc6d541d9692e4e299e136890c4e36408934bb8ac6f41a23377",
+    "version": "1.0.0"
+  },
+  "OPS-PERF": {
+    "hash": "35d79a0c53fa992e0a53e1716974c3c6121222c17a3e0a7680ff79896198c1c8",
+    "version": "1.0.0"
+  },
+  "OPS-RELEASE": {
+    "hash": "c27829239f694519266409f88e16a1bba2931dbb73d8f3a6c99039a05c3de246",
+    "version": "1.0.0"
+  },
+  "SEC-AUTHN": {
+    "hash": "8fdeddd75ee76cd34ed8dd2a69ed271fdc41b8adb001451c55906d8c803bcb4a",
+    "version": "1.0.0"
+  },
+  "SEC-AUTHZ": {
+    "hash": "0390c811d4349d9627baa1e0ba6b30ba7866b49cc4500b2f32db1dc155463039",
+    "version": "1.0.0"
+  },
+  "SEC-CRYPTO": {
+    "hash": "0c7807cf757c9e00e052b5207991316498be942f24e1af9336f839c12518b023",
+    "version": "1.0.0"
+  },
+  "SEC-INPUT": {
+    "hash": "0ff34f52858b6fe17b72894713aa73d32b3f61c740673d03b502f7a5c31d2bf7",
+    "version": "1.0.0"
+  },
+  "SEC-SAST": {
+    "hash": "dedb57d2eef3b22c67128bda009195e1eefc0da4a0ca04ce2fe48143a34f531b",
+    "version": "1.0.0"
+  },
   "SEC-SECRETS": {
     "hash": "73963784241a7485c43b5705eff33f74bb3d71179e9d458a8a09a29d9a73acee",
     "version": "1.0.1"
   },
+  "SEC-SUPPLY": {
+    "hash": "0679fe3f3ea07d9d59a4b8183618b01769fb41bb3efec8f9f67c8e8f3b546ff6",
+    "version": "1.0.0"
+  },
+  "SEC-THREAT": {
+    "hash": "371f44927c6e00a958868dc4eb893efebee0b1cc001ecaef0fa0cc1d820748b9",
+    "version": "1.0.0"
+  },
+  "SEC-WEB": {
+    "hash": "e7da9fca435f768d6d3c66319a87565327fd8cb1023049e79380f22a5479f845",
+    "version": "1.0.0"
+  },
+  "STK-DDB": {
+    "hash": "b320e8625e3428fa021a72b93d9e4486f9354bb1729497bd29978522968c031f",
+    "version": "1.0.0"
+  },
+  "STK-GO": {
+    "hash": "d7287f86dfd95f1b80b368d8f1e454aa7a77c68a15ba21250a47866667b056ff",
+    "version": "1.0.0"
+  },
+  "STK-HTMX": {
+    "hash": "936355bafb0d09546c1919e2fd595fbd6545ff361da8883385a969220a1372e6",
+    "version": "1.0.0"
+  },
+  "STK-NEXT": {
+    "hash": "b8d30de7ae87fd8ee42ae5b3d0fcc57ad22cf64caf463a181aecce65076cf2e5",
+    "version": "1.0.0"
+  },
+  "STK-PG": {
+    "hash": "c2f352f755b03521e58e23354102e06262539fca109ca6202ebc81051c267e26",
+    "version": "1.0.0"
+  },
   "STK-PY": {
     "hash": "438917f23621a9c121eafc9d675a03454459ea91ec30c808d2e48512caf27725",
     "version": "1.0.1"
+  },
+  "STK-REDIS": {
+    "hash": "aabf22fba858bcdd317c0db8b0a2186579e313babab8b6367e3428afffdaeb22",
+    "version": "1.0.0"
+  },
+  "STK-RUST": {
+    "hash": "263f3bcabd8866d12adfc5e53fb83c2b78eafda348c9189c3eabc102568bd83b",
+    "version": "1.0.0"
+  },
+  "STK-SQLITE": {
+    "hash": "acd4e3f1a057750236ebbb38f1b176b5346b7d43cac0e1561a15b174447de9a5",
+    "version": "1.0.0"
+  },
+  "STK-SWIFT": {
+    "hash": "aad720700bb7c6984c5a71fea7530d0b784a244c6cea98ab3f5c651d2f8e6b5a",
+    "version": "1.0.0"
+  },
+  "STK-TS": {
+    "hash": "45053718817838236303a509fdf7735b31456926c538dbb027a37f9899850ef4",
+    "version": "1.0.0"
+  },
+  "STK-VITE": {
+    "hash": "fe87f26d8da8490ae03d0d9ff751c9d42ac71037edb384c8d7ffc775ae0da767",
+    "version": "1.0.0"
+  },
+  "TST-FIXTURES": {
+    "hash": "b1eb8f289a26a964608084bbf8b068def0c3140301459f7c6f1f496700755609",
+    "version": "1.0.0"
+  },
+  "TST-INTEG": {
+    "hash": "40cc3da30a2116434c08acf2193ed82a5ddc1517c669dfbd6b41b4b4c1caaf06",
+    "version": "1.0.0"
+  },
+  "TST-POLICY": {
+    "hash": "e68cfd57115e3c8ff4301a26642cad75de34f7d48f93dba87c7cee1fce9ed376",
+    "version": "1.0.0"
+  },
+  "TST-RATCHET": {
+    "hash": "76146e46529c4970f72a065f25354b01e22ba0b9d727d6ba4eccaa1acd4b0e59",
+    "version": "1.0.0"
+  },
+  "TST-VERIFY": {
+    "hash": "d615cc017939fbd583e385b0b627adec09f2663f84883a23e43b6ad0923feffb",
+    "version": "1.0.0"
+  },
+  "UX-A11Y": {
+    "hash": "7278577270086179a889853cfeb7aa027037e3c59cd9ac232eedb25e7c278d7a",
+    "version": "1.0.0"
+  },
+  "UX-DESIGN": {
+    "hash": "aa70f05bf03e3d2f5d6655a9e16144bf6417664bab8dc30936ef06111a16a287",
+    "version": "1.0.0"
+  },
+  "UX-EMAIL": {
+    "hash": "7b2fe0367bb0e83cc1eca19bca33d42b1c7f3342bb4bb6d40011556b012881b5",
+    "version": "1.0.0"
+  },
+  "UX-FORMS": {
+    "hash": "a2c82c1bf7ecaaf62ea386c8ecd6bd9fa888db4cdc212bfc2d8d106e38cf0aee",
+    "version": "1.0.0"
+  },
+  "UX-I18N": {
+    "hash": "455597343761c9ae8e9d9066ee4031a8c942c5070264942080c18d3ee485769c",
+    "version": "1.0.0"
+  },
+  "UX-RESPONSIVE": {
+    "hash": "4c424e12caee5b5e128648adbc36e5d61442511c0d87b7c701e803dde9167a29",
+    "version": "1.0.0"
+  },
+  "UX-SEO": {
+    "hash": "5bfd8af7186a6f3c774ffdf5a0210c1a7d8b9cca39ba3c20a7d4cbf4f4108954",
+    "version": "1.0.0"
   }
 }

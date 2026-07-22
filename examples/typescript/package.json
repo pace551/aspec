@@ -1,0 +1,33 @@
+{
+  "name": "tally-example",
+  "version": "0.1.0",
+  "description": "NDJSON event tally CLI with zod boundary validation (STK-TS worked example)",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc",
+    "lint": "scripts/lint.sh",
+    "test": "scripts/test.sh",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^14",
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "@types/node": "^24",
+    "@vitest/coverage-v8": "^3",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10",
+    "prettier": "^3",
+    "tsx": "^4",
+    "typescript": "^5",
+    "typescript-eslint": "^8",
+    "vitest": "^3"
+  }
+}

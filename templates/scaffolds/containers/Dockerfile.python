@@ -1,0 +1,26 @@
+# syntax=docker/dockerfile:1
+# Canonical multi-stage Python image (INF-CONTAINERS-01/-02/-03/-06).
+# T3+: pin the base by digest — FROM python:3.14-slim@sha256:<digest>
+#      (docker buildx imagetools inspect python:3.14-slim)
+
+# ---- build stage: pip, compilers, and source live here; none of it ships ----
+FROM python:3.14-slim AS build
+WORKDIR /build
+COPY pyproject.toml ./
+COPY src/ src/
+RUN python -m venv /venv && /venv/bin/pip install --no-cache-dir .
+
+# ---- runtime stage: venv only, non-root, one process ----
+FROM python:3.14-slim AS runtime
+RUN useradd --create-home --uid 10001 app
+COPY --from=build /venv /venv
+ENV PATH="/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+USER app
+WORKDIR /home/app
+EXPOSE 8000
+# Works under `docker run`/compose; ECS overrides with the task-def healthCheck.
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD ["python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2).status == 200 else 1)"]
+# One process per container (INF-CONTAINERS-06): the server, nothing else.
+CMD ["python", "-m", "uvicorn", "{{PACKAGE}}.main:app", "--host", "0.0.0.0", "--port", "8000"]

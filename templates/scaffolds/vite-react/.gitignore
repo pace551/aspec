@@ -1,0 +1,6 @@
+# stack-specific (vite-react); /bootstrap-repo appends _common/gitignore-base
+node_modules/
+dist/
+coverage/
+.lighthouseci/
+*.tsbuildinfo

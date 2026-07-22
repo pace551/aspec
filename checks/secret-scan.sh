@@ -37,11 +37,16 @@ PATTERNS=(
 )
 REGEX=$(IFS='|'; echo "${PATTERNS[*]}")
 
+# Obvious fakes (docs, fixtures) are not findings — same policy as the pre-write hook.
+FAKE_FILTER='EXAMPLE|PLACEHOLDER'
+
 if [[ "$MODE" == "staged" ]]; then
-  SOURCE=$(git diff --staged --unified=0 | grep -E '^\+' | grep -vE '^\+\+\+' || true)
+  SOURCE=$(git diff --staged --unified=0 | grep -E '^\+' | grep -vE '^\+\+\+' \
+    | grep -viE "$FAKE_FILTER" || true)
 else
   SOURCE=$(git ls-files -z | xargs -0 grep -InE "$REGEX" \
-    --exclude='*.example' --exclude='secret-scan.sh' 2>/dev/null || true)
+    --exclude='*.example' --exclude='secret-scan.sh' 2>/dev/null \
+    | grep -viE "$FAKE_FILTER" || true)
   if [[ -n "$SOURCE" ]]; then
     echo "secret-scan: potential secrets found:" >&2
     echo "$SOURCE" | sed 's/\(.\{120\}\).*/\1…/' >&2

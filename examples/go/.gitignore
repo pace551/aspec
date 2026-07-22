@@ -1,0 +1,12 @@
+# --- stack: go (bootstrap appends _common/gitignore-base below) ---
+bin/
+coverage.out
+*.test
+# --- governance _common (SEC-SECRETS: env files never tracked) ---
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log

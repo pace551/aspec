@@ -1,0 +1,8 @@
+# DynamoDB Local for tests and local dev (STK-DDB-06). In-memory: state resets on
+# restart, which is exactly right for test fixtures.
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    command: ["-jar", "DynamoDBLocal.jar", "-inMemory", "-sharedDb"]
+    ports:
+      - "8000:8000"

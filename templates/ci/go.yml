@@ -1,0 +1,105 @@
+# CI — go stack (STK-GO). Concrete composition of templates/ci/_fragments/*.
+# /bootstrap-repo copies this to .github/workflows/ci.yml and prunes jobs the
+# project's tier doesn't require (DEV-CI): T1/T2 typically keep gitleaks + sast + sca
+# and rely on git hooks for lint/test; T3+ runs everything; license-audit is T4.
+#
+# Scripts contract (_common/README.md): lint/test jobs run scripts/lint.sh and
+# scripts/test.sh — the exact commands the pre-commit/pre-push hooks run. The lint
+# job installs golangci-lint first so the script takes its primary path, not the
+# local fallback.
+#
+# fragment: typecheck.yml — omitted by design: the Go compiler typechecks in
+# build/test; there is no separate typechecker job (see fragment comment).
+#
+# {{SETUP_STEPS}} resolved for go:
+#   - uses: actions/setup-go@v5                  (go-version-file: go.mod, built-in module cache)
+# Action pins are major-version tags; at T3+ SEC-SUPPLY upgrades them to commit SHAs.
+
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # fragment: lint.yml — {{CMD_LINT}} = scripts/lint.sh
+  # (= gofmt -l guard + go vet ./... + golangci-lint run)
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install golangci-lint (house runner, STK-GO-02)
+        run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+      - name: Lint
+        run: scripts/lint.sh
+
+  # fragment: test.yml — {{CMD_TEST_COV}} = scripts/test.sh (emits coverage.out)
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Test with coverage
+        run: scripts/test.sh
+      - name: Upload coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+          if-no-files-found: ignore
+
+  # fragment: coverage-ratchet.yml — TST-RATCHET (T2+); CI only checks, never writes.
+  # (setup-go stays: coverage-ratchet.py shells out to `go tool cover -func`.)
+  coverage-ratchet:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Rebuild coverage
+        run: scripts/test.sh
+      - name: Ratchet check
+        run: python3 .governance/coverage-ratchet.py --check
+
+  # fragment: gitleaks.yml — SEC-SECRETS-01 (layer G); full history scan.
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # fragment: sast.yml — {{CMD_SAST}} = gosec (also enabled inside golangci-lint;
+  # standalone job keeps the security gate visible and independently prunable).
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+      - name: Static application security testing
+        run: gosec ./...
+
+  # fragment: sca.yml — {{CMD_SCA}} = govulncheck, call-graph-aware (STK-GO-07, T2+)
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Dependency vulnerability audit
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...

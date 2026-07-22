@@ -1,0 +1,162 @@
+# CI: nextjs — composition of templates/ci/_fragments/* for STK-NEXT projects.
+# /bootstrap-repo copies this to .github/workflows/ci.yml and prunes jobs the
+# project's tier doesn't require (per DEV-CI): T1/T2 keep gitleaks (+ coverage-ratchet
+# at T2); T3 adds lint/typecheck/test/sast/sca/a11y/lighthouse; license-audit is T4.
+# Placeholders resolved: CMD_LINT=scripts/lint.sh · CMD_TYPECHECK=npx tsc --noEmit ·
+# CMD_TEST_COV=scripts/test.sh — the same commands the local hooks run (one source of
+# truth for "passing"). At T3+ SEC-SUPPLY upgrades action pins to commit SHAs.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # fragment: gitleaks.yml — SEC-SECRETS-01 (all tiers with CI)
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # fragment: lint.yml — DEV-CI (T3+; T1/T2 rely on the pre-commit hook)
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: scripts/lint.sh
+
+  # fragment: typecheck.yml — DEV-CI (STK-NEXT-07 / STK-TS strict)
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+  # fragment: test.yml — DEV-CI / TST-POLICY (STK-NEXT-08)
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Test with coverage
+        run: scripts/test.sh
+      - name: Upload coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            coverage.json
+            coverage/coverage-summary.json
+            coverage.out
+            lcov.info
+          if-no-files-found: ignore
+
+  # fragment: coverage-ratchet.yml — TST-RATCHET (T2+)
+  coverage-ratchet:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Rebuild coverage
+        run: scripts/test.sh
+      - name: Ratchet check
+        run: python3 .governance/coverage-ratchet.py --check
+
+  # fragment: sast.yml — SEC-SAST (T2+)
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static application security testing
+        run: pipx run semgrep scan --config p/typescript --error --exclude node_modules
+
+  # fragment: sca.yml — SEC-SUPPLY (T2+)
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Dependency vulnerability audit
+        run: npm audit --audit-level=high
+
+  # fragment: a11y.yml — UX-A11Y (T3+ web). Serves the standalone build the way a
+  # container would ("next start" refuses output:"standalone").
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build and serve
+        run: |
+          npm run build
+          cp -r .next/static .next/standalone/.next/static
+          node .next/standalone/server.js &
+          npx wait-on http://localhost:3000
+      - name: axe-core scan
+        run: npx @axe-core/cli http://localhost:3000 --exit
+
+  # fragment: lighthouse.yml — OPS-PERF (T3+ web). Budgets live in lighthouserc.json
+  # (seeded by the scaffold; its startServerCommand serves the standalone build).
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Lighthouse CI
+        run: npx @lhci/cli autorun
+
+  # fragment: license-audit.yml — LEG-LICENSING (T4 only; pruned below T4)
+  license-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Dependency license audit
+        run: >
+          npx license-checker-rseidelsohn --production --excludePrivatePackages
+          --onlyAllow "MIT;BSD-2-Clause;BSD-3-Clause;Apache-2.0;ISC;0BSD;CC0-1.0;Unlicense"

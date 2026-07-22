@@ -1,0 +1,19 @@
+# Local-dev Valkey (STK-REDIS). Deployed default is managed ElastiCache Valkey
+# (STK-REDIS-06). Policy is set explicitly so eviction behavior matches what you chose
+# (STK-REDIS-04): allkeys-lru = pure cache. Change consciously, not by omission.
+services:
+  cache:
+    image: valkey/valkey:8-alpine
+    command:
+      [
+        "valkey-server",
+        "--maxmemory", "256mb",
+        "--maxmemory-policy", "allkeys-lru",
+      ]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
