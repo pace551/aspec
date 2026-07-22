@@ -23,8 +23,20 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 STANDARDS = ROOT / "standards"
 
-FAMILIES = {"SEC", "TST", "ARC", "STK", "INF", "OPS", "DEV", "UX", "DATA", "AI", "LEG"}
+FAMILY_DIRS = {
+    "SEC": "security", "TST": "testing", "ARC": "architecture", "STK": "stacks",
+    "INF": "infra", "OPS": "operations", "DEV": "process", "UX": "ux",
+    "DATA": "data", "AI": "ai", "LEG": "legal",
+}
+FAMILIES = set(FAMILY_DIRS)
+STACK_KEYS = {
+    "python", "typescript", "go", "rust", "nextjs", "vite-react", "htmx", "swiftui",
+    "sqlite", "postgresql", "dynamodb", "redis", "terraform", "containers",
+    "serverless", "aws", "web",
+}
 TIER_VALUES = {"required", "advisory", "n/a"}
+TIER_NAMES = {"T1", "T2", "T3", "T4"}
+TIER_LINE_RE = re.compile(r"^\*\*Tiers\*\*: (.+?) — \*\*Layer\*\*: (.+)$", re.MULTILINE)
 STATUSES = {"draft", "active", "deprecated"}
 LAYERS = {"H", "G", "A"}
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
@@ -65,6 +77,8 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     fam = str(meta.get("family", ""))
     if fam not in FAMILIES:
         errs.append(f"{rel}: unknown family `{fam}`")
+    elif path.parent.name != FAMILY_DIRS[fam]:
+        errs.append(f"{rel}: family {fam} belongs in standards/{FAMILY_DIRS[fam]}/")
     if sid and fam and not sid.startswith(fam + "-"):
         errs.append(f"{rel}: id `{sid}` does not start with family `{fam}-`")
     if not SEMVER_RE.match(str(meta.get("version", ""))):
@@ -80,8 +94,18 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     stacks = meta.get("stacks")
     if stacks != "all" and not (isinstance(stacks, list) and stacks):
         errs.append(f"{rel}: stacks must be `all` or a non-empty list")
-    if not (isinstance(meta.get("triggers"), list) and meta["triggers"]):
+    elif isinstance(stacks, list):
+        for s in stacks:
+            if s not in STACK_KEYS:
+                errs.append(f"{rel}: unknown stack key `{s}` (allowed: "
+                            f"{', '.join(sorted(STACK_KEYS))})")
+    triggers = meta.get("triggers")
+    if not (isinstance(triggers, list) and triggers):
         errs.append(f"{rel}: triggers must be a non-empty list")
+    else:
+        for t in triggers:
+            if str(t) != str(t).lower():
+                errs.append(f"{rel}: trigger `{t}` must be lowercase")
 
     for req in meta.get("requires") or []:
         if req not in all_ids:
@@ -94,11 +118,22 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
                     f"entry for advisory-only standards)")
     verified_rules: set[str] = set()
     for i, v in enumerate(verification):
-        if not isinstance(v, dict) or "cmd" not in v or "layer" not in v:
+        if not isinstance(v, dict) or not all(k in v for k in ("cmd", "expect", "layer")):
             errs.append(f"{rel}: verification[{i}] needs cmd/expect/layer")
             continue
         if v["layer"] not in LAYERS:
             errs.append(f"{rel}: verification[{i}] layer `{v['layer']}` not in H/G/A")
+        is_attest = str(v["cmd"]).startswith("attest: ")
+        if is_attest != (v["layer"] == "A"):
+            errs.append(f"{rel}: verification[{i}] — `attest: ` cmd prefix and "
+                        f"`layer: A` must appear together (got layer {v['layer']})")
+        if is_attest and len(v.get("rules") or []) != 1:
+            errs.append(f"{rel}: verification[{i}] — attestation entries carry exactly "
+                        f"one rule id (got {len(v.get('rules') or [])})")
+        vtiers = v.get("tiers")
+        if vtiers is not None and (not isinstance(vtiers, list)
+                                   or not set(vtiers) <= TIER_NAMES):
+            errs.append(f"{rel}: verification[{i}] tiers must be a subset of T1–T4")
         verified_rules.update(v.get("rules") or [])
 
     # Rules
@@ -118,14 +153,26 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
         if vr not in seen:
             errs.append(f"{rel}: verification references unknown rule `{vr}`")
 
-    # Enforcement backing: each rule whose block mentions `required` needs H/G
-    # verification coverage or an explicit attestation marker.
+    # Tier-line grammar + enforcement backing: every rule block carries exactly one
+    # `**Tiers**: … — **Layer**: …` line; rules required at any tier need H/G
+    # verification coverage or an explicit `**Layer**: A (attestation)` marker.
     blocks = RULE_HEADING_RE.split(body)  # [pre, id1, block1, id2, block2, ...]
     for rid, block in zip(blocks[1::2], blocks[2::2]):
-        tier_line = block.splitlines()[0] if block.splitlines() else ""
-        first_para = "\n".join(block.splitlines()[:4])
-        if "required" in tier_line and rid not in verified_rules \
-                and "Layer**: A" not in first_para:
+        m_tier = TIER_LINE_RE.search(block)
+        if not m_tier:
+            errs.append(f"{rel}: rule {rid} missing tier line "
+                        f"(`**Tiers**: … — **Layer**: …`)")
+            continue
+        tier_spec, layer_spec = m_tier.group(1), m_tier.group(2)
+        if layer_spec[0] not in "HGA":
+            errs.append(f"{rel}: rule {rid} layer spec must start with H, G, or A")
+        if not re.fullmatch(r"(all|[T1-4·–/,& ]+)\s*(required|advisory|n/a)"
+                            r"(\s*·\s*[T1-4·–/,& ]+\s*(required|advisory|n/a))*",
+                            tier_spec):
+            errs.append(f"{rel}: rule {rid} tier spec `{tier_spec}` doesn't match the "
+                        f"grammar (e.g. `all required`, `T1 advisory · T2–T4 required`)")
+        if "required" in tier_spec and rid not in verified_rules \
+                and not (layer_spec.startswith("A") and "attestation" in layer_spec):
             errs.append(f"{rel}: required rule {rid} has no H/G verification and no "
                         f"explicit `**Layer**: A (attestation)` marker")
 

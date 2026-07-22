@@ -87,6 +87,7 @@ def main() -> int:
             }),
             "last_review": str(meta.get("last_review", "")),
             "path": str(path.relative_to(ROOT)),
+            "tokens_est": len(text) // 4,
         })
 
     dupes = {e["id"] for e in entries if sum(x["id"] == e["id"] for x in entries) > 1}

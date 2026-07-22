@@ -1,10 +1,10 @@
 {
   "SEC-SECRETS": {
-    "hash": "8e6f3c14fcd3bac1f5d9f2ddd15628cc6dfe078659e0e3f9d23984c48c185a8f",
-    "version": "1.0.0"
+    "hash": "73963784241a7485c43b5705eff33f74bb3d71179e9d458a8a09a29d9a73acee",
+    "version": "1.0.1"
   },
   "STK-PY": {
-    "hash": "4347e6b38b7d52fdab72b46b157643c863ecbd876655c6be783fe1ef6ace2f6f",
-    "version": "1.0.0"
+    "hash": "438917f23621a9c121eafc9d675a03454459ea91ec30c808d2e48512caf27725",
+    "version": "1.0.1"
   }
 }

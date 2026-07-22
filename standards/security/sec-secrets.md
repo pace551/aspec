@@ -2,7 +2,7 @@
 id: SEC-SECRETS
 title: Secrets Management
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -34,10 +34,23 @@ verification:
     expect: "exit 0 — a project using .env ships .env.example"
     layer: G
     rules: [SEC-SECRETS-02]
-  - cmd: "attest: secrets storage matches the tier ladder; no secret has appeared in logs, error output, or LLM prompts; any exposed secret was rotated"
-    expect: "explicit yes per item in GOVERNANCE.md attestations"
+  - cmd: "attest: secret storage matches the tier ladder (.env → Keychain/1Password → SSM/Secrets Manager)"
+    expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
-    rules: [SEC-SECRETS-03, SEC-SECRETS-04, SEC-SECRETS-05, SEC-SECRETS-06]
+    rules: [SEC-SECRETS-03]
+  - cmd: "attest: no secret has appeared in logs, error output, crash reports, or LLM prompts"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [SEC-SECRETS-04]
+  - cmd: "attest: any secret ever exposed (git, logs, pasted context) has been rotated"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [SEC-SECRETS-05]
+  - cmd: "attest: credentials are minimally scoped; OIDC/roles used over static keys where available"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [SEC-SECRETS-06]
+    tiers: [T3, T4]
 last_review: 2026-07-22
 ---
 
@@ -106,7 +119,7 @@ in `OPS-INCIDENT`.
 
 ### SEC-SECRETS-06 — Credentials SHOULD be minimally scoped and short-lived
 
-**Tiers**: T1/T2 advisory · T3/T4 required — **Layer**: A (attestation)
+**Tiers**: T1–T2 advisory · T3–T4 required — **Layer**: A (attestation)
 
 Prefer role assumption and OIDC federation over long-lived static keys (CI uses GitHub
 OIDC → AWS role, not stored `AWS_SECRET_ACCESS_KEY` — detail in `INF-ENVS`). Tokens get
@@ -120,7 +133,7 @@ credential per consumer, so revocation is surgical.
 | 1 | `bash ~/Dev/claude-code/governance/checks/secret-scan.sh` | exit 0 (gitleaks, or built-in pattern fallback) | SEC-SECRETS-01 |
 | 2 | `! git ls-files \| grep -qx ".env"` and `git check-ignore -q .env` (if present) | `.env` untracked + ignored | SEC-SECRETS-02 |
 | 3 | `[ ! -f .env ] \|\| [ -f .env.example ]` | example file exists alongside `.env` | SEC-SECRETS-02 |
-| 4 | attestation checklist | explicit per-item yes recorded | SEC-SECRETS-03…06 |
+| 4-7 | attestation checklist (one entry per rule) | explicit yes recorded | SEC-SECRETS-03…06 |
 
 **Remediation:** scan hit on a real secret → rotate now (SEC-SECRETS-05), then remove and
 recommit · scan hit on a fixture → rename value to an obvious fake or add a scoped gitleaks
@@ -171,4 +184,6 @@ an SSM SecureString `/mytool/prod/anthropic-api-key`, and inject via the task de
 
 ## Changelog
 
+- **1.0.1** (2026-07-22) — Format-review fixes: attestations split to one entry per rule;
+  SEC-SECRETS-06 entry tier-scoped to T3+.
 - **1.0.0** (2026-07-22) — Initial version (pilot standard; calibrates the corpus format).

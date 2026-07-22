@@ -14,15 +14,22 @@ calibration bar for depth, tone, and length — match them.
    `python3 checks/lint-framework.py standards/<dir>/<file>.md` clean for every file you
    wrote. Do **not** run `build-index.py` (shared state; the merge step runs it).
 3. **Verification commands must be real.** Every `cmd` either (a) runs as-is from a
-   project root, (b) invokes a script you also write under `checks/` (executable,
-   `set -euo pipefail` for bash, argument `--project DIR` optional), or (c) is an
-   attestation entry starting `attest: …` with `layer: A`. Never invent a tool; if a
-   needed scanner may be missing locally, follow the `checks/secret-scan.sh` pattern:
-   use it if installed, degrade to a documented fallback, never silently pass.
+   project root with the machine contract "exit 0 = pass", (b) invokes a script you also
+   write under `checks/` (executable, `set -euo pipefail` for bash, argument
+   `--project DIR` optional), or (c) is an attestation: cmd starts `attest: `, `layer: A`,
+   and `rules` lists **exactly one** rule id (one attest entry per rule — lint enforces
+   all of this). Never invent a tool; if a needed scanner may be missing locally, follow
+   the `checks/secret-scan.sh` pattern: use it if installed, degrade to a documented
+   fallback, never silently pass. Commands that would fail on a fresh scaffold (empty
+   test dir, no lockfile yet) must tolerate that state explicitly (e.g. pytest exit 5).
+   Verification must be read-only — a check never mutates the working tree.
 4. **Tier honesty**: think through all four tiers per rule. T1 is advisory for almost
-   everything outside SEC-SECRETS/git hygiene. Use the exact tier-line format from the
-   pilots (`**Tiers**: … — **Layer**: …`); a rule with `required` anywhere needs H/G
-   verification coverage or the literal marker `**Layer**: A (attestation)`.
+   everything outside SEC-SECRETS/git hygiene. The tier line follows the linted grammar
+   `**Tiers**: {spec} — **Layer**: {H|G|A}…` with spec ∈ {`all required`, `all advisory`,
+   `T1 advisory · T2–T4 required`, …} — no qualifiers inside the spec; nuance goes in
+   prose, and per-command tier scoping uses the verification entry's `tiers:` key. A rule
+   with `required` anywhere needs H/G verification coverage or the literal marker
+   `**Layer**: A (attestation)`.
 5. **Length**: ≤350 lines per doc; Abstract ≤120 words; T4-only docs proportionate
    (~120-180 lines), never padded.
 6. **Cross-reference by ID** (`SEC-SECRETS`, `OPS-OBS`) — never by path. Reference
@@ -31,10 +38,10 @@ calibration bar for depth, tone, and length — match them.
 7. **Triggers** are lowercase task-brief keywords a `/govern` intake would grep for —
    think "what words appear in a task that makes this standard relevant" (tools, nouns,
    verbs), not taxonomy labels.
-8. **Stack keys vocabulary** (for `stacks:` frontmatter): `python`, `typescript`, `go`,
-   `rust`, `nextjs`, `vite-react`, `htmx`, `swiftui`, `sqlite`, `postgresql`, `dynamodb`,
-   `redis`, `terraform`, `containers`, `serverless`, `aws`, `web` (any browser-facing
-   stack). Cross-cutting standards usually say `all`.
+8. **Stack keys vocabulary** (for `stacks:` frontmatter, lint-enforced allowlist):
+   `python`, `typescript`, `go`, `rust`, `nextjs`, `vite-react`, `htmx`, `swiftui`,
+   `sqlite`, `postgresql`, `dynamodb`, `redis`, `terraform`, `containers`, `serverless`,
+   `aws`, `web` (any browser-facing stack). Cross-cutting standards usually say `all`.
 9. **Version `1.0.0`, status `active`, `last_review: 2026-07-22`**, changelog entry
    `- **1.0.0** (2026-07-22) — Initial version.`
 10. **House context to honor**: solo developer (James), macOS, AWS as the cloud, GitHub +

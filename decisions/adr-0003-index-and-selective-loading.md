@@ -15,9 +15,14 @@ right moment, cheaply and deterministically.
 We will generate `index.json` from standards frontmatter (`checks/build-index.py`) and make
 it `/govern`'s sole entry point: constitution always loads; standards load only when the
 index filter matches the task's tier, detected stacks, or trigger keywords (plus transitive
-`requires`, two hops max). Budget: constitution + index + typical selected set ≤ ~15k
-tokens, enforced by a Phase-4 measurement. The generator refuses to index content changes
-without a version bump, making the index double as the evolution gate.
+`requires`, two hops max). `/govern` never reads `index.json` wholesale — at 67 standards
+the raw index alone is ~10k+ tokens — it filters it with a script and receives only the
+matching entries. Selected standards load in **brief mode** (frontmatter + Abstract +
+Normative Rules + Verification, ~60-70% of a doc's bytes stay unloaded); Worked Examples
+and Anti-Patterns are pulled on demand while implementing in that area. Budget:
+constitution + filtered index slice + brief-mode selected set ≤ ~15k tokens, enforced by a
+Phase-4 measurement. The generator refuses to index content changes without a version
+bump, making the index double as the evolution gate.
 
 ## Alternatives considered
 

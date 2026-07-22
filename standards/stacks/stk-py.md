@@ -2,7 +2,7 @@
 id: STK-PY
 title: Python Stack
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -34,21 +34,36 @@ verification:
     layer: G
     rules: [STK-PY-04]
   - cmd: ".venv/bin/pip-audit"
-    expect: "exit 0 or every finding waived per-CVE"
+    expect: "exit 0 (per-CVE waivers handled by /verify-compliance)"
     layer: G
     rules: [STK-PY-05]
-  - cmd: ".venv/bin/pytest -q"
-    expect: "exit 0"
+    tiers: [T2, T3, T4]
+  - cmd: "sh -c '.venv/bin/pytest -q; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 5 ]'"
+    expect: "exit 0 — tests green (exit 5 'no tests collected' tolerated for fresh scaffolds; TST-POLICY governs test existence)"
     layer: G
     rules: [STK-PY-02]
-  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null && python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py'"
-    expect: "coverage ≥ committed .coverage-baseline"
+  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null 2>&1; python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py --check'"
+    expect: "coverage ≥ committed .coverage-baseline (read-only check)"
     layer: G
     rules: [STK-PY-02]
-  - cmd: "attest: canonical-library table consulted for new deps; public APIs type-hinted"
+    tiers: [T2, T3, T4]
+  - cmd: "attest: pyproject.toml is the single config home with src/ layout"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
-    rules: [STK-PY-06, STK-PY-07]
+    rules: [STK-PY-01]
+  - cmd: "attest: dependency pinning matches project kind (apps exact via lockfile, libraries lower-bounded)"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [STK-PY-06]
+    tiers: [T2, T3, T4]
+  - cmd: "attest: canonical-library table consulted for any new dependency"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [STK-PY-07]
+  - cmd: "attest: all documented commands use .venv/bin paths, never activation"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A
+    rules: [STK-PY-08]
 last_review: 2026-07-22
 ---
 
@@ -78,11 +93,12 @@ imports because CWD is the repo" bugs impossible.
 
 ### STK-PY-02 — Tests MUST run via pytest and coverage MUST never drop below the committed baseline
 
-**Tiers**: T1 advisory (ratchet) / required (pytest green) · T2–T4 required — **Layer**: G
+**Tiers**: all required — **Layer**: G
 
 `pytest` is the only runner; test policy (what gets tested first, integration scope) is
-`TST-POLICY`'s job. The ratchet compares `--cov` output against `.coverage-baseline` via
-`checks/coverage-ratchet.py`; the baseline only moves up. Python floor is 3.11; new
+`TST-POLICY`'s job. "Pytest green" is required at every tier; the coverage ratchet runs at
+T2+ (see the tier-scoped verification entries). The ratchet compares `--cov` output
+against `.coverage-baseline` via `checks/coverage-ratchet.py`; the baseline only moves up. Python floor is 3.11; new
 projects start on the current stable (3.14 today). `numba` note from oracle: keep it an
 optional extra — no hard dependency on packages lacking current-CPython wheels.
 
@@ -167,10 +183,10 @@ this form.
 | 1 | `.venv/bin/ruff check .` | exit 0 | STK-PY-03 |
 | 2 | `.venv/bin/ruff format --check .` | exit 0 | STK-PY-03 |
 | 3 | `.venv/bin/bandit -r src -q` | exit 0 | STK-PY-04 |
-| 4 | `.venv/bin/pip-audit` | exit 0 / per-CVE waivers | STK-PY-05 |
-| 5 | `.venv/bin/pytest -q` | exit 0 | STK-PY-02 |
-| 6 | pytest `--cov` → `coverage-ratchet.py` | ≥ `.coverage-baseline` | STK-PY-02 |
-| 7 | attestation checklist | explicit yes | STK-PY-06, STK-PY-07 |
+| 4 | `.venv/bin/pip-audit` (T2+) | exit 0 / per-CVE waivers | STK-PY-05 |
+| 5 | `.venv/bin/pytest -q` | exit 0 (or 5: no tests yet) | STK-PY-02 |
+| 6 | pytest `--cov` → `coverage-ratchet.py --check` (T2+) | ≥ `.coverage-baseline` | STK-PY-02 |
+| 7-10 | attestation checklist (one per rule) | explicit yes | STK-PY-01, -06, -07, -08 |
 
 **Remediation:** ruff import-order errors → `.venv/bin/ruff check --fix .` · bandit B608
 (SQL) → parameterized queries, never f-strings into SQL · pip-audit hit → try upgrade
@@ -226,4 +242,6 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 
 ## Changelog
 
+- **1.0.1** (2026-07-22) — Format-review fixes: per-entry tier scoping, single-rule
+  attestations, pytest exit-5 tolerance on fresh scaffolds, ratchet runs read-only.
 - **1.0.0** (2026-07-22) — Initial version (pilot standard; transcribes oracle conventions).

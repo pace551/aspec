@@ -26,9 +26,16 @@ triggers:                      # lowercase keywords /govern matches against the 
 requires: []                   # standard IDs co-loaded with this one (kept minimal)
 verification:                  # executed by /verify-compliance, in order
   - cmd: "exact command, run from project root"
-    expect: "exit 0"           # or a short description of the passing condition
-    layer: G                   # H | G | A  (A = the attestation checklist item)
+    expect: "exit 0"           # human-facing description; the MACHINE contract is
+                               # always "exit 0 = pass" — waiver logic lives in
+                               # /verify-compliance, never in expect
+    layer: G                   # H | G | A
     rules: [FAM-SHORTNAME-01]  # rule IDs this command evidences
+    tiers: [T2, T3, T4]        # OPTIONAL: run only at these tiers (default: all four)
+  - cmd: "attest: one-sentence self-check, phrased as the thing being confirmed"
+    expect: "explicit yes in GOVERNANCE.md attestations"
+    layer: A                   # attestation ⇔ cmd starts with `attest: ` (linted both ways)
+    rules: [FAM-SHORTNAME-02]  # attestations carry EXACTLY ONE rule id each
 last_review: 2026-07-22        # bumped by /evolve-standards sweeps even without changes
 ---
 
@@ -41,14 +48,22 @@ last_review: 2026-07-22        # bumped by /evolve-standards sweeps even without
 
 ## Normative Rules
 
-<!-- Each rule: stable ID, one-line bold statement with RFC-2119 verb, tier tags,
-     enforcement layer, then 1-4 sentences of precision (scope, exceptions, definitions).
-     Rule IDs are never renumbered; retired rules stay listed with ~~strikethrough~~ and
-     status note. Order rules by importance, not chronology. -->
+<!-- Each rule: stable ID, one-line bold statement with RFC-2119 verb, then the tier
+     line, then 1-4 sentences of precision (scope, exceptions, definitions). Rule IDs are
+     never renumbered; a retired rule keeps its heading as
+     `### FAM-SHORTNAME-02 — [RETIRED] {original title}` with a one-line note (this
+     preserves the linted numbering). Order rules by importance, not chronology. -->
 
 ### FAM-SHORTNAME-01 — {Bold one-line statement with MUST/SHOULD/MAY}
 
 **Tiers**: T1 advisory · T2–T4 required — **Layer**: G
+
+<!-- The tier line is linted against this grammar, one line, exactly:
+       **Tiers**: {spec} — **Layer**: {H|G|A}{optional parenthetical}
+     where {spec} is `all required`, `all advisory`, or `·`-separated segments like
+     `T1 advisory · T2–T4 required`. No other qualifiers inside the spec — nuance goes
+     in the prose. Rules enforced purely by attestation use exactly
+     `**Layer**: A (attestation)`. -->
 
 {Precision paragraph: exactly what satisfies the rule, what is out of scope, edge cases.}
 
@@ -57,8 +72,8 @@ last_review: 2026-07-22        # bumped by /evolve-standards sweeps even without
 ## Verification
 
 <!-- Human-readable expansion of the frontmatter verification block: the exact commands,
-     what output means pass vs fail, and remediation hints for common failures.
-     Every command here MUST appear in frontmatter and vice versa. -->
+     what output means pass vs fail, and remediation hints for common failures. The
+     frontmatter is authoritative; this table SHOULD mirror it row-for-row. -->
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
@@ -98,9 +113,16 @@ last_review: 2026-07-22        # bumped by /evolve-standards sweeps even without
    rule IDs are `{id}-NN`, contiguous from 01, never reused.
 4. **Version discipline** — any content change bumps `version` and adds a Changelog line.
    `build-index.py` hashes bodies and refuses to index an edited-but-unbumped file.
-5. **Length discipline** — Abstract ≤120 words. Whole doc SHOULD be ≤350 lines; the token
-   budget for a typical selected set is ~15k, and every line here spends it.
+5. **Length discipline** — Abstract ≤120 words. Whole doc SHOULD be ≤350 lines. Loading
+   model: `/govern` never loads `index.json` wholesale (it filters it with a script) and
+   for the compliance brief loads only frontmatter + Abstract + Normative Rules +
+   Verification of each selected standard — Worked Example/Anti-Patterns/References are
+   pulled on demand when implementing in that area. The ≤~15k budget applies to that
+   brief-mode selected set; the rules sections are what spend it.
 6. **Tier honesty** — if a rule is meaningfully different per tier, split the difference
-   into the tier tags, don't average it. "T1: advisory" is a real answer.
+   into the tier tags, don't average it. "T1: advisory" is a real answer. Where individual
+   verification commands only apply above a tier, say so with the entry-level `tiers:` key
+   rather than prose.
 7. **requires minimalism** — `requires` is for standards whose rules are unintelligible
-   without the other doc, not for thematic neighbors. Two hops max will be loaded.
+   without the other doc, not for thematic neighbors. Loading is transitive but capped at
+   two hops.

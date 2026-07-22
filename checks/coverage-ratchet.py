@@ -12,7 +12,9 @@ Reads coverage from (first match wins):
   4. coverage.out               (go tool cover -func output, "total:" line)
   5. lcov.info                  (LH/LF aggregate)
 
-Usage: python3 coverage-ratchet.py [--project DIR] [--value PCT] [--tolerance 0.1]
+Usage: python3 coverage-ratchet.py [--project DIR] [--value PCT] [--tolerance 0.1] [--check]
+  --check  read-only: never writes the baseline (used by /verify-compliance so a
+           verification run leaves no working-tree changes)
 """
 
 from __future__ import annotations
@@ -58,6 +60,8 @@ def main() -> int:
     ap.add_argument("--value", type=float, default=None)
     ap.add_argument("--tolerance", type=float, default=0.1,
                     help="allowed dip in percentage points (float noise)")
+    ap.add_argument("--check", action="store_true",
+                    help="read-only: never write/init the baseline")
     args = ap.parse_args()
     root = args.project.resolve()
     baseline_file = root / ".coverage-baseline"
@@ -68,6 +72,10 @@ def main() -> int:
         return 2
 
     if not baseline_file.exists():
+        if args.check:
+            print(f"coverage-ratchet: OK (no baseline yet; current {current:.2f}% — "
+                  f"run without --check to initialize)")
+            return 0
         baseline_file.write_text(f"{current:.2f}\n")
         print(f"coverage-ratchet: baseline initialized at {current:.2f}%")
         return 0
@@ -77,7 +85,7 @@ def main() -> int:
         print(f"coverage-ratchet: FAIL — coverage {current:.2f}% is below baseline "
               f"{baseline:.2f}%. Add tests or (with a waiver) reset the baseline.")
         return 1
-    if current > baseline:
+    if current > baseline and not args.check:
         baseline_file.write_text(f"{current:.2f}\n")
         print(f"coverage-ratchet: raised baseline {baseline:.2f}% → {current:.2f}%")
     else:
