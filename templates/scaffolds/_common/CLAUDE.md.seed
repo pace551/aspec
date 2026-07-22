@@ -1,0 +1,26 @@
+# CLAUDE.md — {{PROJECT_NAME}}
+
+{{ONE_LINE_DESCRIPTION}}
+
+Governed project — tier and applicable standards in `GOVERNANCE.md`; run
+`/verify-compliance` before calling any work done (Constitution C2).
+
+## Structure
+
+```
+{{STRUCTURE_TREE}}
+```
+
+## Commands
+
+All commands runnable verbatim from repo root (no activation, no cd — STK conventions):
+
+```bash
+scripts/lint.sh        # format check + lint (same gate as pre-commit hook and CI)
+scripts/test.sh        # tests + coverage (same gate as pre-push hook and CI)
+{{RUN_COMMAND}}        # run the thing
+```
+
+## Gotchas
+
+{{GOTCHAS_OR_TBD}}

@@ -1,0 +1,8 @@
+# Fragment: lint — DEV-CI. Same commands as scripts/lint.sh and the pre-commit hook.
+lint:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Lint
+      run: {{CMD_LINT}}

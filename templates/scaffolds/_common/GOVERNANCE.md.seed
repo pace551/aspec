@@ -1,0 +1,18 @@
+# Governance Manifest
+
+```yaml
+tier: {{TIER}}
+classified: {{DATE}}
+tier_override: null
+stacks: {{STACKS}}
+standards: []        # pinned by /govern
+waivers: []
+external_action_approvals: []
+pii_inventory: n/a
+last_verified: null
+attestations: []
+```
+
+## Notes
+
+Bootstrapped by /bootstrap-repo on {{DATE}}. Run `/govern` to classify and pin standards.

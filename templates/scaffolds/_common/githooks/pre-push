@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# pre-push — DEV-BOOTSTRAP / TST-RATCHET (layer H). Tests + read-only ratchet check.
+set -euo pipefail
+
+if [ -x scripts/test.sh ]; then
+  scripts/test.sh
+else
+  echo "pre-push: scripts/test.sh missing — test gate skipped (DEV-BOOTSTRAP violation)" >&2
+fi
+
+if [ -f .coverage-baseline ]; then
+  python3 .governance/coverage-ratchet.py --check
+fi

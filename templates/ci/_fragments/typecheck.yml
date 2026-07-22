@@ -1,0 +1,9 @@
+# Fragment: typecheck — DEV-CI. Stacks without a separate typechecker (Go, Rust) fold
+# this into build/test and omit the job.
+typecheck:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Typecheck
+      run: {{CMD_TYPECHECK}}

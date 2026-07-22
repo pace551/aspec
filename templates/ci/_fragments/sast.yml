@@ -1,0 +1,9 @@
+# Fragment: sast — SEC-SAST. {{CMD_SAST}} is the stack's scanner (bandit, semgrep,
+# gosec, clippy); see the SEC-SAST per-stack table.
+sast:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Static application security testing
+      run: {{CMD_SAST}}

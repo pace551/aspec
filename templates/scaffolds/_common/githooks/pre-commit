@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# pre-commit — DEV-BOOTSTRAP / SEC-SECRETS (layer H). Installed via core.hooksPath.
+# Gates: staged secret scan (always), then scripts/lint.sh if present.
+set -euo pipefail
+
+bash .governance/secret-scan.sh --staged
+
+if [ -x scripts/lint.sh ]; then
+  scripts/lint.sh
+else
+  echo "pre-commit: scripts/lint.sh missing — lint gate skipped (DEV-BOOTSTRAP violation)" >&2
+fi

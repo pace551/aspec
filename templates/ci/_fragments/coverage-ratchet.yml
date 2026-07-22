@@ -1,0 +1,15 @@
+# Fragment: coverage-ratchet — TST-RATCHET. Fails if coverage drops below the committed
+# .coverage-baseline; raising the baseline happens locally (the script writes it), CI
+# only checks.
+coverage-ratchet:
+  runs-on: ubuntu-latest
+  needs: [test]
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Rebuild coverage
+      run: {{CMD_TEST_COV}}
+    - name: Ratchet check
+      run: python3 .governance/coverage-ratchet.py --check
+      # /bootstrap-repo vendors checks/coverage-ratchet.py into .governance/ so CI
+      # doesn't need the governance repo on the runner.

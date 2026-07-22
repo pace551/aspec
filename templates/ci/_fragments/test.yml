@@ -1,0 +1,19 @@
+# Fragment: test — DEV-CI / TST-POLICY. {{CMD_TEST_COV}} must emit coverage data the
+# ratchet fragment can read (see checks/coverage-ratchet.py header for formats).
+test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Test with coverage
+      run: {{CMD_TEST_COV}}
+    - name: Upload coverage data
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage
+        path: |
+          coverage.json
+          coverage/coverage-summary.json
+          coverage.out
+          lcov.info
+        if-no-files-found: ignore

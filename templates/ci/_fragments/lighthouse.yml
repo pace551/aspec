@@ -1,0 +1,11 @@
+# Fragment: lighthouse — OPS-PERF (T3+ web). Budgets live in lighthouserc.json in the
+# project (scaffolds seed one with the OPS-PERF defaults: perf ≥ 90 on key pages).
+lighthouse:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Build
+      run: {{CMD_BUILD}}
+    - name: Lighthouse CI
+      run: npx @lhci/cli autorun

@@ -1,0 +1,11 @@
+# Fragment: gitleaks — SEC-SECRETS-01 (layer G; layer H is the local pre-commit hook).
+# Full-history scan so an old leak surfaces even after deletion.
+gitleaks:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,15 @@
+# Fragment: iac-scan — INF-TF. Runs on any repo containing *.tf; {{TF_DIR}} defaults
+# to infra/.
+iac-scan:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: terraform-linters/setup-tflint@v4
+    - name: tflint
+      working-directory: {{TF_DIR}}
+      run: tflint --init && tflint
+    - name: checkov
+      uses: bridgecrewio/checkov-action@v12
+      with:
+        directory: {{TF_DIR}}
+        quiet: true

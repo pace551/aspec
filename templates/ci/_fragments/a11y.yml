@@ -1,0 +1,14 @@
+# Fragment: a11y — UX-A11Y (T3+ web). {{CMD_SERVE}} starts the built app on
+# {{APP_URL}}; axe fails the job on WCAG violations for the listed pages.
+a11y:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Build and serve
+      run: |
+        {{CMD_BUILD}}
+        {{CMD_SERVE}} &
+        npx wait-on {{APP_URL}}
+    - name: axe-core scan
+      run: npx @axe-core/cli {{APP_URL}} --exit

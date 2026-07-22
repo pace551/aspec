@@ -1,0 +1,10 @@
+# Fragment: license-audit — LEG-LICENSING (T4). {{CMD_LICENSES}} is the stack's
+# license lister filtered against the allowlist (MIT/BSD/Apache-2.0/ISC by default);
+# copyleft findings fail the job pending a human decision.
+license-audit:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Dependency license audit
+      run: {{CMD_LICENSES}}

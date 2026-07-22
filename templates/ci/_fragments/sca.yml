@@ -1,0 +1,9 @@
+# Fragment: sca — SEC-SUPPLY. {{CMD_SCA}} is the stack's dependency auditor
+# (pip-audit, npm audit --audit-level=high, osv-scanner, cargo audit).
+sca:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # {{SETUP_STEPS}}
+    - name: Dependency vulnerability audit
+      run: {{CMD_SCA}}
