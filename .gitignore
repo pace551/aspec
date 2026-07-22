@@ -1,0 +1,20 @@
+# local env / editor
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# node
+node_modules/
+
+# scratch
+*.log
+.scratch/

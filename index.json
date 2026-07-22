@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "generated": "2026-07-22",
+  "constitution": [
+    "constitution/CONSTITUTION.md",
+    "constitution/tiers.md"
+  ],
+  "standards": [
+    {
+      "id": "SEC-SECRETS",
+      "title": "Secrets Management",
+      "family": "SEC",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": "all",
+      "triggers": [
+        "secret",
+        "credential",
+        "api key",
+        "token",
+        "password",
+        ".env",
+        "keychain",
+        "vault",
+        "private key"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/security/sec-secrets.md"
+    },
+    {
+      "id": "STK-PY",
+      "title": "Python Stack",
+      "family": "STK",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "stacks": [
+        "python"
+      ],
+      "triggers": [
+        "python",
+        "pyproject",
+        "pytest",
+        "pip",
+        "venv",
+        "ruff",
+        "fastapi",
+        "pandas"
+      ],
+      "requires": [
+        "SEC-SECRETS"
+      ],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-07-22",
+      "path": "standards/stacks/stk-py.md"
+    }
+  ]
+}
