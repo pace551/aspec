@@ -5,6 +5,10 @@ CI templates, skills, and enforcement machinery that make Claude Code deliverabl
 tested, observable, and maintainable **by rule rather than by mood** — scaled across four
 tiers from personal scripts (T1) to commercial products (T4).
 
+**New here? Read [`docs/GUIDE.md`](docs/GUIDE.md)** — the developer walkthrough (mental
+model, skill lifecycle, GOVERNANCE.md anatomy, waivers, evolution loop, troubleshooting).
+This README is the summary.
+
 ## How it works
 
 1. **`constitution/CONSTITUTION.md`** — ten invariants, always loaded, every task.
