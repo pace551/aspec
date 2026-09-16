@@ -1,13 +1,14 @@
-# governance
+# ASPEC
 
-Personal development governance framework: the constitution, standards corpus, scaffolds,
-CI templates, skills, and enforcement machinery that make Claude Code deliverables secure,
-tested, observable, and maintainable **by rule rather than by mood** — scaled across four
-tiers from personal scripts (T1) to commercial products (T4).
+**Agent Safety, Performance, Enforcement & Compliance**
 
-**New here? Read [`docs/GUIDE.md`](docs/GUIDE.md)** — the developer walkthrough (mental
-model, skill lifecycle, GOVERNANCE.md anatomy, waivers, evolution loop, troubleshooting).
-This README is the summary.
+A personal development-governance framework that makes every Claude Code deliverable
+secure, tested, observable, and maintainable **by rule rather than by mood** — scaled
+across four tiers from personal scripts (T1) to commercial products (T4).
+
+**New here?** Open [`docs/field-guide.html`](docs/field-guide.html) for the visual
+overview, or read [`docs/GUIDE.md`](docs/GUIDE.md) for the detailed developer
+walkthrough (GOVERNANCE.md anatomy, waivers, evolution loop, troubleshooting).
 
 ## How it works
 

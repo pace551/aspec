@@ -1,9 +1,11 @@
-# Developer Guide — using the governance framework
+# Developer Guide — ASPEC
 
-The framework makes every Claude Code deliverable secure, tested, observable, and
-maintainable **by rule rather than by mood** — scaled to how much the project matters.
-This guide is the human walkthrough. The README is the elevator pitch; this is how you
-actually live with it.
+**Agent Safety, Performance, Enforcement & Compliance**
+
+ASPEC makes every Claude Code deliverable secure, tested, observable, and maintainable
+**by rule rather than by mood** — scaled to how much the project matters. This guide is
+the human walkthrough. The README is the elevator pitch; this is how you actually live
+with it.
 
 ---
 

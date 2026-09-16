@@ -1,7 +1,7 @@
-# CLAUDE.md — governance framework repo
+# CLAUDE.md — ASPEC (Agent Safety, Performance, Enforcement & Compliance)
 
-This repo IS the governance framework other projects load. Changes here propagate to every
-future task, so this repo holds itself to its own strictest rules.
+This repo IS the ASPEC governance framework other projects load. Changes here propagate to
+every future task, so this repo holds itself to its own strictest rules.
 
 ## Working in this repo
 

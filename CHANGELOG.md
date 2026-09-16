@@ -1,4 +1,4 @@
-# Changelog — governance framework
+# Changelog — ASPEC
 
 Framework-level changes (structure, tooling, skills, constitution). Individual standards
 carry their own per-file changelogs.

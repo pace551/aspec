@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — install the governance framework's global surfaces.
+# install.sh — install ASPEC (Agent Safety, Performance, Enforcement & Compliance).
 #
 #   checks/install.sh              install/refresh skills into ~/.claude/skills (safe, default)
 #   checks/install.sh --global-claude   also write ~/.claude/CLAUDE.md governance pointer
@@ -33,13 +33,13 @@ done
 # --- global CLAUDE.md ---
 if $DO_CLAUDE; then
   TARGET="$HOME/.claude/CLAUDE.md"
-  if [ -f "$TARGET" ] && ! grep -q "governance framework" "$TARGET"; then
+  if [ -f "$TARGET" ] && ! grep -q "ASPEC\|governance framework" "$TARGET"; then
     echo "install.sh: $TARGET exists and is not governance-managed — not overwriting" >&2
   else
     cat > "$TARGET" <<EOFCLAUDE
-# Global rules — governance framework
+# Global rules — ASPEC (Agent Safety, Performance, Enforcement & Compliance)
 
-Every task is governed by the personal governance framework at
+Every task is governed by ASPEC at
 \`$GOV\` (this file is its only always-on pointer).
 
 1. The Constitution applies to every task, every tier: read
