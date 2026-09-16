@@ -566,6 +566,10 @@ git clone https://github.com/pace551/aspec.git ~/aspec
 # 2. Install the five skills into Claude Code
 cd ~/aspec
 bash checks/install.sh
+#    → on first run, prompts for your Obsidian vault path
+#      (used by /harvest-learnings and /evolve-standards)
+#      default: ~/Documents/Obsidian/Personal
+#      enter 'none' if you don't use Obsidian — learnings capture is skipped
 
 # 3. Point Claude Code at the framework (writes ~/.claude/CLAUDE.md)
 bash checks/install.sh --global-claude
@@ -574,14 +578,16 @@ bash checks/install.sh --global-claude
 #    secret scan + session banner; makes a timestamped settings backup)
 bash checks/install.sh --hooks</code></pre>
   <p>Each step is idempotent — re-run <code>install.sh</code> after pulling updates to refresh
-  installed skills and hooks. The canonical sources stay in this repo; the installed copies
-  are what Claude Code reads at runtime.</p>
+  installed skills and hooks. Paths are stored in <code>~/.claude/aspec.json</code> and won't
+  be re-prompted on subsequent runs. The canonical skill sources in the repo use
+  placeholders (<code>$GOV</code>, <code>$VAULT</code>) that get resolved to your actual
+  paths at install time.</p>
 
   <h3>What each step does</h3>
   <div class="table-wrap"><table>
     <tr><th>Step</th><th>What it installs</th><th>Where</th></tr>
     <tr><td><code>install.sh</code></td>
-        <td>Five skills: <code>/govern</code>, <code>/verify-compliance</code>, <code>/bootstrap-repo</code>, <code>/harvest-learnings</code>, <code>/evolve-standards</code></td>
+        <td>Five skills (<code>/govern</code>, <code>/verify-compliance</code>, <code>/bootstrap-repo</code>, <code>/harvest-learnings</code>, <code>/evolve-standards</code>) with paths resolved from your clone location and vault path, saved to <code>~/.claude/aspec.json</code></td>
         <td><code>~/.claude/skills/</code></td></tr>
     <tr><td><code>--global-claude</code></td>
         <td>A small <code>CLAUDE.md</code> that tells Claude Code to run <code>/govern</code> before chunky tasks and <code>/verify-compliance</code> before declaring done — the always-on pointer that makes the framework apply everywhere</td>
