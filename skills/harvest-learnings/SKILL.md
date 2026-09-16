@@ -30,8 +30,8 @@ the framework just worked is the success case).
 
 ### 2. Write one note per distinct learning
 
-Template: `~/Dev/claude-code/governance/templates/obsidian/governance-learning-template.md`.
-Destination: `~/Documents/Obsidian/Personal/Inbox/YYYY-MM-DD governance <slug>.md`.
+Template: `$GOV/templates/obsidian/governance-learning-template.md`.
+Destination: `$INBOX/YYYY-MM-DD governance <slug>.md`.
 Frontmatter must carry `type: governance-learning`, `status: candidate`, the implicated
 standard/rule IDs in `standards:` (or `[]` for missing-rule gaps), `project`, `tier`.
 The **Proposed change** section is the payload — write it as the smallest diff

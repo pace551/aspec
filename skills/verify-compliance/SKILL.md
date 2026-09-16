@@ -6,7 +6,7 @@ description: The "done" gate. Use this skill BEFORE declaring any governed task 
 # verify-compliance — the done gate
 
 Work is not done until this passes (Constitution C2). Deterministic scripts verify; you
-comply and remediate. Governance repo: `~/Dev/claude-code/governance` (below: `$GOV`).
+comply and remediate. Governance repo: `$GOV`.
 
 ## Steps
 

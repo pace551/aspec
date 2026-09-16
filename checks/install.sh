@@ -7,11 +7,16 @@
 #                                  (BLOCKING secret-scan hook — run only with explicit
 #                                  user consent; makes a timestamped settings backup)
 #
+# On first run, writes ~/.claude/aspec.json with resolved paths (governance repo,
+# Obsidian vault). Skills are templated with these paths at install time so the
+# canonical sources in skills/ stay portable.
+#
 # Idempotent; canonical sources stay in this repo (edit here, re-run to propagate).
 set -euo pipefail
 
 GOV="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_DST="$HOME/.claude/skills"
+CONFIG="$HOME/.claude/aspec.json"
 DO_CLAUDE=false
 DO_HOOKS=false
 for arg in "$@"; do
@@ -22,11 +27,48 @@ for arg in "$@"; do
   esac
 done
 
-# --- skills ---
+# --- config (first run or paths changed) ---
+VAULT_PATH=""
+if [ -f "$CONFIG" ]; then
+  VAULT_PATH=$(python3 -c "import json; print(json.load(open('$CONFIG')).get('obsidian_vault',''))" 2>/dev/null || true)
+fi
+
+if [ -z "$VAULT_PATH" ] || [ ! -d "$VAULT_PATH" ]; then
+  DEFAULT_VAULT="$HOME/Documents/Obsidian/Personal"
+  echo "ASPEC needs your Obsidian vault path for /harvest-learnings and /evolve-standards."
+  echo "  (leave blank to use: $DEFAULT_VAULT)"
+  echo "  (enter 'none' if you don't use Obsidian — learnings capture will be skipped)"
+  printf "  Vault path: "
+  read -r VAULT_INPUT
+  if [ "$VAULT_INPUT" = "none" ]; then
+    VAULT_PATH="none"
+  elif [ -n "$VAULT_INPUT" ]; then
+    VAULT_PATH="$VAULT_INPUT"
+  else
+    VAULT_PATH="$DEFAULT_VAULT"
+  fi
+fi
+
+python3 - "$CONFIG" "$GOV" "$VAULT_PATH" <<'PYEOF'
+import json, sys
+path, gov, vault = sys.argv[1], sys.argv[2], sys.argv[3]
+config = {"governance_repo": gov, "obsidian_vault": vault}
+with open(path, "w") as f:
+    json.dump(config, f, indent=2)
+    f.write("\n")
+print(f"wrote {path}")
+PYEOF
+
+# --- skills (templated with resolved paths) ---
 mkdir -p "$SKILLS_DST"
+INBOX="$VAULT_PATH/Inbox"
 for skill in govern bootstrap-repo verify-compliance harvest-learnings evolve-standards; do
   mkdir -p "$SKILLS_DST/$skill"
-  cp "$GOV/skills/$skill/SKILL.md" "$SKILLS_DST/$skill/SKILL.md"
+  sed \
+    -e "s|\\\$GOV|$GOV|g" \
+    -e "s|\\\$VAULT|$VAULT_PATH|g" \
+    -e "s|\\\$INBOX|$INBOX|g" \
+    "$GOV/skills/$skill/SKILL.md" > "$SKILLS_DST/$skill/SKILL.md"
   echo "installed skill: /$skill"
 done
 

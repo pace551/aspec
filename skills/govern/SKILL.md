@@ -6,7 +6,7 @@ description: Use this skill at the START of any chunky development task, when cr
 # govern — governance intake
 
 Classify the task, select only the standards that apply, pin them in `GOVERNANCE.md`, and
-brief the session. Governance repo: `~/Dev/claude-code/governance` (below: `$GOV`).
+brief the session. Governance repo: `$GOV`.
 
 ## Steps
 

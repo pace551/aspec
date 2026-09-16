@@ -6,7 +6,7 @@ description: Use this skill when creating a new project repository, when /implem
 # bootstrap-repo — governed project scaffolding
 
 Stand up (or retrofit) a repo that passes `/verify-compliance` from its first commit.
-Governance repo: `~/Dev/claude-code/governance` (below: `$GOV`).
+Governance repo: `$GOV`.
 
 ## Steps
 

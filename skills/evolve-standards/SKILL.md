@@ -7,7 +7,7 @@ description: Use this skill for the quarterly governance review, the monthly fas
 
 Standards change here and nowhere else (Constitution C10). Every change: version bump +
 changelog + regenerated index + clean self-lint. Governance repo:
-`~/Dev/claude-code/governance` (below: `$GOV`).
+`$GOV`.
 
 ## Mode selection
 
@@ -22,7 +22,7 @@ changelog + regenerated index + clean self-lint. Governance repo:
 ### 1. Gather candidates
 
 ```bash
-rg -l "type: governance-learning" ~/Documents/Obsidian/Personal/ | \
+rg -l "type: governance-learning" $VAULT/ | \
   xargs rg -l "status: candidate"
 ```
 
