@@ -36,22 +36,22 @@ if $DO_CLAUDE; then
   if [ -f "$TARGET" ] && ! grep -q "governance framework" "$TARGET"; then
     echo "install.sh: $TARGET exists and is not governance-managed — not overwriting" >&2
   else
-    cat > "$TARGET" <<'EOF'
+    cat > "$TARGET" <<EOFCLAUDE
 # Global rules — governance framework
 
 Every task is governed by the personal governance framework at
-`~/Dev/claude-code/governance/` (this file is its only always-on pointer).
+\`$GOV\` (this file is its only always-on pointer).
 
 1. The Constitution applies to every task, every tier: read
-   `~/Dev/claude-code/governance/constitution/CONSTITUTION.md` before substantive work.
+   \`$GOV/constitution/CONSTITUTION.md\` before substantive work.
 2. Before any chunky task (multi-file change, new project, deploy, anything with side
-   effects): run `/govern` to classify the tier and load the applicable standards.
-3. Work is DONE only when `/verify-compliance` passes for the project's tier
+   effects): run \`/govern\` to classify the tier and load the applicable standards.
+3. Work is DONE only when \`/verify-compliance\` passes for the project's tier
    (Constitution C2). Never declare done while it fails.
-4. In a repo with a `GOVERNANCE.md`, honor its pins, waivers, and approvals.
-5. Governance friction (missing/wrong/heavy rule) → `/harvest-learnings`, never ad-hoc
+4. In a repo with a \`GOVERNANCE.md\`, honor its pins, waivers, and approvals.
+5. Governance friction (missing/wrong/heavy rule) → \`/harvest-learnings\`, never ad-hoc
    standard edits.
-EOF
+EOFCLAUDE
     echo "wrote $TARGET"
   fi
 fi

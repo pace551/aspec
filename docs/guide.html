@@ -1,0 +1,647 @@
+<title>The Governance Framework — a field guide</title>
+<style>
+  :root {
+    --paper: #F6F8F7;
+    --surface: #FFFFFF;
+    --ink: #1B2320;
+    --muted: #3E4E47;
+    --hairline: #C8D1CC;
+    --accent: #0A5A4A;
+    --accent-soft: #E3EFEA;
+    --fail: #8B2E26;
+    --fail-soft: #F5E6E3;
+    --code-bg: #EDF2EF;
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #141A18; --surface: #1C2422; --ink: #E4EAE7; --muted: #A3B0AA;
+      --hairline: #2A342F; --accent: #5CC4A8; --accent-soft: #1E332C;
+      --fail: #E08A7E; --fail-soft: #392420; --code-bg: #202A26;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F6F8F7; --surface: #FFFFFF; --ink: #1B2320; --muted: #3E4E47;
+    --hairline: #C8D1CC; --accent: #0A5A4A; --accent-soft: #E3EFEA;
+    --fail: #8B2E26; --fail-soft: #F5E6E3; --code-bg: #EDF2EF;
+  }
+  :root[data-theme="dark"] {
+    --paper: #141A18; --surface: #1C2422; --ink: #E4EAE7; --muted: #A3B0AA;
+    --hairline: #2A342F; --accent: #5CC4A8; --accent-soft: #1E332C;
+    --fail: #E08A7E; --fail-soft: #392420; --code-bg: #202A26;
+  }
+
+  html { background: var(--paper); }
+  body {
+    font-family: var(--sans); color: var(--ink); line-height: 1.55;
+    margin: 0; padding: 0 20px; background: var(--paper);
+  }
+  .page { max-width: 76ch; margin: 0 auto; padding: 48px 0 96px; }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  code, .mono {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--code-bg); border-radius: 3px; padding: 1px 5px;
+  }
+  pre {
+    font-family: var(--mono); font-size: 0.82rem; line-height: 1.5;
+    background: var(--code-bg); border: 1px solid var(--hairline);
+    padding: 14px 16px; border-radius: 4px; overflow-x: auto; margin: 16px 0;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  /* ---------- masthead ---------- */
+  .masthead { border-bottom: 3px double var(--hairline); padding-bottom: 28px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 600;
+    line-height: 1.12; margin: 0 0 12px; text-wrap: balance; letter-spacing: -0.01em;
+  }
+  .dek { font-size: 1.06rem; color: var(--muted); margin: 0; max-width: 62ch; }
+  .dek strong { color: var(--ink); font-weight: 600; }
+
+  .stats {
+    display: flex; flex-wrap: wrap; gap: 10px 36px; margin-top: 26px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat { display: flex; flex-direction: column; gap: 1px; }
+  .stat b { font-family: var(--serif); font-size: 1.45rem; font-weight: 600; line-height: 1.1; }
+  .stat span {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 52px; }
+  h2 {
+    font-family: var(--serif); font-size: 1.55rem; font-weight: 600;
+    margin: 0 0 6px; line-height: 1.2; text-wrap: balance;
+  }
+  .kicker {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 10px;
+  }
+  h3 { font-size: 1.02rem; font-weight: 650; margin: 26px 0 6px; }
+  p { margin: 10px 0; }
+  .lede { font-size: 1.02rem; }
+
+  /* ---------- lifecycle steps (a real sequence) ---------- */
+  .steps { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .steps li {
+    display: grid; grid-template-columns: 44px 1fr; gap: 14px;
+    padding: 14px 0; border-top: 1px solid var(--hairline);
+  }
+  .steps li:last-child { border-bottom: 1px solid var(--hairline); }
+  .stepno {
+    font-family: var(--serif); font-size: 1.5rem; color: var(--accent);
+    line-height: 1.1; font-variant-numeric: tabular-nums;
+  }
+  .steps b { font-weight: 650; }
+  .steps p { margin: 3px 0 0; color: var(--muted); font-size: 0.94rem; }
+  .steps p b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- architecture diagram ---------- */
+  .diagram-wrap { overflow-x: auto; margin: 20px 0 6px; padding-bottom: 6px; }
+  .diagram { min-width: 640px; display: flex; flex-direction: column; gap: 0; font-size: 0.85rem; }
+  .dg-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .dg-box {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px;
+    padding: 10px 13px;
+  }
+  .dg-box.accent { border-color: var(--accent); background: var(--accent-soft); }
+  .dg-box b { display: block; font-weight: 650; margin-bottom: 2px; }
+  .dg-box .mono { background: none; padding: 0; color: var(--accent); font-size: 0.76rem; }
+  .dg-box p { margin: 2px 0 0; color: var(--muted); font-size: 0.8rem; line-height: 1.45; }
+  .dg-arrow {
+    text-align: center; color: var(--muted); font-family: var(--mono);
+    font-size: 0.72rem; padding: 7px 0; letter-spacing: 0.06em;
+  }
+  .dg-span { grid-column: 1 / -1; }
+  .dg-2 { grid-column: span 1; }
+  .caption { font-size: 0.8rem; color: var(--muted); font-family: var(--mono); }
+
+  /* ---------- tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); font-weight: 500;
+    text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--ink);
+  }
+  td { padding: 9px 14px 9px 0; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  td:first-child { white-space: nowrap; }
+  .tier { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--accent); }
+
+  /* ---------- enforcement layer cards ---------- */
+  .layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 18px 0; }
+  .layer {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px;
+    padding: 14px 16px; border-top: 3px solid var(--accent);
+  }
+  .layer h4 { margin: 0 0 4px; font-size: 0.95rem; }
+  .layer h4 .mono { color: var(--accent); background: var(--accent-soft); }
+  .layer p { margin: 4px 0 0; font-size: 0.85rem; color: var(--muted); }
+
+  .chip {
+    display: inline-block; font-family: var(--mono); font-size: 0.72rem;
+    border-radius: 3px; padding: 1px 7px; letter-spacing: 0.03em;
+  }
+  .chip.pass { background: var(--accent-soft); color: var(--accent); }
+  .chip.fail { background: var(--fail-soft); color: var(--fail); }
+
+  /* ---------- misc ---------- */
+  .rulequote {
+    border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; margin: 18px 0;
+    font-family: var(--serif); font-size: 1.05rem;
+  }
+  .rulequote .who { display: block; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+  ul.plain { padding-left: 20px; margin: 10px 0; }
+  ul.plain li { margin: 5px 0; }
+  ul.plain li::marker { color: var(--accent); }
+  .footnote { margin-top: 60px; border-top: 1px solid var(--hairline); padding-top: 14px; font-size: 0.8rem; color: var(--muted); }
+
+  /* ---------- concerns grid ---------- */
+  .concerns { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 18px 0; }
+  .concern {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px;
+    padding: 10px 13px; border-left: 3px solid var(--accent);
+  }
+  .concern b { display: block; font-size: 0.88rem; margin-bottom: 2px; }
+  .concern span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+  /* ---------- scenario walkthroughs ---------- */
+  .scenario { margin: 28px 0; padding: 20px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px; }
+  .scenario-label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 8px; font-weight: 600;
+  }
+  .scenario h4 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 650; }
+  .scenario p { margin: 6px 0; font-size: 0.9rem; }
+  .scenario pre { margin: 10px 0 6px; font-size: 0.78rem; }
+  .scenario .outcome {
+    margin-top: 10px; padding: 8px 12px; background: var(--accent-soft);
+    border-radius: 3px; font-size: 0.84rem;
+  }
+  .scenario .outcome b { color: var(--accent); }
+
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">~/Dev/claude-code/governance · field guide</p>
+  <h1>A constitution, a rulebook, and a gate: governing an AI teammate by rule, not mood</h1>
+  <p class="dek">A personal development-governance framework that makes every Claude Code deliverable
+  <strong>secure, tested, observable, and cost-sane by default</strong> — with effort scaled to how much
+  the project actually matters, and a hard, deterministic definition of "done."</p>
+  <div class="stats">
+    <div class="stat"><b>67</b><span>standards</span></div>
+    <div class="stat"><b>403</b><span>numbered rules</span></div>
+    <div class="stat"><b>4</b><span>tiers</span></div>
+    <div class="stat"><b>5</b><span>slash-command skills</span></div>
+    <div class="stat"><b>17</b><span>check scripts</span></div>
+    <div class="stat"><b>3</b><span>enforcement layers</span></div>
+  </div>
+</header>
+
+<section>
+  <p class="kicker">The premise</p>
+  <h2>Why this exists</h2>
+  <p class="lede">Handing an AI agent a chunky, multi-day build works — until you inspect the result and
+  ask: are secrets handled? Are the tests meaningful? Did it set a budget alarm before deploying to AWS?
+  Does the public-facing page meet accessibility standards? Is the SQL parameterized or is it one
+  f-string away from injection? Without explicit direction, the answers to all of these depend on
+  what the model happened to think about that session.</p>
+  <p>The framework makes these concerns <strong>rules, not suggestions</strong> — and backs each one
+  with a script that has an exit code. Here is the full surface it governs:</p>
+  <div class="concerns">
+    <div class="concern"><b>Secrets</b><span>Never in git, logs, or LLM prompts. .env discipline, vault ladder, rotation playbook.</span></div>
+    <div class="concern"><b>Testing</b><span>Test-first for core logic and every bugfix. Coverage ratchet that only goes up.</span></div>
+    <div class="concern"><b>Security</b><span>SAST, supply-chain audit, input validation, auth/authz, web hardening, threat modeling.</span></div>
+    <div class="concern"><b>Infrastructure</b><span>Terraform/OpenTofu, containers, serverless, networking — all with cost alarms and least-privilege.</span></div>
+    <div class="concern"><b>Operations</b><span>Structured logging, alerting, deploy pipelines, backups with tested restores, incident response.</span></div>
+    <div class="concern"><b>Architecture</b><span>API design, error handling, idempotency, config management, concurrency, modularity.</span></div>
+    <div class="concern"><b>UX &amp; accessibility</b><span>Responsive design, WCAG 2.2 AA, loading/empty/error states, forms, SEO, email deliverability.</span></div>
+    <div class="concern"><b>Data governance</b><span>Privacy/PII inventory, forward-only migrations, retention lifecycle.</span></div>
+    <div class="concern"><b>LLM concerns</b><span>Model selection from live data, prompt versioning, evals before changes, prompt injection defense.</span></div>
+    <div class="concern"><b>Process</b><span>Repo bootstrap, conventional commits, code review ladder, dependency management, CI baselines.</span></div>
+    <div class="concern"><b>Legal</b><span>Dependency license audit, commercial launch checklist (ToS, privacy policy, DMARC).</span></div>
+    <div class="concern"><b>Cost</b><span>AWS budget alarm before first deploy. LLM spend caps. No silent NAT gateways or always-on RDS.</span></div>
+  </div>
+  <p>The design bet, in one line:</p>
+  <p class="rulequote">Deterministic scripts verify; the LLM complies.
+  <span class="who">— the framework's operating principle</span></p>
+  <p>No gate is a vibe. Every requirement is either checked by a command, blocked by a hook,
+  or recorded as an explicit yes/no attestation — so drift is always visible, never silent.</p>
+</section>
+
+<section>
+  <p class="kicker">What it does</p>
+  <h2>The lifecycle, end to end</h2>
+  <p>Day to day, the whole framework is five slash commands. A governed task moves through them in order:</p>
+  <ol class="steps">
+    <li><span class="stepno">1</span><div>
+      <b><code>/govern</code> — classify &amp; select</b>
+      <p>Applies a first-match rubric to pick the project's <b>tier</b> (T1–T4), detects its stacks,
+      and selects only the standards that apply. Writes the result into the project's
+      <code>GOVERNANCE.md</code> manifest and briefs the session on the hard rules. Ambiguity costs
+      exactly one question — never a silent guess.</p>
+    </div></li>
+    <li><span class="stepno">2</span><div>
+      <b><code>/bootstrap-repo</code> — scaffold with the gates on</b>
+      <p>Copies the stack scaffold, installs git hooks (pre-commit: secret scan + lint; pre-push:
+      tests + coverage ratchet), composes tier-appropriate CI from fragments, seeds
+      <code>CLAUDE.md</code> / <code>GOVERNANCE.md</code> / <code>.env.example</code> — then <b>proves its own gates
+      fire</b> (a canary secret commit must be rejected) before handing the repo over.</p>
+    </div></li>
+    <li><span class="stepno">3</span><div>
+      <b>Build normally</b>
+      <p>The relevant rules are in context; hooks block the worst mistakes at write and commit time.
+      Nothing else about the workflow changes.</p>
+    </div></li>
+    <li><span class="stepno">4</span><div>
+      <b><code>/verify-compliance</code> — the "done" gate</b>
+      <p>Executes every pinned standard's verification commands and prints a pass/fail table.
+      <b>Work is not done while this fails.</b> Advisory rules become an attestation checklist —
+      answered honestly and written into the manifest. A full pass stamps <code>last_verified</code>.</p>
+    </div></li>
+    <li><span class="stepno">5</span><div>
+      <b><code>/harvest-learnings</code> → <code>/evolve-standards</code> — close the loop</b>
+      <p>Friction (a rule that was missing, wrong, or too heavy) is captured as a structured note in
+      the Obsidian vault. On a quarterly cadence — monthly for fast-churn areas like AI models — those
+      candidates become human-approved, version-bumped diffs to the standards themselves.</p>
+    </div></li>
+  </ol>
+</section>
+
+<section>
+  <p class="kicker">How it works</p>
+  <h2>Architecture</h2>
+  <div class="diagram-wrap"><div class="diagram">
+    <div class="dg-row">
+      <div class="dg-box accent dg-span">
+        <b>Constitution <span class="mono">constitution/CONSTITUTION.md</span></b>
+        <p>Ten invariants loaded for <em>every</em> task at <em>every</em> tier: secrets never touch git ·
+        done means verified · test-first for core logic and bugfixes · spend requires consent ·
+        deviations are visible. Two pages, always in context.</p>
+      </div>
+    </div>
+    <div class="dg-arrow">▼ &nbsp;every task starts here</div>
+    <div class="dg-row">
+      <div class="dg-box">
+        <b>Tier rubric <span class="mono">tiers.md</span></b>
+        <p>First-match classifier: payments/PII → T4 · deployed or other users → T3 ·
+        output-is-analysis → T2 · else T1.</p>
+      </div>
+      <div class="dg-box">
+        <b>Machine index <span class="mono">index.json</span></b>
+        <p>Generated catalog of all 67 standards' frontmatter. Never hand-edited; never loaded wholesale.</p>
+      </div>
+      <div class="dg-box">
+        <b>Selector <span class="mono">select-standards.py</span></b>
+        <p>Filters the index on tier + stacks + trigger keywords. Two modes: <em>pins</em> (everything
+        applicable) and <em>brief</em> (what loads into context, ≤ ~15k tokens).</p>
+      </div>
+    </div>
+    <div class="dg-arrow">▼ &nbsp;selection writes the per-project contract</div>
+    <div class="dg-row">
+      <div class="dg-box accent dg-span">
+        <b>Project manifest <span class="mono">GOVERNANCE.md</span></b>
+        <p>Tier · pinned standard versions · waivers (rule-scoped, expiry mandatory) · external-action
+        approvals · PII inventory · attestations · <code>last_verified</code>. Pins make standards evolution
+        non-breaking: the corpus moves forward, projects upgrade deliberately.</p>
+      </div>
+    </div>
+    <div class="dg-arrow">▼ &nbsp;the manifest is what gets enforced</div>
+    <div class="dg-row">
+      <div class="dg-box">
+        <b>Standards corpus <span class="mono">standards/ · 11 families</span></b>
+        <p>SEC · TST · ARC · STK · INF · OPS · DEV · UX · DATA · AI · LEG. 403 rules with permanent IDs,
+        per-tier applicability, runnable verification, worked examples, anti-patterns.</p>
+      </div>
+      <div class="dg-box">
+        <b>Verifier <span class="mono">run-verification.py</span></b>
+        <p>Reads the manifest, runs every pinned standard's commands for the tier, honors waivers,
+        fails expired ones, emits the attestation checklist. Exit code is the verdict.</p>
+      </div>
+      <div class="dg-box">
+        <b>Scaffolds &amp; CI <span class="mono">templates/</span></b>
+        <p>12 stack scaffolds + CI fragments (lint, test, ratchet, gitleaks, SAST, SCA, IaC scan, axe,
+        Lighthouse, license audit) composed per tier by <code>/bootstrap-repo</code>.</p>
+      </div>
+    </div>
+  </div></div>
+  <p class="caption">Everything above lives in one dedicated git repo; projects carry only their GOVERNANCE.md.</p>
+
+  <h3>The load-bearing trick: selective loading</h3>
+  <p>Sixty-seven standards ≈ 14k lines — no agent can carry that. So <em>context scope</em> and
+  <em>enforcement scope</em> are deliberately different. In context: the constitution plus rule-level
+  detail for only the stack- and trigger-matched standards (measured worst case ≈ 10.8k tokens for a
+  T4 full-stack product). Enforced: <strong>everything pinned</strong>, whether or not the session ever read it.
+  You cannot dodge a rule by not loading it.</p>
+</section>
+
+<section>
+  <p class="kicker">Proportionality</p>
+  <h2>Four tiers, one rubric</h2>
+  <p>Governance weight scales with blast radius — by rubric, not by mood. T1 stays light <em>by design</em>;
+  a personal script that gains a public URL is a re-classification event, not a judgment call.</p>
+  <div class="table-wrap"><table>
+    <tr><th>Tier</th><th>Definition</th><th>Posture</th></tr>
+    <tr><td><span class="tier">T1</span> personal</td><td>Only you run it; breakage costs minutes</td>
+        <td>Constitution + secrets + git hygiene hard; the rest advisory. Git hooks, no CI.</td></tr>
+    <tr><td><span class="tier">T2</span> research</td><td>Outputs inform real decisions; a wrong conclusion is the failure mode</td>
+        <td>+ test-first analytical core, provenance/leakage guards, reproducibility (pinned deps, seeds).</td></tr>
+    <tr><td><span class="tier">T3</span> product</td><td>Internet-exposed and/or has users beyond yourself</td>
+        <td>Full security/ops/UX required; CI mandatory; staging; accessibility + performance gates.</td></tr>
+    <tr><td><span class="tier">T4</span> commercial</td><td>Money, third-party PII, or public launch</td>
+        <td>+ legal baseline, retention/deletion, <em>tested</em> restores, license audit, MFA, DMARC.</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <p class="kicker">The unit of the system</p>
+  <h2>Anatomy of a standard</h2>
+  <p>Each standard is one markdown file whose <strong>frontmatter is the API</strong> — machines act on it,
+  humans read the prose below it. Rule IDs are permanent; waivers and attestations reference them forever.</p>
+<pre><code>---
+id: SEC-SECRETS            # stable forever
+version: 1.0.1             # semver; the index generator REFUSES unbumped edits
+tiers: {T1: required, T2: required, T3: required, T4: required}
+stacks: all                # or [python, nextjs, …] — drives selection
+triggers: [secret, credential, api key, .env, …]
+verification:              # executed by /verify-compliance; exit 0 = pass
+  - cmd: "bash …/checks/secret-scan.sh"
+    layer: G
+    rules: [SEC-SECRETS-01]
+  - cmd: "attest: any exposed secret has been rotated"
+    layer: A
+    rules: [SEC-SECRETS-05]
+---
+## Abstract → Normative Rules (RFC-2119, e.g. SEC-SECRETS-01)
+## Verification → Worked Example → Anti-Patterns → Changelog</code></pre>
+  <p>A framework linter (<code>lint-framework.py</code>) holds all 67 files to this schema — every rule
+  required at any tier must be backed by a hard/gate check or an explicit attestation marker. The
+  linter itself is mutation-tested, because a green linter you've never seen fail proves nothing.</p>
+</section>
+
+<section>
+  <p class="kicker">Teeth</p>
+  <h2>Three enforcement layers</h2>
+  <p>Every rule declares how it's backed. Nothing is advisory-and-invisible.</p>
+  <div class="layers">
+    <div class="layer">
+      <h4><span class="mono">H</span> &nbsp;Hard hooks</h4>
+      <p>Block the action itself. A global Claude Code hook rejects any file write containing a
+      live-secret pattern; per-repo git hooks reject secret commits and failing pushes.</p>
+    </div>
+    <div class="layer">
+      <h4><span class="mono">G</span> &nbsp;Gates</h4>
+      <p>Block "done." CI jobs and <code>/verify-compliance</code> commands — lint, tests, coverage
+      ratchet (never decreases), gitleaks, SAST, SCA, IaC scan, axe, Lighthouse.</p>
+    </div>
+    <div class="layer">
+      <h4><span class="mono">A</span> &nbsp;Attestations</h4>
+      <p>Record drift. Advisory rules force an explicit <em>followed: true/false</em> entry in the
+      manifest. Saying no is allowed; saying nothing is not.</p>
+    </div>
+  </div>
+  <p>Escapes are designed, not denied: disagree with a required rule and you grant a <strong>waiver</strong> —
+  one rule ID, one reason, mandatory expiry (≤ 180 days). Expired waivers flip the gate to
+  <span class="chip fail">FAIL</span>; a fixed violation flips its row to <span class="chip pass">PASS</span>.
+  A rule that keeps collecting waivers is treated as evidence the <em>rule</em> is wrong — which feeds
+  the evolution loop instead of piling up exemptions.</p>
+</section>
+
+<section>
+  <p class="kicker">In practice</p>
+  <h2>Using the framework — concrete scenarios</h2>
+  <p>The lifecycle section above shows the <em>flow</em>. This section shows what it actually looks
+  and feels like to use, across different project types and situations.</p>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 1 — new project, full flow</p>
+    <h4>Building a Python CLI that talks to the Anthropic API</h4>
+    <p>You ask Claude Code to build a tool. The global <code>CLAUDE.md</code> triggers <code>/govern</code>
+    automatically at the start of the task.</p>
+<pre><code>Governance intake: /govern
+  Tier: T1 (personal — only you run it; first-match rubric line 4)
+  Stacks: python
+  Standards pinned (6): SEC-SECRETS 1.0.1, STK-PY 1.0.1, TST-POLICY 1.0.0, ...
+  Hard rules for this task:
+    SEC-SECRETS-01  No secret ever written to a tracked file
+    SEC-SECRETS-02  .env (gitignored) + .env.example shipped
+    STK-PY-03       ruff must pass (house config)
+    STK-PY-04       bandit must pass
+  Done = /verify-compliance green (Constitution C2).</code></pre>
+    <p>The agent scaffolds via <code>/bootstrap-repo</code>: you get a <code>src/</code> layout, <code>pyproject.toml</code>
+    with the house ruff config, git hooks that scan for secrets on every commit, <code>.env.example</code>
+    with placeholder keys, and a seeded <code>GOVERNANCE.md</code>. Then it builds your tool.</p>
+    <p>When the agent thinks it's done, it runs <code>/verify-compliance</code>:</p>
+<pre><code>verify-compliance · tier T1 · PASS
+  [  PASS] STK-PY-03  ruff check .
+  [  PASS] STK-PY-03  ruff format --check .
+  [  PASS] STK-PY-04  bandit -r src -q
+  [  PASS] STK-PY-02  pytest -q
+  [  PASS] SEC-SECRETS-01  secret-scan.sh
+  [  PASS] SEC-SECRETS-02  .env not tracked, .env.example exists
+  last_verified: 2026-09-15</code></pre>
+    <div class="outcome"><b>What you got that you wouldn't have without the framework:</b> secrets
+    discipline enforced by hook, not hope. Lint and security scan baked into the commit cycle.
+    A machine-verifiable definition of "done" instead of "I think it's ready."</div>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 2 — the gate catches a real problem</p>
+    <h4>Agent builds a FastAPI service with a database query</h4>
+    <p>The agent writes <code>f"SELECT * FROM users WHERE id = {user_id}"</code> — an f-string SQL
+    injection, the canonical anti-pattern the framework was designed to catch.</p>
+<pre><code>verify-compliance · tier T3 · FAIL (1)
+  [  PASS] STK-PY-03  ruff check .
+  [  FAIL] STK-PY-04  bandit -r src -q
+           | Issue: [B608] Possible SQL injection via string-based query
+           | Severity: Medium   Confidence: Low
+           | CWE: CWE-89
+           | Location: src/app/db.py:14</code></pre>
+    <p>The agent cannot declare done. It fixes the query to use parameterized placeholders,
+    re-runs the gate, and the row flips to <span class="chip pass">PASS</span>.</p>
+    <div class="outcome"><b>What happened:</b> a deterministic scanner caught an injection
+    vulnerability that the model introduced and would have shipped without the gate. The
+    framework didn't rely on the model noticing its own mistake.</div>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 3 — a personal tool goes public</p>
+    <h4>Your T1 script now has a URL and other users</h4>
+    <p>You re-run <code>/govern</code>. The rubric re-classifies: "deployed beyond localhost with
+    internet reach" → T3. The standard set jumps from 6 to ~40. CI becomes mandatory. Security,
+    accessibility, and performance gates activate. <code>/bootstrap-repo</code> can retrofit what's
+    missing (CI workflows, healthcheck endpoint, content security policy headers).</p>
+    <div class="outcome"><b>The point:</b> escalation is cheap and mechanical. The framework
+    doesn't punish growth — it adjusts the safety net to match the new blast radius.</div>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 4 — you disagree with a rule</p>
+    <h4>pip-audit flags a CVE that isn't reachable in your code</h4>
+    <p>The gate is failing on STK-PY-05 (dependency vulnerability audit) for a CVE in a
+    transitive dependency you never call.</p>
+<pre><code># You grant a waiver — one rule, one reason, mandatory expiry
+waivers:
+  - rule_id: STK-PY-05
+    reason: "CVE-2026-12345 in lxml — we use none of its XML parsing;
+             unreachable. Upgrading blocked on numpy compatibility."
+    expires: 2026-12-01
+    granted_by: you</code></pre>
+    <p>The gate now shows <span class="chip pass">WAIVED</span> for that rule. If you don't fix
+    it by December 1, the waiver expires and the gate fails again — renewal is a fresh,
+    conscious decision.</p>
+    <div class="outcome"><b>Waivers are escapes, not loopholes.</b> The rule that keeps getting
+    waived feeds the evolution loop — it's evidence the rule itself may be miscalibrated,
+    and <code>/evolve-standards</code> surfaces that pattern.</div>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 5 — working on an existing governed project</p>
+    <h4>Adding a feature to a repo that already has GOVERNANCE.md</h4>
+    <p>When you open the session, the banner hook prints:</p>
+<pre><code>Governed project: tier T3 · last_verified 2026-08-22 · done = /verify-compliance green</code></pre>
+    <p><code>/govern</code> re-runs (cheap — one script call) to re-confirm the tier and flag any
+    standard-version drift. You work normally. Before the PR, <code>/verify-compliance</code> runs
+    the full check suite. The PR description carries the pass/fail table as evidence.</p>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-label">Scenario 6 — something felt wrong</p>
+    <h4>A rule was too heavy for a T1 script, or a gap wasn't covered</h4>
+    <p>After the task, run <code>/harvest-learnings</code>. It asks what was missing, wrong, or
+    disproportionate, and writes a structured note to the Obsidian vault. On the next
+    quarterly <code>/evolve-standards</code> pass, those notes become proposed diffs to the standards
+    themselves — version-bumped, changelogged, and applied only with your approval.</p>
+    <div class="outcome"><b>The framework learns from use.</b> Over-governing a personal script
+    is treated as a bug, same as under-governing a public product.</div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Self-application</p>
+  <h2>The framework governs itself</h2>
+  <ul class="plain">
+    <li><strong>Versioned evolution:</strong> standards change only via <code>/evolve-standards</code> —
+    human-approved diffs, semver bumps, changelogs. The index generator hashes every file and refuses
+    to index a content change without a version bump.</li>
+    <li><strong>Own CI:</strong> the repo runs its self-lint, script lint, shell syntax checks, and a
+    full-history gitleaks scan on every push.</li>
+    <li><strong>Negative fixture:</strong> a generator builds a deliberately broken project (hardcoded
+    key, f-string SQL, coverage below baseline, expired waiver) and the test asserts the verifier fails
+    it citing the exact rule IDs — then flips when one violation is fixed.</li>
+    <li><strong>Verified examples:</strong> one small real project per stack, each run green through its
+    own gates (Python, TypeScript, Go, Next.js, Vite+React, HTMX; Rust and SwiftUI written, pending
+    local toolchains).</li>
+  </ul>
+</section>
+
+<section>
+  <p class="kicker">Getting started</p>
+  <h2>Installation</h2>
+
+  <h3>Prerequisites</h3>
+  <ul class="plain">
+    <li><strong>Claude Code</strong> — the framework is designed for Claude Code's skill and hook system</li>
+    <li><strong>Python 3.11+</strong> with <code>PyYAML</code> — powers the index, linter, selector, verifier, and coverage ratchet (<code>pip install pyyaml</code> if not already available)</li>
+    <li><strong>gitleaks</strong> (recommended) — secret scanning at commit and CI time; the framework degrades to a built-in pattern scan without it, but gitleaks has broader coverage (<code>brew install gitleaks</code> on macOS)</li>
+  </ul>
+  <p>Per-stack tooling (ruff, bandit, eslint, gosec, etc.) is installed per-project by <code>/bootstrap-repo</code> — you don't need all of them upfront.</p>
+
+  <h3>Clone and install</h3>
+<pre><code># 1. Clone the repo (anywhere you like)
+git clone https://github.com/you/governance.git ~/governance
+
+# 2. Install the five skills into Claude Code
+cd ~/governance
+bash checks/install.sh
+
+# 3. Point Claude Code at the framework (writes ~/.claude/CLAUDE.md)
+bash checks/install.sh --global-claude
+
+# 4. Wire the global hooks (optional — adds the blocking pre-write
+#    secret scan + session banner; makes a timestamped settings backup)
+bash checks/install.sh --hooks</code></pre>
+  <p>Each step is idempotent — re-run <code>install.sh</code> after pulling updates to refresh
+  installed skills and hooks. The canonical sources stay in this repo; the installed copies
+  are what Claude Code reads at runtime.</p>
+
+  <h3>What each step does</h3>
+  <div class="table-wrap"><table>
+    <tr><th>Step</th><th>What it installs</th><th>Where</th></tr>
+    <tr><td><code>install.sh</code></td>
+        <td>Five skills: <code>/govern</code>, <code>/verify-compliance</code>, <code>/bootstrap-repo</code>, <code>/harvest-learnings</code>, <code>/evolve-standards</code></td>
+        <td><code>~/.claude/skills/</code></td></tr>
+    <tr><td><code>--global-claude</code></td>
+        <td>A small <code>CLAUDE.md</code> that tells Claude Code to run <code>/govern</code> before chunky tasks and <code>/verify-compliance</code> before declaring done — the always-on pointer that makes the framework apply everywhere</td>
+        <td><code>~/.claude/CLAUDE.md</code></td></tr>
+    <tr><td><code>--hooks</code></td>
+        <td>A <code>PreToolUse</code> hook that blocks writes containing live-secret patterns (the only blocking hook — deliberately narrow), and a <code>SessionStart</code> hook that prints a one-line governance banner in repos with a <code>GOVERNANCE.md</code></td>
+        <td><code>~/.claude/settings.json</code></td></tr>
+  </table></div>
+
+  <h3>Verify the installation</h3>
+<pre><code># The framework should lint itself clean
+python3 checks/lint-framework.py
+# → lint-framework: clean (67 standards)
+
+# The selector should find standards
+python3 checks/select-standards.py --tier T1 --stacks python \
+  --brief-text "cli tool" --mode brief | head -5
+
+# Start a new Claude Code session — you should see the five
+# governance skills in your available slash commands</code></pre>
+
+  <h3>Uninstalling</h3>
+  <p>The installer only writes to <code>~/.claude/</code> — it never modifies your projects. To remove:</p>
+<pre><code># Remove skills
+rm -rf ~/.claude/skills/{govern,bootstrap-repo,verify-compliance,harvest-learnings,evolve-standards}
+
+# Remove global CLAUDE.md (or edit it to remove the governance block)
+rm ~/.claude/CLAUDE.md
+
+# Remove hooks — restore from the timestamped backup
+cp ~/.claude/settings.json.bak.YYYYMMDDHHMMSS ~/.claude/settings.json</code></pre>
+</section>
+
+<section>
+  <p class="kicker">Stack</p>
+  <h2>Tech, briefly</h2>
+  <div class="table-wrap"><table>
+    <tr><th>Piece</th><th>Implementation</th></tr>
+    <tr><td>Corpus &amp; contracts</td><td>Markdown + YAML frontmatter — agent-consumable, human-readable, diffable</td></tr>
+    <tr><td>Machinery</td><td>Python 3.14 stdlib + PyYAML (<code>build-index</code>, <code>lint-framework</code>, <code>select-standards</code>, <code>run-verification</code>, <code>coverage-ratchet</code>) and bash check scripts that degrade gracefully when a scanner is missing</td></tr>
+    <tr><td>Enforcement</td><td>Claude Code hooks (<code>PreToolUse</code>, <code>SessionStart</code>), git hooks via <code>core.hooksPath</code>, GitHub Actions fragments, gitleaks</td></tr>
+    <tr><td>Interface</td><td>Five Claude Code skills (installed to <code>~/.claude/skills</code>); <code>/write-spec</code> and <code>/implement-spec</code> are wired in — implement-spec cannot declare done while the gate fails</td></tr>
+    <tr><td>Memory</td><td>Obsidian vault Inbox for learnings; per-project <code>GOVERNANCE.md</code> as the durable contract</td></tr>
+  </table></div>
+
+  <h3>Try it in two minutes</h3>
+<pre><code># see what a T3 web product would be governed by
+python3 checks/select-standards.py --tier T3 \
+  --stacks typescript,nextjs,web --brief-text "public guestbook" --mode brief
+
+# watch the gate fail correctly, citing rule IDs
+bash examples/noncompliant-fixture/setup.sh /tmp/badproj --install
+python3 checks/run-verification.py --project /tmp/badproj
+
+# hold the framework to its own schema
+python3 checks/lint-framework.py</code></pre>
+</section>
+
+<p class="footnote">Repo: <span class="mono">~/Dev/claude-code/governance</span> · deep dive:
+<span class="mono">docs/GUIDE.md</span> · design records: <span class="mono">decisions/ADR-0001…0003</span> ·
+67 standards / 403 rules / ~14k lines of corpus, built and verified 2026-07, hooks wired 2026-08.</p>
+
+</div>
