@@ -2,7 +2,7 @@
 id: LEG-COMMERCIAL
 title: Commercial Baseline
 family: LEG
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: n/a
@@ -39,7 +39,7 @@ verification:
     layer: A
     rules: [LEG-COMMERCIAL-03]
     tiers: [T4]
-  - cmd: "attest: the business-entity and payments-provider questions were raised to James and his answers recorded"
+  - cmd: "attest: the business-entity and payments-provider questions were raised to the user and their answers recorded"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [LEG-COMMERCIAL-04]
@@ -65,7 +65,7 @@ The pre-launch checklist for anything T4: the minimum a paying stranger is owed 
 money or PII changes hands. Compliance in one breath: ToS and privacy policy exist and
 tell the truth about the `pii_inventory`, a monitored support email is published, a refund
 policy exists if payments do, the business-entity and payments-provider questions were put
-to James (the framework raises them, never answers them), the sending domain has
+to the user (the framework raises them, never answers them), the sending domain has
 SPF/DKIM/DMARC, and MFA is on every account in the product's path. Nearly all attestation
 — this is a gate walked once before launch and re-attested at each verify.
 
@@ -87,7 +87,7 @@ practice changes, the policy changes in the same release.
 
 **Tiers**: T1–T2 n/a · T3 advisory · T4 required — **Layer**: A (attestation)
 
-A support/contact email published on the product (and in the ToS), routed somewhere James
+A support/contact email published on the product (and in the ToS), routed somewhere the user
 actually reads — forwarding to the personal inbox is fine; an unmonitored
 `support@` black hole is not. This address is also the deletion-request intake
 (`DATA-RETENTION-04`) and the security-report channel, which is why "monitored" is the
@@ -103,11 +103,11 @@ payment providers require one anyway; deciding it before the first dispute means
 first dispute is procedure, not improvisation. n/a below T4 because taking payment *is*
 the T4 rubric line.
 
-### LEG-COMMERCIAL-04 — Entity and payments-provider questions MUST be raised to James, not answered by the framework
+### LEG-COMMERCIAL-04 — Entity and payments-provider questions MUST be raised to the user, not answered by the framework
 
 **Tiers**: T1–T3 n/a · T4 required — **Layer**: A (attestation)
 
-Before first payment, put two questions to James and record his answers in
+Before first payment, put two questions to the user and record their answers in
 `GOVERNANCE.md`: (1) operate as sole proprietor or form an entity (LLC) — liability and
 tax territory; (2) which payments provider, on what terms. The framework's job is that
 these are asked *before* revenue exists, and that no agent answers them autonomously —
@@ -142,7 +142,7 @@ over.
 | 1 | attest: ToS + truthful privacy policy published | explicit yes | LEG-COMMERCIAL-01 |
 | 2 | attest: monitored support email published | explicit yes | LEG-COMMERCIAL-02 |
 | 3 | attest: refund policy published (if payments) | explicit yes | LEG-COMMERCIAL-03 |
-| 4 | attest: entity + provider questions raised to James | explicit yes | LEG-COMMERCIAL-04 |
+| 4 | attest: entity + provider questions raised to the user | explicit yes | LEG-COMMERCIAL-04 |
 | 5 | attest: SPF/DKIM/DMARC on sending domain | explicit yes | LEG-COMMERCIAL-05 |
 | 6 | attest: MFA on all operator accounts | explicit yes | LEG-COMMERCIAL-06 |
 
@@ -174,7 +174,7 @@ commercial_baseline:   # LEG-COMMERCIAL — walked 2026-07-22, re-attested each 
 | Copy-pasted privacy policy claiming "we never share data" while prompts hit an LLM API | Documented misrepresentation — worse than no policy | Derive the policy from the pii_inventory (LEG-COMMERCIAL-01) |
 | Launch first, "legal stuff" later | The baseline exists for the first angry stranger, who arrives on day one | Walk the checklist before the URL is public |
 | `support@` that nobody reads | Deletion requests and security reports rot; card disputes auto-lose | Forward + test it (LEG-COMMERCIAL-02) |
-| Framework/agent picks the LLC answer | Legal decision made without authority | Raise to James, record, stop (LEG-COMMERCIAL-04) |
+| Framework/agent picks the LLC answer | Legal decision made without authority | Raise to the user, record, stop (LEG-COMMERCIAL-04) |
 | No DMARC because "we barely send email" | Domain spoofable; the little mail sent goes to spam | `p=none` + reports today, tighten later |
 | MFA on the app but not the registrar | Attacker moves DNS, owns everything downstream | Operator accounts first (LEG-COMMERCIAL-06) |
 
@@ -189,3 +189,4 @@ commercial_baseline:   # LEG-COMMERCIAL — walked 2026-07-22, re-attested each 
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

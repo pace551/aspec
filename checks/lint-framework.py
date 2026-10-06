@@ -219,7 +219,7 @@ def main() -> int:
         # Index freshness (delegated to build-index --check)
         check = subprocess.run(
             [sys.executable, str(ROOT / "checks" / "build-index.py"), "--check"],
-            capture_output=True, text=True,
+            capture_output=True, text=True, check=False,
         )
         if check.returncode != 0:
             errors.append(check.stdout.strip() or "index.json stale")

@@ -2,7 +2,7 @@
 id: LEG-LICENSING
 title: Licensing
 family: LEG
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -50,7 +50,7 @@ last_review: 2026-07-22
 
 Retires the risk of shipping a product whose dependencies or assets carry obligations
 nobody read. Compliance in one breath: T4 CI runs a dependency license audit against an
-allowlist (MIT/BSD/Apache-2.0/ISC fine; copyleft flagged for a human decision), James's
+allowlist (MIT/BSD/Apache-2.0/ISC fine; copyleft flagged for a human decision), the user's
 own public repos carry an explicit LICENSE file (MIT default), and bundled assets —
 fonts, icons, images — are checked at T3+ for web-facing work. Advisory below T3 because
 a private personal tool creates no distribution, and most license obligations attach at
@@ -75,7 +75,7 @@ ripping out a load-bearing dependency later.
 
 Allowlist: MIT, BSD (2/3-clause), Apache-2.0, ISC — adopt freely. Copyleft (GPL, LGPL,
 and especially AGPL, which triggers on network use) is not banned, but in a T4 product it
-requires a human decision from James *before* adoption, recorded in `GOVERNANCE.md`
+requires a human decision from the user *before* adoption, recorded in `GOVERNANCE.md`
 (dependency, license, why the obligation is acceptable). Unknown/custom licenses get the
 same treatment. Claude Code never resolves this alone: flag and stop — this is a
 liability call, not an engineering call.
@@ -112,7 +112,7 @@ known-clean sources: OFL fonts (Google Fonts), MIT/ISC icon sets.
 | 4 | attest: bundled asset licenses checked (T3+) | explicit yes | LEG-LICENSING-04 |
 
 **Remediation:** audit fails on a new dependency → swap for an allowlisted alternative, or
-stop and raise the copyleft decision to James (LEG-LICENSING-02) · public repo without
+stop and raise the copyleft decision to the user (LEG-LICENSING-02) · public repo without
 LICENSE → add MIT (or chosen license) now; it applies prospectively · desktop-only font in
 a web bundle → replace with an OFL equivalent.
 
@@ -152,7 +152,7 @@ license_decisions:
 | Public repo with no LICENSE "so it's free" | Default is all-rights-reserved — nobody can legally use it | Explicit MIT via DEV-BOOTSTRAP (LEG-LICENSING-03) |
 | Treating npm `license` field as ground truth | Metadata lies; transitive deps differ | Scanner over the installed tree |
 | Bundling a "free" font into a web app | Free-for-desktop ≠ web embedding rights | Check terms; prefer OFL (LEG-LICENSING-04) |
-| Claude Code silently swapping in a copyleft dep | Liability decision made by an agent | Flag and stop for James (LEG-LICENSING-02) |
+| Claude Code silently swapping in a copyleft dep | Liability decision made by an agent | Flag and stop for the user (LEG-LICENSING-02) |
 
 ## References
 
@@ -165,3 +165,4 @@ license_decisions:
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

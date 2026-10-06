@@ -2,7 +2,7 @@
 id: ARC-PATTERNS
 title: Patterns & Anti-Patterns
 family: ARC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -157,8 +157,8 @@ The master table. Other ARC standards reference these by name.
 | Premature abstraction / DRY-before-3 | Base class or `utils` helper extracted at the second (or first) use | The wrong abstraction hardens and every future case gets bent to fit it | Rule of three (`ARC-MODULARITY-04`) |
 | God object | One class/module that knows everything; every change touches it; 500+ lines | Unreviewable diffs, test setup requiring the world, change amplification | Split along responsibility seams (`ARC-MODULARITY-05`) |
 | Distributed monolith | Services that must deploy together or share a database | All microservice costs, none of the independence | Real boundaries or one deployable — never the middle |
-| Resume-driven architecture | Tech chosen for novelty (Kubernetes for a cron job) | The ops burden outlives the excitement; solo dev pages himself | Boring default; one recorded innovation token (ARC-PATTERNS-01) |
-| Clever-over-clear | Dense one-liners, metaprogramming, implicit magic | The next reader — future James or an agent — burns context deciphering instead of building | Explicit, boring code; cleverness goes in the tests |
+| Resume-driven architecture | Tech chosen for novelty (Kubernetes for a cron job) | The ops burden outlives the excitement; solo dev pages themselves | Boring default; one recorded innovation token (ARC-PATTERNS-01) |
+| Clever-over-clear | Dense one-liners, metaprogramming, implicit magic | The next reader — a future maintainer or an agent — burns context deciphering instead of building | Explicit, boring code; cleverness goes in the tests |
 
 ## References
 
@@ -174,3 +174,4 @@ The master table. Other ARC standards reference these by name.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

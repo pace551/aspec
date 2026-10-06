@@ -2,7 +2,7 @@
 id: INF-CONTAINERS
 title: Containers & ECS
 family: INF
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -150,7 +150,7 @@ toil with no upside at this scale. Fargate task sizes are chosen deliberately �
 at 0.25 vCPU/512 MB (ARM64/Graviton for the better price-performance) and resize on
 observed usage; oversizing is a silent recurring cost (OPS-FINOPS). Scale-to-zero,
 event-shaped work belongs on Lambda instead (INF-SERVERLESS-01). Deviating to EC2
-hosts (GPU, special AMI) is a cost decision escalated to James (C6).
+hosts (GPU, special AMI) is a cost decision escalated to the user (C6).
 
 ### INF-CONTAINERS-08 — Each service MUST have its own least-privilege task role
 
@@ -240,3 +240,4 @@ plus `awslogs` logConfiguration, `readonlyRootFilesystem`, a `healthCheck`, and
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.2** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

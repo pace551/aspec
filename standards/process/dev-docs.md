@@ -2,7 +2,7 @@
 id: DEV-DOCS
 title: Documentation & ADRs
 family: DEV
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -49,7 +49,7 @@ last_review: 2026-07-22
 
 ## Abstract
 
-Documentation here serves two readers: future-James and the implementing agent. The
+Documentation here serves two readers: the future maintainer and the implementing agent. The
 README answers what/run/test/config in one screen; `CLAUDE.md` is the agent's operating
 manual and staying true is part of "done"; hard-to-reverse decisions get an ADR at T2+
 (the test: *would future-me ask why?*); everything lives in the repo, versioned with the
@@ -64,7 +64,7 @@ code it describes; comments explain constraints and why, never narrate what. Fil
 
 Minimum viable README, in one screen: one paragraph of what and why; the run command(s),
 copy-pasteable; the test command; where configuration lives (`settings.yaml`, env vars
-via `.env.example`). Anything beyond that is optional. The audience is future-James six
+via `.env.example`). Anything beyond that is optional. The audience is the future maintainer six
 months out, who remembers nothing — if he'd have to open source files to answer one of
 the four questions, the README is below minimum.
 
@@ -177,3 +177,4 @@ future-me would absolutely ask about.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

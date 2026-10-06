@@ -2,7 +2,7 @@
 id: OPS-INCIDENT
 title: Incident Response
 family: OPS
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -59,11 +59,11 @@ failure (C9); the only unforgivable one is the silent kind.
 
 **Tiers**: T1–T2 advisory · T3–T4 required — **Layer**: A (attestation)
 
-"User-facing" = anyone other than James was blocked, served errors, or had data
+"User-facing" = anyone other than the user was blocked, served errors, or had data
 exposed. The note is five headings, half a page: **what** happened, **impact** (who/how
 long/how bad), **timeline** (detect → mitigate → resolve, with the detection source —
 did `OPS-ALERTS` catch it or did a human?), **root cause**, **prevention** (concrete
-change, owner = James, done-by date). Blameless is trivially true solo but still
+change, owner = the user, done-by date). Blameless is trivially true solo but still
 binding on the write-up: causes are systemic ("no staging gate"), not character flaws
 ("was careless"). Notes land in the Obsidian vault inbox via `/harvest-learnings` so
 `/evolve-standards` can promote recurring causes into standards (C10). T1/T2:
@@ -180,3 +180,4 @@ Prevention: migrate step moved ahead of deploy in workflow — done, PR #41
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

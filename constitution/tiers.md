@@ -9,9 +9,9 @@ tier tags override nothing in the Constitution, which always applies.
 
 | Tier | Name | Definition | Failure cost | Posture |
 |---|---|---|---|---|
-| **T1** | Personal | Only James runs it; localhost or local files | Minutes of annoyance | Constitution + secrets + git hygiene hard; everything else advisory. Git hooks; CI not required. |
+| **T1** | Personal | Only the user runs it; localhost or local files | Minutes of annoyance | Constitution + secrets + git hygiene hard; everything else advisory. Git hooks; CI not required. |
 | **T2** | Research | Outputs inform real decisions (money, health, publication); conclusion-correctness matters more than uptime | A wrong decision made on bad analysis | T1 + test-first analytical core, data provenance, leakage guards, reproducibility (pinned deps, seeds, recorded data versions). |
-| **T3** | Product | Internet-exposed and/or has users other than James; no revenue | Other people blocked, data exposed, reputation | Full SEC/OPS/UX required; CI mandatory; staging environment; a11y and performance gates. |
+| **T3** | Product | Internet-exposed and/or has users other than the user; no revenue | Other people blocked, data exposed, reputation | Full SEC/OPS/UX required; CI mandatory; staging environment; a11y and performance gates. |
 | **T4** | Commercial | Money changes hands, third-party PII is held, or it's publicly launched as a product | Legal/financial liability | T3 + legal baseline, retention/deletion, tested-restore DR, license audit, MFA on all accounts, DMARC. |
 
 ## Classification rubric
@@ -21,11 +21,11 @@ Apply top-down; **first match wins**:
 1. Takes payment, is sold, or stores PII of people outside the household beyond an email
    address → **T4**
 2. Runs as a **deployed service** beyond localhost with internet reach, OR people other
-   than James use the running system → **T3**
+   than the user use the running system → **T3**
 3. Primary output is analysis, a model, a report, or a decision input → **T2**
 4. Otherwise → **T1**
 
-Carve-out — **published libraries/packages** (code others run, no service James operates):
+Carve-out — **published libraries/packages** (code others run, no service the user operates):
 classify by rubric lines 3-4 as usual, but supply-chain families (SEC, TST, DEV, LEG
 licensing) apply at T3 weight. Service-only standards (staging, a11y, perf budgets,
 observability) don't apply — there is no deployment to govern.
@@ -44,8 +44,8 @@ Rules of application:
 Re-run `/govern` (which will re-classify and diff the standard set) when any of these happen:
 
 - A T1 tool gets a URL, a second user, or starts acting on external parties (emails
-  someone other than James, posts to third-party systems) → likely T3. A cron job whose
-  outputs stay with James (e.g. a report emailed to himself) stays T1/T2 — automation
+  someone other than the user, posts to third-party systems) → likely T3. A cron job whose
+  outputs stay with the user (e.g. a report emailed to themselves) stays T1/T2 — automation
   alone doesn't escalate; audience does.
 - A T2 analysis becomes a dashboard or scheduled report someone else consumes → T3
 - A T3 product takes its first payment or stores its first third-party record → T4

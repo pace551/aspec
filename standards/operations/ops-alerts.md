@@ -2,7 +2,7 @@
 id: OPS-ALERTS
 title: Monitoring & Alerting
 family: OPS
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -58,7 +58,7 @@ last_review: 2026-07-22
 
 ## Abstract
 
-Solo-dev alerting: every alert is a page to James's phone or inbox, so the bar is high
+Solo-dev alerting: every alert is a page to the user's phone or inbox, so the bar is high
 and the set is small. Alert only on user-facing symptoms — availability, error rate,
 latency SLO breach, budget — never on internal causes. Every alert is actionable and
 carries a "check this first" note; anything that fires weekly without action gets fixed
@@ -83,7 +83,7 @@ absorb noise: one person receives everything, so everything must deserve interru
 
 **Tiers**: T1–T2 advisory · T3–T4 required — **Layer**: A (attestation)
 
-An alert exists only if there is an action James would take on receiving it. Each alert
+An alert exists only if there is an action the user would take on receiving it. Each alert
 definition carries (in the alarm description or a `RUNBOOK.md` entry) one or two lines
 of "check first": the dashboard link, the log query, the likely culprits. Writing that
 note at creation time is the test — if nothing concrete can be written, the alert is a
@@ -116,7 +116,7 @@ email subscription (free, no PagerDuty at this scale). T4 adds a second channel
 
 The mortgage-scheduler lesson: a launchd job died for weeks and nothing said so. Every
 launchd/cron/EventBridge job runs through a wrapper that (a) captures exit status,
-(b) on failure sends a notification James actually sees (email or macOS notification),
+(b) on failure sends a notification the user actually sees (email or macOS notification),
 and (c) logs the outcome either way (`OPS-OBS`). For jobs whose *absence* is the failure
 mode, prefer a dead-man's switch (healthchecks.io free tier: job pings on success; the
 service alerts on silence). Concurrency/overlap discipline for the jobs themselves is
@@ -196,3 +196,4 @@ resource "aws_cloudwatch_metric_alarm" "error_rate" {
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

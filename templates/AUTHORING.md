@@ -44,7 +44,7 @@ calibration bar for depth, tone, and length — match them.
    `aws`, `web` (any browser-facing stack). Cross-cutting standards usually say `all`.
 9. **Version `1.0.0`, status `active`, `last_review: 2026-07-22`**, changelog entry
    `- **1.0.0** (2026-07-22) — Initial version.`
-10. **House context to honor**: solo developer (James), macOS, AWS as the cloud, GitHub +
+10. **House context to honor**: solo developer, macOS, AWS as the cloud, GitHub +
     Actions, Claude Code as the implementing agent, free/open tooling by default
     (Constitution C6). Personal-scale pragmatism beats enterprise ceremony — every rule
     must earn its weight at the tier where it's required.

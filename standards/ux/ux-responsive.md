@@ -2,7 +2,7 @@
 id: UX-RESPONSIVE
 title: Responsive Design
 family: UX
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -56,7 +56,7 @@ horizontal scrolling on the phone where real users actually are. Compliance in o
 CSS is written mobile-first, every layout is eyeballed at 375/768/1280px before "done", the
 body never scrolls sideways (wide content scrolls inside its own container), touch targets
 are ≥44px, dimensions are relative units on flexbox/grid, and images reserve their space.
-Advisory at T1/T2 where James is the only viewer; required at T3+ where a phone-first
+Advisory at T1/T2 where the user is the only viewer; required at T3+ where a phone-first
 stranger is the first impression.
 
 ## Normative Rules
@@ -178,3 +178,4 @@ img { max-width: 100%; height: auto; }
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

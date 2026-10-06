@@ -11,7 +11,7 @@ waivers:
       and what would unblock it.
     expires: 2026-10-01           # mandatory; ≤180 days out
     granted: 2026-07-22
-    granted_by: James             # waivers are a human decision, never self-granted by an agent
+    granted_by: user             # waivers are a human decision, never self-granted by an agent
 ```
 
 Policy:

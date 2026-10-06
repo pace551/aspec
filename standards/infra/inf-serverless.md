@@ -2,7 +2,7 @@
 id: INF-SERVERLESS
 title: Serverless (Lambda + API Gateway)
 family: INF
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -32,7 +32,7 @@ verification:
     layer: G
     rules: [INF-SERVERLESS-04]
   - cmd: "sh -c '! git grep -q \"aws_lambda_provisioned_concurrency_config\" -- \"*.tf\"'"
-    expect: "exit 0 — no provisioned concurrency; presence requires James's recorded consent (waiver)"
+    expect: "exit 0 — no provisioned concurrency; presence requires the user's recorded consent (waiver)"
     layer: G
     rules: [INF-SERVERLESS-07]
   - cmd: "attest: each function does one job; any lambdalith is a framework adapter (e.g. FastAPI+Mangum), not an ad-hoc router"
@@ -74,7 +74,7 @@ one breath: functions are declared in tofu (no second SAM/CDK stack), each does 
 job, memory and timeout are chosen not defaulted, async paths have failure
 destinations, handlers tolerate duplicate delivery, config comes from SSM, logs are
 structured JSON, and public endpoints sit behind a throttled HTTP API. Provisioned
-concurrency is a recurring cost and needs James's explicit consent. Architecture
+concurrency is a recurring cost and needs the user's explicit consent. Architecture
 defaults are advisory; the safety rules (failure destinations, idempotency, deliberate
 limits) harden at T2+.
 
@@ -143,7 +143,7 @@ stable event/business id (conditional writes, upsert semantics, dedup table per
 ARC-IDEMPOTENCY) so a retry is a no-op, not a double-charge or double-email. "It
 hasn't duplicated yet" is not a design.
 
-### INF-SERVERLESS-07 — Provisioned concurrency MUST NOT be enabled without James's recorded consent
+### INF-SERVERLESS-07 — Provisioned concurrency MUST NOT be enabled without the user's recorded consent
 
 **Tiers**: all required — **Layer**: G
 
@@ -198,7 +198,7 @@ the C6 budget (SEC-WEB rate-limit posture).
 **Remediation:** parallel SAM/CDK stack → port to the tofu roots (INF-TF), delete the
 second stack; a root `template.yml` that is not SAM → rename it (or waive with reason)
 · missing timeout/memory → set explicit values with a sizing comment · provisioned
-concurrency check fails → either remove the resource or record James's consent as a
+concurrency check fails → either remove the resource or record the user's consent as a
 waiver with the monthly cost · no failure destination → add
 `aws_lambda_function_event_invoke_config` with an SQS `on_failure` + depth alarm.
 
@@ -268,3 +268,4 @@ resource "aws_apigatewayv2_stage" "api" {
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.2** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

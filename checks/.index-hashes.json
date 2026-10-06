@@ -8,16 +8,16 @@
     "version": "1.0.0"
   },
   "AI-SECURITY": {
-    "hash": "6b8eaa9a441bad97deea9e02112bee801f247b3f708042b91c24e0afca4fae0c",
-    "version": "1.0.0"
+    "hash": "88c4b53f0a18ec82340a33f5aebf92db05ebc29a866edf24c7f15f6870efb226",
+    "version": "1.0.1"
   },
   "ARC-API": {
-    "hash": "f4357e74f5fab44bea243997ff8bca1dd0bb2139be5266cb6aa40fe9c46e4cb1",
-    "version": "1.0.0"
+    "hash": "2bfef93e96399a042cd9462305414071793a0da96b64531bb9da0336e34ca703",
+    "version": "1.0.1"
   },
   "ARC-CONCURRENCY": {
-    "hash": "02aa9c281015d7476704c25c8c08dd21902296bfc78802406860357b08ea75af",
-    "version": "1.0.0"
+    "hash": "55095c827514ff8b0ddbd9077f86db6c79bc87d3461abec2afa7b07071e7cdbb",
+    "version": "1.0.1"
   },
   "ARC-CONFIG": {
     "hash": "7d5c4928253263fd0d52389204d33f27ef21697d7e68c7fc57ed663b7452921c",
@@ -36,20 +36,20 @@
     "version": "1.0.0"
   },
   "ARC-PATTERNS": {
-    "hash": "1806a674cc2ee3cd3a490ddde75ce59b223311e4ea003968a529cab091abd318",
-    "version": "1.0.0"
+    "hash": "38d74eebbdc373cbeafdc4017c9241cd8a6eea1ba19680bab4ab5d8fdedc47bf",
+    "version": "1.0.1"
   },
   "DATA-MODELING": {
     "hash": "de57ce8e880994df0736d54946028e3f210af140fc201eece8d84de92a3dc5c0",
     "version": "1.0.0"
   },
   "DATA-PRIVACY": {
-    "hash": "bd2dc29ce85cdc49ee5d3c426b8473eb9d94dba7bc9013a6dd3af016e57e2935",
-    "version": "1.0.0"
+    "hash": "bda5c7940e1c875e983c001a8eede9a2339cbbb3395e6eb64084af2032d569c2",
+    "version": "1.0.1"
   },
   "DATA-RETENTION": {
-    "hash": "c470876752eaf79bc05feb15203361ac651f8fb9134fa8f396981ea5aaa57a29",
-    "version": "1.0.0"
+    "hash": "6888331edc2ee56b643ab280389f5ceda13a4dbfeaebe9cf5b5f92e06688afae",
+    "version": "1.0.1"
   },
   "DEV-BOOTSTRAP": {
     "hash": "38c2694a118c1140c7da22416944f3c3a242d03227b09bfbecaee98dabed8a99",
@@ -64,48 +64,48 @@
     "version": "1.0.0"
   },
   "DEV-DOCS": {
-    "hash": "cb9b24b1505020f24253eaa9cc4319e9930dc798bfaaba4663c5dd3137e507e3",
-    "version": "1.0.0"
+    "hash": "5a55666f5b46beca457d7cc6885c7489c8474c795bc14edec1aac3bfa61a400e",
+    "version": "1.0.1"
   },
   "DEV-GIT": {
-    "hash": "a358088d49ade65fc19b4d2853f144c8259984ebc7c12418ff10d6acc04063c5",
-    "version": "1.0.0"
+    "hash": "e8c21d71c1d65fbb8eee0e1c11c7d06f2a558713a3eb9b90f6cc6cbfa9470fb7",
+    "version": "1.0.1"
   },
   "DEV-REVIEW": {
     "hash": "989129878090003d08181291477825276bb1e201f6f95ef229797824ef8fa0b3",
     "version": "1.0.0"
   },
   "INF-CONTAINERS": {
-    "hash": "44aac3406f1fa79ef43952a5866131634d1f57c86c217e983f5d240f97478422",
-    "version": "1.0.1"
+    "hash": "a16c82dfda486c771fb7a18b39a0f307943074a9dbdf06ebb8c138f9735674f0",
+    "version": "1.0.2"
   },
   "INF-EDGE": {
-    "hash": "c24ae6491beaa0de45ed295152d347d981d96df6cf2a92cffed603875e45bf65",
-    "version": "1.0.0"
-  },
-  "INF-ENVS": {
-    "hash": "dabfeccdadcebc23062d38a868dc8b4a1997cdec35d0bb5266f8d6e465ed4247",
-    "version": "1.0.0"
-  },
-  "INF-SERVERLESS": {
-    "hash": "2fd7ca1671964b2907658845c2820c58a4ca2cf83667ae6f3b0694d73f2797d1",
+    "hash": "a1826d6fd0622672b261e72cffba4fcb03eb67c7b585a952e5acab91444c9511",
     "version": "1.0.1"
   },
+  "INF-ENVS": {
+    "hash": "792e9e52d7d11cf14c959aaabd76afa162a9eb5c6f2096ed23f352527922cfab",
+    "version": "1.0.1"
+  },
+  "INF-SERVERLESS": {
+    "hash": "06c80c1a7507356ad7be9408f571132a47c92a85f849824a01a2d94c4b32233c",
+    "version": "1.0.2"
+  },
   "INF-TF": {
-    "hash": "165cf736cc33d9ca79c7aea4b27800a98e8469ae8cd029eb277d11767ce08e15",
-    "version": "1.0.0"
+    "hash": "274394e007624c6c77fdc515229e151d2a94846de5500a99b3510f0ca1da4c09",
+    "version": "1.0.1"
   },
   "LEG-COMMERCIAL": {
-    "hash": "5795ea67f005a07aa62ee4e59ffced2d2835ad23ba55f0947f87a2498ee4552a",
-    "version": "1.0.0"
+    "hash": "054288e7cccb3ede1abf571b49347832792d0582618bad337bbe877c4a4f204c",
+    "version": "1.0.1"
   },
   "LEG-LICENSING": {
-    "hash": "d618e069f5ef7b4284b4d8480b1875d724ecee6e9c48a9ee1800674851796f20",
-    "version": "1.0.0"
+    "hash": "bbd0a759948378d45b3f289ad7e2e1457d80aacc421e706fba669e43b595e6c5",
+    "version": "1.0.1"
   },
   "OPS-ALERTS": {
-    "hash": "de6f1aaff05c986b88ae1c07606f112333532d1acc5d88a878a3a2183971be71",
-    "version": "1.0.0"
+    "hash": "f67af9ca52a099b13ec900b3cc3b033407939e8ade05ef0afc3c53eb01d4ee80",
+    "version": "1.0.1"
   },
   "OPS-BACKUP": {
     "hash": "96afb5fd3913bd4a402b8e1f6a6f6086aeb585c2346cc6f280dac43e59a34a40",
@@ -120,8 +120,8 @@
     "version": "1.0.0"
   },
   "OPS-INCIDENT": {
-    "hash": "f936976dee2e7e522cbb6e9e100373bec7c3ae71b03952a7a51ed25e0a422fee",
-    "version": "1.0.0"
+    "hash": "47fa826084a01a784ade26bf9853cdbcc940529b4de791db659e7822ed78a74d",
+    "version": "1.0.1"
   },
   "OPS-OBS": {
     "hash": "b79add10cc4c5cc6d541d9692e4e299e136890c4e36408934bb8ac6f41a23377",
@@ -136,8 +136,8 @@
     "version": "1.0.0"
   },
   "SEC-AUTHN": {
-    "hash": "8fdeddd75ee76cd34ed8dd2a69ed271fdc41b8adb001451c55906d8c803bcb4a",
-    "version": "1.0.0"
+    "hash": "69af94c21f8d5c3e5d5368ddfbbc52e57e0240319aff70e072ec64544347b2ef",
+    "version": "1.0.1"
   },
   "SEC-AUTHZ": {
     "hash": "0390c811d4349d9627baa1e0ba6b30ba7866b49cc4500b2f32db1dc155463039",
@@ -248,20 +248,20 @@
     "version": "1.0.0"
   },
   "UX-EMAIL": {
-    "hash": "7b2fe0367bb0e83cc1eca19bca33d42b1c7f3342bb4bb6d40011556b012881b5",
-    "version": "1.0.0"
+    "hash": "5ed83232c2aa0390784aa8d29c65c0f9d0fbce8488f06582a2295c953d6063f4",
+    "version": "1.0.1"
   },
   "UX-FORMS": {
-    "hash": "a2c82c1bf7ecaaf62ea386c8ecd6bd9fa888db4cdc212bfc2d8d106e38cf0aee",
-    "version": "1.0.0"
+    "hash": "7187939c5f1fbd7e3eee02175002aee867ff37e92b2821ed44fed43343cb1de8",
+    "version": "1.0.1"
   },
   "UX-I18N": {
     "hash": "455597343761c9ae8e9d9066ee4031a8c942c5070264942080c18d3ee485769c",
     "version": "1.0.0"
   },
   "UX-RESPONSIVE": {
-    "hash": "4c424e12caee5b5e128648adbc36e5d61442511c0d87b7c701e803dde9167a29",
-    "version": "1.0.0"
+    "hash": "876356cdb7d9f6467ab9134e963ce893bdd18f3bd54fcc2b022eba1b412397c3",
+    "version": "1.0.1"
   },
   "UX-SEO": {
     "hash": "5bfd8af7186a6f3c774ffdf5a0210c1a7d8b9cca39ba3c20a7d4cbf4f4108954",

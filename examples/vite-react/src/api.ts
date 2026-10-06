@@ -10,7 +10,7 @@ const services: Service[] = [
   { id: "queue", name: "Job queue", status: "down" },
 ];
 
-let profile: Profile = { displayName: "James", email: "james@example.com" };
+let profile: Profile = { displayName: "Test User", email: "user@example.com" };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

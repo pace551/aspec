@@ -88,7 +88,7 @@ standards:
   - {id: SEC-SECRETS, version: 1.0.1}
   - {id: STK-PY, version: 1.0.1}
 waivers:
-  - {rule_id: STK-PY-05, reason: "fixture: expired waiver test", expires: 2026-07-10, granted: 2026-06-01, granted_by: James}
+  - {rule_id: STK-PY-05, reason: "fixture: expired waiver test", expires: 2026-07-10, granted: 2026-06-01, granted_by: user}
 last_verified: null
 attestations: []
 ```

@@ -2,7 +2,7 @@
 id: DEV-GIT
 title: Git & PR Conventions
 family: DEV
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -116,7 +116,7 @@ allows it.
 
 The PR is not ceremony; it is the review surface: `/code-review` and `/security-review`
 (DEV-REVIEW) attach findings to it, CI gates it (DEV-CI), and the description archives
-the evidence. Solo development doesn't change that — future-James is the second party.
+the evidence. Solo development doesn't change that — the future maintainer is the second party.
 At T4, GitHub branch protection with required status checks makes this mechanical
 (DEV-CI-05). At T1/T2, committing to `main` is allowed but PRs are still the default for
 anything non-trivial.
@@ -204,3 +204,4 @@ Bug #12 — payment marked late despite the 3-day grace window.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

@@ -17,7 +17,7 @@ attestations: []
 
 ## Notes
 
-Worked example for the governance framework (STK-RUST). T1 by rubric line 4: only James
+Worked example for the governance framework (STK-RUST). T1 by rubric line 4: only the user
 runs it, local files only, no service, no external side effects. Bootstrapped from
 `templates/scaffolds/rust/` on 2026-07-22. Not yet locally verified (no cargo on the
 authoring machine) — run `scripts/lint.sh` and `scripts/test.sh` after installing the

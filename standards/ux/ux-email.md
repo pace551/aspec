@@ -2,7 +2,7 @@
 id: UX-EMAIL
 title: Transactional Email & Notifications
 family: UX
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -68,7 +68,7 @@ effect to fire by accident. Compliance in one breath: SES as the house sender; t
 authenticated with SPF + DKIM + DMARC; transactional-only unless someone explicitly opted
 into more; every automated mail carries a plain-text part, a working unsubscribe for
 non-critical sends, and a monitored reply-to; templates live in the repo; failures log and
-retry idempotently; and dev/staging can never email a real user. James-only notification
+retry idempotently; and dev/staging can never email a real user. User-only notification
 mail at T1/T2 skips the ceremony — but not C7's first-send approval, and never the
 no-real-users rule.
 
@@ -119,7 +119,7 @@ notifications) carries a working one-click unsubscribe or per-category mute, hon
 immediately, plus `List-Unsubscribe`/`List-Unsubscribe-Post` headers; security-critical
 mail (resets, receipts, breach notices) is exempt. `Reply-To` reaches a mailbox somebody
 reads — `noreply@` is telling users their response is unwelcome while support requests
-bounce into the void. **James-only exemption**: T1/T2 automation that mails only James
+bounce into the void. **User-only exemption**: T1/T2 automation that mails only the user
 (cron reports, alerts to breathemoto@gmail.com) skips this rule's ceremony entirely — but
 not C7's one-time first-send approval, and never UX-EMAIL-07.
 
@@ -204,7 +204,7 @@ def send_receipt(order):
 ```
 
 Dev config: `EMAIL_MODE=dry-run` renders and logs both parts; no SES credentials exist in
-that environment (UX-EMAIL-07). A T1 cron report to James: SES sandbox, own address
+that environment (UX-EMAIL-07). A T1 cron report to the user: SES sandbox, own address
 verified, one-line C7 approval in `GOVERNANCE.md` — nothing more.
 
 ## Anti-Patterns
@@ -234,3 +234,4 @@ verified, one-line C7 approval in `GOVERNANCE.md` — nothing more.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

@@ -51,8 +51,8 @@ describe("Settings", () => {
     const user = userEvent.setup();
     renderWithQuery(<Settings />);
 
-    await user.type(screen.getByLabelText("Display name"), "James F");
-    await user.type(screen.getByLabelText("Email"), "james@example.com");
+    await user.type(screen.getByLabelText("Display name"), "Test User");
+    await user.type(screen.getByLabelText("Email"), "user@example.com");
     await user.click(screen.getByRole("button", { name: "Save" }));
 
     expect(await screen.findByRole("status")).toHaveTextContent("Saved.");
