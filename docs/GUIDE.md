@@ -128,7 +128,7 @@ standards:                        # THE PIN SET — versions this project is gov
   - {id: SEC-SECRETS, version: 1.0.1}
   - {id: STK-PY, version: 1.0.1}
 waivers:                          # rule-scoped exemptions, expiry MANDATORY (≤180d)
-  - {rule_id: STK-PY-05, reason: "CVE unreachable…", expires: 2026-10-01, granted_by: James}
+  - {rule_id: STK-PY-05, reason: "CVE unreachable…", expires: 2026-10-01, granted_by: user}
 external_action_approvals:        # your consent record for emails/deploys/API calls (C7)
 pii_inventory: n/a                # T3+: what personal data lives where
 last_verified: 2026-07-22         # stamped by a fully-green /verify-compliance

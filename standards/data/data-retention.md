@@ -2,7 +2,7 @@
 id: DATA-RETENTION
 title: Retention & Lifecycle
 family: DATA
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -58,7 +58,7 @@ Compliance in one breath: at T3+ `GOVERNANCE.md` records how long each category 
 data, logs, backups, analytics, uploads), log groups have explicit expiry instead of
 never-expire, backup lifecycle matches the written policy, and at T4 deletion-on-request
 actually works end-to-end, backups included via a written strategy note. At T1/T2,
-cheap-storage hoarding of James's own data is fine — the rule is that at T3+ the choice is
+cheap-storage hoarding of the user's own data is fine — the rule is that at T3+ the choice is
 written down, not that hoarding stops.
 
 ## Normative Rules
@@ -71,7 +71,7 @@ written down, not that hoarding stops.
 entry's `retention` field here — `DATA-PRIVACY`), logs, backups, analytics/derived data,
 uploads/artifacts. "Forever" and "until the disk fills" are acceptable answers when
 consciously chosen and written; only the *unwritten* default is a violation. Carve-out:
-hoarding James's own data at T1/T2 on cheap storage is explicitly sanctioned — the
+hoarding the user's own data at T1/T2 on cheap storage is explicitly sanctioned — the
 obligation is the writing-down, and it starts at T3.
 
 ### DATA-RETENTION-02 — Log retention MUST be explicitly set, never never-expire
@@ -161,3 +161,4 @@ aws logs put-retention-policy --log-group-name /app/prod --retention-in-days 90
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

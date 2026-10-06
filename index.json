@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-07-22",
+  "generated": "2026-10-06",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -77,7 +77,7 @@
       "id": "AI-SECURITY",
       "title": "LLM Security",
       "family": "AI",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -104,13 +104,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/ai/ai-security.md",
-      "tokens_est": 2288
+      "tokens_est": 2323
     },
     {
       "id": "ARC-API",
       "title": "API Design",
       "family": "ARC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -139,13 +139,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-api.md",
-      "tokens_est": 2356
+      "tokens_est": 2390
     },
     {
       "id": "ARC-CONCURRENCY",
       "title": "Concurrency & Background Jobs",
       "family": "ARC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -177,7 +177,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-concurrency.md",
-      "tokens_est": 2387
+      "tokens_est": 2419
     },
     {
       "id": "ARC-CONFIG",
@@ -324,7 +324,7 @@
       "id": "ARC-PATTERNS",
       "title": "Patterns & Anti-Patterns",
       "family": "ARC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -354,7 +354,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-patterns.md",
-      "tokens_est": 2229
+      "tokens_est": 2264
     },
     {
       "id": "DATA-MODELING",
@@ -393,7 +393,7 @@
       "id": "DATA-PRIVACY",
       "title": "Privacy & PII",
       "family": "DATA",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -420,13 +420,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/data/data-privacy.md",
-      "tokens_est": 1982
+      "tokens_est": 2016
     },
     {
       "id": "DATA-RETENTION",
       "title": "Retention & Lifecycle",
       "family": "DATA",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -453,13 +453,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/data/data-retention.md",
-      "tokens_est": 1848
+      "tokens_est": 1882
     },
     {
       "id": "INF-CONTAINERS",
       "title": "Containers & ECS",
       "family": "INF",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -489,13 +489,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-containers.md",
-      "tokens_est": 3023
+      "tokens_est": 3056
     },
     {
       "id": "INF-EDGE",
       "title": "Networking & Edge",
       "family": "INF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -530,13 +530,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-edge.md",
-      "tokens_est": 2767
+      "tokens_est": 2802
     },
     {
       "id": "INF-ENVS",
       "title": "Environments & Promotion",
       "family": "INF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -567,13 +567,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-envs.md",
-      "tokens_est": 2958
+      "tokens_est": 2992
     },
     {
       "id": "INF-SERVERLESS",
       "title": "Serverless (Lambda + API Gateway)",
       "family": "INF",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -605,13 +605,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-serverless.md",
-      "tokens_est": 3336
+      "tokens_est": 3371
     },
     {
       "id": "INF-TF",
       "title": "Terraform/OpenTofu on AWS",
       "family": "INF",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -644,13 +644,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-tf.md",
-      "tokens_est": 3014
+      "tokens_est": 3048
     },
     {
       "id": "LEG-COMMERCIAL",
       "title": "Commercial Baseline",
       "family": "LEG",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "n/a",
@@ -678,13 +678,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/legal/leg-commercial.md",
-      "tokens_est": 2270
+      "tokens_est": 2309
     },
     {
       "id": "LEG-LICENSING",
       "title": "Licensing",
       "family": "LEG",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -712,13 +712,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/legal/leg-licensing.md",
-      "tokens_est": 1778
+      "tokens_est": 1813
     },
     {
       "id": "OPS-ALERTS",
       "title": "Monitoring & Alerting",
       "family": "OPS",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -748,7 +748,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/operations/ops-alerts.md",
-      "tokens_est": 2127
+      "tokens_est": 2162
     },
     {
       "id": "OPS-BACKUP",
@@ -858,7 +858,7 @@
       "id": "OPS-INCIDENT",
       "title": "Incident Response",
       "family": "OPS",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -886,7 +886,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/operations/ops-incident.md",
-      "tokens_est": 2235
+      "tokens_est": 2269
     },
     {
       "id": "OPS-OBS",
@@ -1101,7 +1101,7 @@
       "id": "DEV-DOCS",
       "title": "Documentation & ADRs",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1126,13 +1126,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-docs.md",
-      "tokens_est": 2004
+      "tokens_est": 2041
     },
     {
       "id": "DEV-GIT",
       "title": "Git & PR Conventions",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1160,7 +1160,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-git.md",
-      "tokens_est": 2317
+      "tokens_est": 2352
     },
     {
       "id": "DEV-REVIEW",
@@ -1197,7 +1197,7 @@
       "id": "SEC-AUTHN",
       "title": "Authentication",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1224,7 +1224,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-authn.md",
-      "tokens_est": 2361
+      "tokens_est": 2396
     },
     {
       "id": "SEC-AUTHZ",
@@ -2177,7 +2177,7 @@
       "id": "UX-EMAIL",
       "title": "Transactional Email & Notifications",
       "family": "UX",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2206,13 +2206,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/ux/ux-email.md",
-      "tokens_est": 2948
+      "tokens_est": 2981
     },
     {
       "id": "UX-FORMS",
       "title": "Forms, Validation & Feedback States",
       "family": "UX",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2243,7 +2243,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/ux/ux-forms.md",
-      "tokens_est": 2698
+      "tokens_est": 2732
     },
     {
       "id": "UX-I18N",
@@ -2283,7 +2283,7 @@
       "id": "UX-RESPONSIVE",
       "title": "Responsive Design",
       "family": "UX",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2313,7 +2313,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/ux/ux-responsive.md",
-      "tokens_est": 2082
+      "tokens_est": 2115
     },
     {
       "id": "UX-SEO",

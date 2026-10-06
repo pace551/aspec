@@ -18,5 +18,5 @@ attestations: []
 ## Notes
 
 Worked example for the governance framework (STK-PY + SQLite pattern). T1 by rubric
-line 4: only James runs it, local files only, no service, no external side effects.
+line 4: only the user runs it, local files only, no service, no external side effects.
 Bootstrapped from `templates/scaffolds/python/` on 2026-07-22.

@@ -2,7 +2,7 @@
 id: INF-ENVS
 title: Environments & Promotion
 family: INF
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -204,7 +204,7 @@ data "aws_iam_policy_document" "gha_trust" {
       # Pin repo AND the protected environment — never repo:owner/* (INF-ENVS-03)
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:jafinch/myproj:environment:prod"]
+      values   = ["repo:example-org/myproj:environment:prod"]
     }
   }
 }
@@ -262,3 +262,4 @@ jobs:
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

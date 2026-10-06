@@ -19,7 +19,7 @@ import json
 import re
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import yaml
@@ -64,7 +64,8 @@ def main() -> int:
     if tier not in ("T1", "T2", "T3", "T4"):
         sys.exit(f"run-verification: bad tier {tier!r} in GOVERNANCE.md")
 
-    today = date.today().isoformat()
+    now = datetime.now().astimezone().date()
+    today = now.isoformat()
     waived: set[str] = set()
     results: list[dict] = []
     attestations: list[dict] = []
@@ -84,7 +85,7 @@ def main() -> int:
         else:
             waived.add(str(w.get("rule_id")))
             note = "ok"
-            if (date.fromisoformat(expires) - date.today()).days <= 14:
+            if (date.fromisoformat(expires) - now).days <= 14:
                 note = f"expires soon ({expires})"
             results.append({"kind": "waiver", "id": w.get("rule_id"),
                             "status": "WAIVED", "detail": note})
@@ -116,7 +117,7 @@ def main() -> int:
                 continue
             proc = subprocess.run(
                 ["bash", "-c", str(v["cmd"])], cwd=project, text=True,
-                capture_output=True, timeout=args.timeout,
+                capture_output=True, timeout=args.timeout, check=False,
             )
             ok = proc.returncode == 0
             if not ok:

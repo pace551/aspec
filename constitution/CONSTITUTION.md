@@ -1,6 +1,6 @@
 # The Constitution
 
-Invariants for **every** task Claude Code performs for James, regardless of tier, stack, or
+Invariants for **every** task Claude Code performs for the user, regardless of tier, stack, or
 project. This file is small on purpose: it is always loaded. Everything conditional lives in
 `standards/` and is selected per-task by `/govern` via `index.json`.
 

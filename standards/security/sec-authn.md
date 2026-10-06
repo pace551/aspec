@@ -2,7 +2,7 @@
 id: SEC-AUTHN
 title: Authentication
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -37,7 +37,7 @@ verification:
     layer: A
     rules: [SEC-AUTHN-03]
     tiers: [T3, T4]
-  - cmd: "attest: MFA is enabled on James's AWS and GitHub accounts, and (at T4) on every admin and cloud account touching this project"
+  - cmd: "attest: MFA is enabled on the user's AWS and GitHub accounts, and (at T4) on every admin and cloud account touching this project"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [SEC-AUTHN-04]
@@ -59,7 +59,7 @@ managed provider (Cognito, Auth0, Clerk, or plain OAuth "sign in with GitHub/Goo
 hand-rolling is the documented exception. Where passwords are unavoidable they are hashed
 with argon2id or bcrypt — never MD5/SHA — sessions live in httpOnly/Secure/SameSite
 cookies rather than localStorage JWTs, auth endpoints are throttled, and MFA covers all
-admin and cloud accounts at T4. James's own AWS and GitHub MFA is constitution-adjacent:
+admin and cloud accounts at T4. The user's own AWS and GitHub MFA is constitution-adjacent:
 always on, regardless of any project's tier.
 
 ## Normative Rules
@@ -101,7 +101,7 @@ expire server-side, and logout actually invalidates — a "stateless" JWT that c
 revoked before expiry is a design smell, not a feature. Exact flag reference and header
 context live in SEC-WEB-04.
 
-### SEC-AUTHN-04 — MFA MUST be enabled on James's AWS and GitHub always, and on all admin/cloud accounts at T4
+### SEC-AUTHN-04 — MFA MUST be enabled on the user's AWS and GitHub always, and on all admin/cloud accounts at T4
 
 **Tiers**: T1–T3 advisory · T4 required — **Layer**: A (attestation)
 
@@ -202,3 +202,4 @@ At T3, prefer deleting both snippets and letting Clerk/Cognito own the flow
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

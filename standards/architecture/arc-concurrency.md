@@ -2,7 +2,7 @@
 id: ARC-CONCURRENCY
 title: Concurrency & Background Jobs
 family: ARC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -155,7 +155,7 @@ The house launchd entry point (rules 01, 02, 03) — macOS-safe mkdir lock:
 
 ```bash
 #!/usr/bin/env bash
-# run_scheduled.sh — invoked by com.jafinch.myjob.plist (ARC-CONCURRENCY-01)
+# run_scheduled.sh — invoked by com.example.myjob.plist (ARC-CONCURRENCY-01)
 set -euo pipefail
 LOCK="${TMPDIR:-/tmp}/myjob.lock"
 
@@ -200,3 +200,4 @@ monitoring pass greps for missing START lines.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

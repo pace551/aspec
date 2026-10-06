@@ -2,7 +2,7 @@
 id: DATA-PRIVACY
 title: Privacy & PII
 family: DATA
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -51,7 +51,7 @@ Retires the failure mode where personal data spreads beyond where anyone decided
 be: into logs, fixtures, error reports, or LLM prompts. Compliance in one breath: at T3+
 `GOVERNANCE.md` carries a `pii_inventory` (or the explicit answer `none`), every field
 collected is needed by a live feature, and PII never leaks into observability output, test
-data, or prompts without an inventory entry. At T1/T2 James's own and household data is
+data, or prompts without an inventory entry. At T1/T2 the user's own and household data is
 personal data hygiene, not compliance theater — the carve-out relaxes the ceremony, never
 the no-logs/no-fixtures rules. Email addresses are PII. The oracle anonymization pattern is
 the house example of PII-safe LLM use.
@@ -107,7 +107,7 @@ separately banned by `SEC-SECRETS-04`.
 
 **Tiers**: T1–T2 advisory · T3–T4 n/a — **Layer**: A
 
-James's own data and household data (mortgage figures, personal finance, family calendars)
+the user's own data and household data (mortgage figures, personal finance, family calendars)
 at T1/T2 is personal data hygiene, not compliance theater: no inventory, no purpose
 audit required. The carve-out ends at the rubric line — the moment a project holds a
 third party's PII beyond an email address it is T4 territory (`tiers.md` line 1), and
@@ -175,3 +175,4 @@ log.info(f"processed for {user.email}")                      # DATA-PRIVACY-03 v
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

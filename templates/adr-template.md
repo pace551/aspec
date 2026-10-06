@@ -9,7 +9,7 @@ not an essay.
 
 - **Status**: proposed | accepted | superseded by ADR-MMMM
 - **Date**: YYYY-MM-DD
-- **Deciders**: James (+ Claude session link if useful)
+- **Deciders**: the maintainer (+ Claude session link if useful)
 
 ## Context
 

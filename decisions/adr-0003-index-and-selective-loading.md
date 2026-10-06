@@ -2,7 +2,7 @@
 
 - **Status**: accepted
 - **Date**: 2026-07-22
-- **Deciders**: James
+- **Deciders**: the maintainer
 
 ## Context
 

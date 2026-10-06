@@ -37,7 +37,7 @@ def read_coverage(root: Path) -> float | None:
     if go.exists():
         import subprocess
         out = subprocess.run(["go", "tool", "cover", f"-func={go}"],
-                             capture_output=True, text=True, cwd=root).stdout
+                             capture_output=True, text=True, cwd=root, check=False).stdout
         m = re.search(r"total:.*?([\d.]+)%", out)
         if m:
             return float(m.group(1))

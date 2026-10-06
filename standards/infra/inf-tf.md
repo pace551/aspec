@@ -2,7 +2,7 @@
 id: INF-TF
 title: Terraform/OpenTofu on AWS
 family: INF
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -70,7 +70,7 @@ last_review: 2026-07-22
 
 ## Abstract
 
-Every AWS resource James operates is declared in code and applied with OpenTofu — no
+Every AWS resource the user operates is declared in code and applied with OpenTofu — no
 ClickOps beyond the two hand-made bootstrap objects (state bucket, budget alarm).
 Compliance in one breath: `envs/dev` and `envs/prod` root modules compose shared
 `modules/`, state lives in S3 with the native lockfile and never in git, providers are
@@ -239,3 +239,4 @@ data "aws_ssm_parameter" "api_key" {
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

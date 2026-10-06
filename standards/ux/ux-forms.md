@@ -2,7 +2,7 @@
 id: UX-FORMS
 title: Forms, Validation & Feedback States
 family: UX
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -76,7 +76,7 @@ whatever the framework happens to render:
 - **Loading**: skeleton (preferred for content) or spinner (for actions), with the
   triggering control disabled (UX-FORMS-03). No layoutless flash, no frozen UI.
 - **Empty**: "no items yet" plus what to do about it (a CTA or one-line explanation).
-  A blank region is indistinguishable from a bug — to the user *and* to future James.
+  A blank region is indistinguishable from a bug — to the user *and* to a future maintainer.
 - **Error**: what happened and how to recover (retry, edit input, contact route). Never a
   raw exception, stack trace, or bare status code — `ARC-ERRORS` owns the mapping from
   internal errors to safe user-facing messages; this rule owns that a designed surface for
@@ -223,3 +223,4 @@ your first above"), and `error` (retry button) as explicit branches.
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

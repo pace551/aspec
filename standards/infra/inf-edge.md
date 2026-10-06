@@ -2,7 +2,7 @@
 id: INF-EDGE
 title: Networking & Edge
 family: INF
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -36,7 +36,7 @@ verification:
     layer: G
     rules: [INF-EDGE-06]
   - cmd: "sh -c '! git grep -q \"aws_nat_gateway\" -- \"*.tf\"'"
-    expect: "exit 0 — no NAT gateway; presence requires James's recorded consent (waiver)"
+    expect: "exit 0 — no NAT gateway; presence requires the user's recorded consent (waiver)"
     layer: G
     rules: [INF-EDGE-07]
   - cmd: "attest: public dns records live in a route53 hosted zone managed by tofu"
@@ -70,7 +70,7 @@ last_review: 2026-07-22
 
 ## Abstract
 
-How traffic reaches the things James deploys: Route53 for DNS, ACM for certificates
+How traffic reaches the things the user deploys: Route53 for DNS, ACM for certificates
 that renew themselves, CloudFront in front of anything public (with WAF attached at
 T4), S3 that is never public directly, security groups that admit only 443/80 at the
 edge, and SSH replaced by SSM Session Manager. The standing bias is
@@ -142,7 +142,7 @@ on the rare EC2 box goes through SSM Session Manager (IAM-authed, MFA-able, logg
 no keypair files, no open port). Egress SHOULD also be scoped on T4 services holding
 sensitive data.
 
-### INF-EDGE-07 — Prefer serverless/managed designs; a NAT gateway requires James's recorded consent
+### INF-EDGE-07 — Prefer serverless/managed designs; a NAT gateway requires the user's recorded consent
 
 **Tiers**: all required — **Layer**: G
 
@@ -247,3 +247,4 @@ data "aws_iam_policy_document" "site_read" {
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

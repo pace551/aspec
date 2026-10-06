@@ -2,7 +2,7 @@
 id: ARC-API
 title: API Design
 family: ARC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -50,7 +50,7 @@ verification:
     layer: A
     rules: [ARC-API-06]
     tiers: [T3, T4]
-  - cmd: "attest: any non-REST (RPC-ish) interface is internal-only with no consumer other than James"
+  - cmd: "attest: any non-REST (RPC-ish) interface is internal-only with no consumer other than the user"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [ARC-API-07]
@@ -64,7 +64,7 @@ last_review: 2026-07-22
 REST-by-default conventions for any HTTP interface: plural-noun resources, `/v1` path
 versioning, RFC 9457 `problem+json` errors, cursor pagination in a consistent envelope,
 `Idempotency-Key` on side-effecting endpoints, and an OpenAPI spec generated from code.
-Required once an API has consumers other than James (T3+), where every inconsistency
+Required once an API has consumers other than the user (T3+), where every inconsistency
 becomes someone else's workaround. At T1/T2 the ceremony is advisory and internal tools
 MAY stay RPC-ish — the standard's job there is to keep accidental APIs from fossilizing
 into unfixable ones.
@@ -203,3 +203,4 @@ async def list_invoices(cursor: str | None = None, limit: int = 50) -> dict:
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

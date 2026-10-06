@@ -17,6 +17,6 @@ attestations: []
 
 ## Notes
 
-Worked example for the governance framework (STK-TS). T1 by rubric line 4: only James
+Worked example for the governance framework (STK-TS). T1 by rubric line 4: only the user
 runs it, local files only, no service, no external side effects. Bootstrapped from
 `templates/scaffolds/typescript/` on 2026-07-22.

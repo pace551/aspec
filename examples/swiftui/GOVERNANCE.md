@@ -21,7 +21,7 @@ attestations:
 
 ## Notes
 
-Worked example for STK-SWIFT. T1 by rubric line 4: a local library only James builds.
+Worked example for STK-SWIFT. T1 by rubric line 4: a local library only the user builds.
 Deliberate trim per STK-SWIFT-06: no hosted CI — verification is
 `checks/stk-swift-verify.sh` (`swift test`). On this machine (Command Line Tools only,
 no Xcode) the toolchain ships no XCTest/Testing modules: `swift build` is green, and
