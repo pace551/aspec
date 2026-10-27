@@ -18,6 +18,8 @@ carry their own per-file changelogs.
   `postgres` used to omit the always-required STK-PG. The canonical list moves to
   `checks/stack-keys.json` (shared by lint and the selector); /govern's
   stack-detection step now names the exact `postgresql`/`dynamodb` keys.
+- Framework CI pins ruff (0.17.1) so lint rules can't change between runs; an
+  unpinned install picked up new default rules mid-PR twice.
 - Portability: verification commands and scaffolds resolve the governance repo via
   `GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home
   path; lint-framework rejects hardcoded home and absolute governance-repo paths
