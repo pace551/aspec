@@ -2,7 +2,7 @@
 id: TST-RATCHET
 title: Coverage Ratchet
 family: TST
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -21,8 +21,8 @@ triggers:
   - coverage.json
 requires: []
 verification:
-  - cmd: "sh -c 'python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 2 ]'"
-    expect: "exit 0 — coverage ≥ baseline − tolerance (exit 2 'no coverage data yet' tolerated on fresh scaffolds; the stack gate produces the data)"
+  - cmd: "sh -c 'python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 3 ]'"
+    expect: "exit 0 — coverage ≥ baseline − tolerance (exit 3 'no coverage data yet' tolerated on fresh scaffolds; the stack gate produces the data)"
     layer: G
     rules: [TST-RATCHET-01, TST-RATCHET-02]
     tiers: [T2, T3, T4]
@@ -110,20 +110,20 @@ stack produces one:
 
 Because precedence is first-match, a stale `coverage.json` left over from an experiment
 can shadow the real report — coverage artifacts are gitignored and cleaned before runs.
-Missing data entirely is exit 2 ("run tests with coverage first"), tolerated only on
+Missing data entirely is exit 3 ("run tests with coverage first"), tolerated only on
 fresh scaffolds with no tests yet.
 
 ## Verification
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `coverage-ratchet.py --check` (exit 2 tolerated) (T2+) | current ≥ baseline − 0.1 | TST-RATCHET-01, -02 |
+| 1 | `coverage-ratchet.py --check` (exit 3 tolerated) (T2+) | current ≥ baseline − 0.1 | TST-RATCHET-01, -02 |
 | 2 | `[ ! -f .coverage-baseline ] \|\| git ls-files --error-unmatch .coverage-baseline` | baseline tracked if present | TST-RATCHET-01 |
 | 3 | attest: no unwaived reset/lowering (T2+) | explicit yes recorded | TST-RATCHET-03 |
 | 4 | attest: coverage format readable, artifacts clean (T2+) | explicit yes recorded | TST-RATCHET-04 |
 
 **Remediation:** FAIL below baseline → add tests for the new untested code; never edit the
-baseline to pass · exit 2 with tests present → the coverage report isn't being written
+baseline to pass · exit 3 with tests present → the coverage report isn't being written
 (add `--cov-report=json` / `json-summary` reporter / `-coverprofile`) · baseline
 untracked → `git add .coverage-baseline` · legitimate decrease (code deletion) → waiver
 per TST-RATCHET-03, then re-initialize.
@@ -169,12 +169,14 @@ test job so `coverage.json` already exists.
 ## References
 
 - `checks/coverage-ratchet.py` — the implementation; this standard documents its
-  contract (formats, precedence, tolerance, `--check`, exit codes 0/1/2).
+  contract (formats, precedence, tolerance, `--check`, exit codes 0/1/3).
 - coverage.py JSON report / istanbul json-summary / `go tool cover` / lcov tracefile
   format — the four format contracts the reader function depends on.
 - Constitution C3 — "coverage never decreases" is the article this mechanism enforces.
 
 ## Changelog
 
+- **1.0.2** (2026-10-27) — "No coverage data" is now exit 3 instead of 2, because Python also
+  exits 2 when it can't open the script; a missing ratchet script used to pass this check.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

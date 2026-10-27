@@ -3,7 +3,9 @@
 
 Compares a current coverage percentage against the committed baseline file
 `.coverage-baseline` in the project root. If coverage >= baseline, the baseline is
-raised to the new value (ratchet up); if it's lower, exit 1.
+raised to the new value (ratchet up); if it's lower, exit 1. No coverage data at all
+exits 3 (NO_DATA) — deliberately not 2, which Python itself uses for "can't open
+file" and argparse errors, so a missing script can never pass as "no data yet".
 
 Reads coverage from (first match wins):
   1. --value <float>            explicit percentage
@@ -24,6 +26,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+NO_DATA = 3
 
 
 def read_coverage(root: Path) -> float | None:
@@ -69,7 +73,7 @@ def main() -> int:
     current = args.value if args.value is not None else read_coverage(root)
     if current is None:
         print("coverage-ratchet: no coverage data found (run tests with coverage first)")
-        return 2
+        return NO_DATA
 
     if not baseline_file.exists():
         if args.check:

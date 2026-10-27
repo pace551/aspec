@@ -2037,7 +2037,7 @@
       "id": "TST-RATCHET",
       "title": "Coverage Ratchet",
       "family": "TST",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2063,7 +2063,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-ratchet.md",
-      "tokens_est": 2224
+      "tokens_est": 2270
     },
     {
       "id": "TST-VERIFY",
