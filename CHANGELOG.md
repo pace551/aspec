@@ -5,6 +5,11 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Stack keys: select-standards rejects unknown `--stacks` keys (usage error listing
+  the allowed keys) instead of silently dropping the stack-scoped standards — e.g.
+  `postgres` used to omit the always-required STK-PG. The canonical list moves to
+  `checks/stack-keys.json` (shared by lint and the selector); /govern's
+  stack-detection step now names the exact `postgresql`/`dynamodb` keys.
 - Portability: verification commands and scaffolds resolve the governance repo via
   `GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home
   path; lint-framework rejects hardcoded home and absolute governance-repo paths

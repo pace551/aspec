@@ -4,7 +4,8 @@
 Filters index.json without ever loading it into agent context. Selection semantics:
   - status must be `active`
   - tier applicability `n/a` → excluded
-  - stack-scoped standards match when their stacks intersect the project's
+  - stack-scoped standards match when their stacks intersect the project's; an
+    unknown stack key (not in checks/stack-keys.json) is a usage error, never skipped
   - `required` at the tier → selected (stack permitting)
   - `advisory` at the tier → selected only when a trigger keyword matches the brief
   - transitive `requires` pulled in, capped at two hops
@@ -67,6 +68,10 @@ def main() -> int:
         sys.exit(f"select-standards: {gov} is not an ASPEC repo (no index.json)")
     index = json.loads((gov / "index.json").read_text())
     stacks = {s.strip() for s in args.stacks.split(",") if s.strip()}
+    allowed = set(json.loads((gov / "checks" / "stack-keys.json").read_text()))
+    if unknown := sorted(stacks - allowed):
+        ap.error(f"unknown stack key(s): {', '.join(unknown)} "
+                 f"(allowed: {', '.join(sorted(allowed))})")
     brief = args.brief_text.lower()
 
     by_id = {e["id"]: e for e in index["standards"]}

@@ -15,6 +15,8 @@ every future task, so this repo holds itself to its own strictest rules.
 - The format contract is `templates/standard-template.md` — new standards start from it.
   The pilot standards (`standards/security/sec-secrets.md`, `standards/stacks/stk-py.md`)
   are the calibration references for depth and tone.
+- **PRs are always a single squashed commit.** Fixups during review get squashed into
+  the PR's one commit on the branch and force-pushed with `--force-with-lease`.
 - Skills in `skills/` are canonical; `checks/install.sh` copies them to `~/.claude/skills/`.
   Edit here, then reinstall — never edit the installed copies.
 

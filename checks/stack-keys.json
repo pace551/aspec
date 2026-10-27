@@ -1,0 +1,5 @@
+[
+  "python", "typescript", "go", "rust", "nextjs", "vite-react", "htmx", "swiftui",
+  "sqlite", "postgresql", "dynamodb", "redis", "terraform", "containers",
+  "serverless", "aws", "web"
+]
