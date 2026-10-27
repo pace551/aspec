@@ -38,6 +38,7 @@ examples/       per-stack worked examples + noncompliant-fixture (negative test)
 python3 checks/build-index.py           # regenerate catalog
 python3 checks/build-index.py --check   # freshness check only
 python3 checks/lint-framework.py        # self-lint everything
+python3 -m unittest discover -s checks -p "test_*.py"   # check-script unit tests
 checks/secret-scan.sh --staged          # pre-commit secret gate
 ```
 

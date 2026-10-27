@@ -2,7 +2,7 @@
 id: STK-RUST
 title: Rust Stack
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -33,7 +33,7 @@ verification:
     expect: "exit 0 — a crate with no tests yet passes trivially (fresh scaffold tolerated; TST-POLICY governs test existence)"
     layer: G
     rules: [STK-RUST-04]
-  - cmd: "sh -c 'command -v cargo-llvm-cov >/dev/null 2>&1 || { echo \"cargo-llvm-cov not installed: cargo install cargo-llvm-cov\" >&2; exit 1; }; cargo llvm-cov --lcov --output-path lcov.info >/dev/null 2>&1; python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py --check'"
+  - cmd: "sh -c 'command -v cargo-llvm-cov >/dev/null 2>&1 || { echo \"cargo-llvm-cov not installed: cargo install cargo-llvm-cov\" >&2; exit 1; }; cargo llvm-cov --lcov --output-path lcov.info >/dev/null 2>&1; python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
     expect: "coverage ≥ committed .coverage-baseline (read-only check; lcov.info is gitignored output; fails loudly if cargo-llvm-cov missing)"
     layer: G
     rules: [STK-RUST-04]
@@ -251,4 +251,5 @@ fn main() -> anyhow::Result<()> {
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

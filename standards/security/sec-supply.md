@@ -2,7 +2,7 @@
 id: SEC-SUPPLY
 title: Supply Chain Security
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -23,17 +23,17 @@ triggers:
   - install script
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sca.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sca.sh\""
     expect: "exit 0 — dependency audit clean (missing scanner degrades to a documented warning at T1/T2)"
     layer: G
     rules: [SEC-SUPPLY-01]
     tiers: [T1, T2]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sca.sh --tier T3"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sca.sh\" --tier T3"
     expect: "exit 0 — dependency audit clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-SUPPLY-01]
     tiers: [T3]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sca.sh --tier T4"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sca.sh\" --tier T4"
     expect: "exit 0 — dependency audit clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-SUPPLY-01]
@@ -140,7 +140,7 @@ with install-time scripts. One minute of vigilance per new dep, not a review boa
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/sec-sca.sh` (T1/T2) | exit 0 — clean or documented warning | SEC-SUPPLY-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/sec-sca.sh"` (T1/T2) | exit 0 — clean or documented warning | SEC-SUPPLY-01 |
 | 2 | `… sec-sca.sh --tier T3` (T3) | exit 0 — clean; missing scanner fails | SEC-SUPPLY-01 |
 | 3 | `… sec-sca.sh --tier T4` (T4) | exit 0 — clean; missing scanner fails | SEC-SUPPLY-01 |
 | 4 | attest: lockfiles committed, installs reproducible | explicit yes recorded | SEC-SUPPLY-02 |
@@ -207,4 +207,5 @@ A per-CVE waiver, the only sanctioned shape for a lingering finding:
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

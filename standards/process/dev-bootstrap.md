@@ -2,7 +2,7 @@
 id: DEV-BOOTSTRAP
 title: Repository Bootstrap
 family: DEV
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -188,9 +188,7 @@ myproj/
 Hook install (what `/bootstrap-repo` runs):
 
 ```bash
-cp ~/Dev/claude-code/governance/templates/scaffolds/_common/pre-commit .git/hooks/pre-commit
-cp ~/Dev/claude-code/governance/templates/scaffolds/_common/pre-push .git/hooks/pre-push
-chmod +x .git/hooks/pre-commit .git/hooks/pre-push
+bash "$GOVERNANCE_DIR/templates/scaffolds/_common/install-git-hooks.sh"
 ```
 
 ## Anti-Patterns
@@ -215,4 +213,5 @@ chmod +x .git/hooks/pre-commit .git/hooks/pre-push
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path. The hook-install example now matches what /bootstrap-repo runs (install-git-hooks.sh).
 - **1.0.0** (2026-07-22) — Initial version.

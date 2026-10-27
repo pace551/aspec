@@ -4,7 +4,7 @@
 # .governance/, and points git at them. Idempotent.
 set -euo pipefail
 
-GOV="${GOVERNANCE_DIR:-$HOME/Dev/claude-code/governance}"
+GOV="${GOVERNANCE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
 COMMON="$GOV/templates/scaffolds/_common"
 
 [ -d .git ] || { echo "install-git-hooks: run from a git repo root" >&2; exit 2; }

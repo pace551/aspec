@@ -6,8 +6,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-VERIFY="${GOVERNANCE_DIR:-$HOME/Dev/claude-code/governance}/checks/stk-swift-verify.sh"
-if [ -f "$VERIFY" ]; then
+GOV="${GOVERNANCE_DIR:-}"
+if [ -z "$GOV" ]; then
+  GOV=$(python3 -c "import json, os.path; print(json.load(open(os.path.expanduser('~/.claude/aspec.json'))).get('governance_repo', ''))" 2>/dev/null || true)
+fi
+VERIFY="$GOV/checks/stk-swift-verify.sh"
+if [ -n "$GOV" ] && [ -f "$VERIFY" ]; then
   bash "$VERIFY" --project .
 else
   swift test

@@ -6,8 +6,8 @@ classified: 2026-07-22
 tier_override: null
 stacks: [python, sqlite]
 standards:
-  - {id: STK-PY, version: 1.0.1}
-  - {id: SEC-SECRETS, version: 1.0.1}
+  - {id: STK-PY, version: 1.0.2}
+  - {id: SEC-SECRETS, version: 1.0.2}
 waivers: []
 external_action_approvals: []
 pii_inventory: n/a

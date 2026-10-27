@@ -6,8 +6,8 @@ classified: 2026-07-22
 tier_override: null
 stacks: [nextjs, typescript, web]
 standards:
-  - {id: SEC-SECRETS, version: 1.0.1}
-  - {id: STK-TS, version: 1.0.0}
+  - {id: SEC-SECRETS, version: 1.0.2}
+  - {id: STK-TS, version: 1.0.1}
   - {id: STK-NEXT, version: 1.0.0}
 waivers: []
 external_action_approvals: []

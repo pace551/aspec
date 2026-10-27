@@ -2,7 +2,7 @@
 id: SEC-CRYPTO
 title: Cryptography & Transport
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -23,17 +23,17 @@ triggers:
   - at rest
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\""
     expect: "exit 0 — scanner flags MD5/SHA1-for-security and insecure modes (lenient when scanner missing at T1/T2)"
     layer: G
     rules: [SEC-CRYPTO-02]
     tiers: [T1, T2]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T3"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T3"
     expect: "exit 0 — scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-CRYPTO-02]
     tiers: [T3]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T4"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T4"
     expect: "exit 0 — scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-CRYPTO-02]
@@ -146,7 +146,7 @@ SEC-SECRETS-05: rotate first, clean up second.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/sec-sast.sh` (T1/T2) | exit 0 — no weak-hash/insecure-mode findings | SEC-CRYPTO-02 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` (T1/T2) | exit 0 — no weak-hash/insecure-mode findings | SEC-CRYPTO-02 |
 | 2 | `… sec-sast.sh --tier T3` (T3) | exit 0; missing scanner fails | SEC-CRYPTO-02 |
 | 3 | `… sec-sast.sh --tier T4` (T4) | exit 0; missing scanner fails | SEC-CRYPTO-02 |
 | 4 | attest: no hand-rolled primitives | explicit yes recorded | SEC-CRYPTO-01 |
@@ -214,4 +214,5 @@ restore — choose correctly on day one).
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

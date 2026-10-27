@@ -2,7 +2,7 @@
 id: ARC-ERRORS
 title: Error Handling & Resilience
 family: ARC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -24,7 +24,7 @@ triggers:
   - degradation
 requires: []
 verification:
-  - cmd: "python3 ~/Dev/claude-code/governance/checks/silent-swallow.py"
+  - cmd: "python3 \"$GOVERNANCE_DIR/checks/silent-swallow.py\""
     expect: "exit 0 — no catch-all handler silently swallows; deliberate swallows carry `swallow-ok: <reason>`"
     layer: G
     rules: [ARC-ERRORS-01]
@@ -149,7 +149,7 @@ logging.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `python3 ~/Dev/claude-code/governance/checks/silent-swallow.py` (T2+) | exit 0 — no unmarked catch-all swallow | ARC-ERRORS-01 |
+| 1 | `python3 "$GOVERNANCE_DIR/checks/silent-swallow.py"` (T2+) | exit 0 — no unmarked catch-all swallow | ARC-ERRORS-01 |
 | 2–4 | attestation checklist (one entry per rule) | explicit yes recorded | ARC-ERRORS-02…04 |
 | 5 | attestation, T3+ only | explicit yes recorded | ARC-ERRORS-05 |
 | 6–7 | attestation checklist | explicit yes recorded | ARC-ERRORS-06…07 |
@@ -212,4 +212,5 @@ Translate (`from exc`), never swallow; the caller logs `PriceFeedError` once
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

@@ -2,7 +2,7 @@
 id: STK-PY
 title: Python Stack
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -42,7 +42,7 @@ verification:
     expect: "exit 0 — tests green (exit 5 'no tests collected' tolerated for fresh scaffolds; TST-POLICY governs test existence)"
     layer: G
     rules: [STK-PY-02]
-  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null 2>&1; python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py --check'"
+  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null 2>&1; python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
     expect: "coverage ≥ committed .coverage-baseline (read-only check)"
     layer: G
     rules: [STK-PY-02]
@@ -242,6 +242,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 
 ## Changelog
 
+- **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Format-review fixes: per-entry tier scoping, single-rule
   attestations, pytest exit-5 tolerance on fresh scaffolds, ratchet runs read-only.
 - **1.0.0** (2026-07-22) — Initial version (pilot standard; transcribes oracle conventions).

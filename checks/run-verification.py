@@ -4,8 +4,9 @@
 Reads the project's GOVERNANCE.md YAML block, resolves each pinned standard in the
 governance repo, filters verification entries by the project tier, executes H/G commands
 from the project root, and emits the attestation checklist for layer-A entries. Waived
-rule IDs are skipped (expired waivers FAIL). Exit 0 only when every required H/G command
-passes and no waiver is expired.
+rule IDs are skipped (expired waivers FAIL). Verification commands run with
+GOVERNANCE_DIR exported (pointing at the governance repo). Exit 0 only when every
+required H/G command passes and no waiver is expired.
 
 Usage:
   run-verification.py [--project DIR] [--governance-dir DIR] [--json] [--stamp]
@@ -16,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -51,13 +53,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project", default=".", type=Path)
     ap.add_argument("--governance-dir",
-                    default=str(Path(__file__).resolve().parent.parent))
+                    default=os.environ.get("GOVERNANCE_DIR")
+                    or str(Path(__file__).resolve().parent.parent))
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--stamp", action="store_true")
     ap.add_argument("--timeout", type=int, default=600)
     args = ap.parse_args()
     project = args.project.resolve()
-    gov = Path(args.governance_dir)
+    gov = Path(args.governance_dir).expanduser().resolve()
+    if not (gov / "standards").is_dir():
+        sys.exit(f"run-verification: {gov} is not an ASPEC repo (no standards/)")
 
     manifest, gtext, gpath = read_manifest(project)
     tier = manifest.get("tier")
@@ -118,6 +123,7 @@ def main() -> int:
             proc = subprocess.run(
                 ["bash", "-c", str(v["cmd"])], cwd=project, text=True,
                 capture_output=True, timeout=args.timeout, check=False,
+                env={**os.environ, "GOVERNANCE_DIR": str(gov)},
             )
             ok = proc.returncode == 0
             if not ok:

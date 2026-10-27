@@ -3,7 +3,8 @@
 
 Validates every standard against the schema contract in templates/standard-template.md:
 frontmatter completeness, ID/filename discipline, rule extraction and enforcement backing,
-requires resolution, changelog/version consistency, abstract length, index freshness.
+requires resolution, changelog/version consistency, abstract length, index freshness,
+no hardcoded home/absolute paths into the governance repo.
 
 Usage: python3 checks/lint-framework.py [FILE ...]
 With FILE args: lint only those standards and skip the index-freshness check (used by
@@ -42,6 +43,13 @@ LAYERS = {"H", "G", "A"}
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
 ID_RE = re.compile(r"^[A-Z]+-[A-Z0-9]+$")
 RULE_HEADING_RE = re.compile(r"^### ([A-Z]+-[A-Z0-9]+-\d{2}) — ", re.MULTILINE)
+HOME_PATH_RE = re.compile(r"(~|\$HOME|\$\{HOME\}|/Users/[^/\s]+|/home/[^/\s]+)/")
+GOV_PATH_RE = re.compile(
+    r"(?:~|\$HOME|\$\{HOME\}|/Users/[^/\s]+|/home/[^/\s]+)"
+    r"/\S*?/(?:checks|hooks|templates)/")
+ABS_GOV_PATH_RE = re.compile(
+    r"(?<![\w}$.~:/-])/(?:[^\s\"'`/]+/)*"
+    r"(?:(?:checks|hooks)/[\w.-]+\.(?:sh|py)\b|templates/(?:scaffolds|ci)/)")
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
 REQUIRED_KEYS = [
     "id", "title", "family", "version", "status", "tiers", "stacks",
@@ -51,6 +59,14 @@ REQUIRED_SECTIONS = [
     "## Abstract", "## Normative Rules", "## Verification", "## Worked Example",
     "## Anti-Patterns", "## References", "## Changelog",
 ]
+
+
+def hardcoded_cmd_path(cmd: str) -> bool:
+    return bool(HOME_PATH_RE.search(cmd) or ABS_GOV_PATH_RE.search(cmd))
+
+
+def hardcoded_body_path(body: str) -> bool:
+    return bool(GOV_PATH_RE.search(body) or ABS_GOV_PATH_RE.search(body))
 
 
 def lint_file(path: Path, all_ids: set[str]) -> list[str]:
@@ -130,6 +146,10 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
         if is_attest and len(v.get("rules") or []) != 1:
             errs.append(f"{rel}: verification[{i}] — attestation entries carry exactly "
                         f"one rule id (got {len(v.get('rules') or [])})")
+        if not is_attest and hardcoded_cmd_path(str(v["cmd"])):
+            errs.append(f'{rel}: verification[{i}] cmd hardcodes a home/absolute '
+                        f'path — reference framework scripts as '
+                        f'"$GOVERNANCE_DIR/checks/…"')
         vtiers = v.get("tiers")
         if vtiers is not None and (not isinstance(vtiers, list)
                                    or not set(vtiers) <= TIER_NAMES):
@@ -152,6 +172,10 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     for vr in verified_rules:
         if vr not in seen:
             errs.append(f"{rel}: verification references unknown rule `{vr}`")
+
+    if hardcoded_body_path(body):
+        errs.append(f"{rel}: body hardcodes a path into the governance repo — "
+                    f"use $GOVERNANCE_DIR")
 
     # Tier-line grammar + enforcement backing: every rule block carries exactly one
     # `**Tiers**: … — **Layer**: …` line; rules required at any tier need H/G

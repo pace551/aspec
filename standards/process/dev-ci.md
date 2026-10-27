@@ -2,7 +2,7 @@
 id: DEV-CI
 title: CI Baseline
 family: DEV
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: n/a
@@ -22,12 +22,12 @@ triggers:
   - red build
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/dev-ci-present.sh --tier T3"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/dev-ci-present.sh\" --tier T3"
     expect: "exit 0 — workflows declare lint, typecheck, test, coverage-ratchet, gitleaks, sast, sca"
     layer: G
     rules: [DEV-CI-01]
     tiers: [T3]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/dev-ci-present.sh --tier T4"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/dev-ci-present.sh\" --tier T4"
     expect: "exit 0 — T3 set plus license-audit"
     layer: G
     rules: [DEV-CI-01]
@@ -128,8 +128,8 @@ enforces what T3 takes on attestation.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/dev-ci-present.sh --tier T3` (T3) | exit 0 — required job names found | DEV-CI-01 |
-| 2 | `bash ~/Dev/claude-code/governance/checks/dev-ci-present.sh --tier T4` (T4) | exit 0 — T3 set + license-audit | DEV-CI-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/dev-ci-present.sh" --tier T3` (T3) | exit 0 — required job names found | DEV-CI-01 |
+| 2 | `bash "$GOVERNANCE_DIR/checks/dev-ci-present.sh" --tier T4` (T4) | exit 0 — T3 set + license-audit | DEV-CI-01 |
 | 3 | `[ -x .git/hooks/pre-commit ] && [ -x .git/hooks/pre-push ]` | exit 0 | DEV-CI-02 |
 | 4 | attestation: conditional fragments match the repo's surfaces (T3+) | explicit yes | DEV-CI-03 |
 | 5 | attestation: green-to-merge held; red main treated as top priority | explicit yes | DEV-CI-04 |
@@ -196,4 +196,5 @@ lines, and the fragment files themselves. Promotion to T4 is one job
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

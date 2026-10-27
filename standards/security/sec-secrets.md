@@ -2,7 +2,7 @@
 id: SEC-SECRETS
 title: Secrets Management
 family: SEC
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -22,7 +22,7 @@ triggers:
   - private key
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/secret-scan.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/secret-scan.sh\""
     expect: "exit 0 — no secret patterns in tracked files"
     layer: G
     rules: [SEC-SECRETS-01]
@@ -130,7 +130,7 @@ credential per consumer, so revocation is surgical.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/secret-scan.sh` | exit 0 (gitleaks, or built-in pattern fallback) | SEC-SECRETS-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/secret-scan.sh"` | exit 0 (gitleaks, or built-in pattern fallback) | SEC-SECRETS-01 |
 | 2 | `! git ls-files \| grep -qx ".env"` and `git check-ignore -q .env` (if present) | `.env` untracked + ignored | SEC-SECRETS-02 |
 | 3 | `[ ! -f .env ] \|\| [ -f .env.example ]` | example file exists alongside `.env` | SEC-SECRETS-02 |
 | 4-7 | attestation checklist (one entry per rule) | explicit yes recorded | SEC-SECRETS-03…06 |
@@ -184,6 +184,7 @@ an SSM SecureString `/mytool/prod/anthropic-api-key`, and inject via the task de
 
 ## Changelog
 
+- **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Format-review fixes: attestations split to one entry per rule;
   SEC-SECRETS-06 entry tier-scoped to T3+.
 - **1.0.0** (2026-07-22) — Initial version (pilot standard; calibrates the corpus format).

@@ -2,7 +2,7 @@
 id: SEC-INPUT
 title: Input Validation & Injection Defense
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -25,17 +25,17 @@ triggers:
   - zod
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\""
     expect: "exit 0 — scanner catches string-built SQL and shell=True (lenient when scanner missing at T1/T2)"
     layer: G
     rules: [SEC-INPUT-02, SEC-INPUT-03]
     tiers: [T1, T2]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T3"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T3"
     expect: "exit 0 — scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-INPUT-02, SEC-INPUT-03]
     tiers: [T3]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T4"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T4"
     expect: "exit 0 — scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-INPUT-02, SEC-INPUT-03]
@@ -165,7 +165,7 @@ XSS defense; SEC-WEB-01's CSP is the second layer that catches what slips throug
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/sec-sast.sh` (T1/T2) | exit 0 — no B608/B602-class findings | SEC-INPUT-02, -03 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` (T1/T2) | exit 0 — no B608/B602-class findings | SEC-INPUT-02, -03 |
 | 2 | `… sec-sast.sh --tier T3` (T3) | exit 0; missing scanner fails | SEC-INPUT-02, -03 |
 | 3 | `… sec-sast.sh --tier T4` (T4) | exit 0; missing scanner fails | SEC-INPUT-02, -03 |
 | 4 | attest: schema validation at every boundary | explicit yes recorded | SEC-INPUT-01 |
@@ -242,4 +242,5 @@ interpreted as SQL, shell, or path structure.
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -57,10 +58,13 @@ def main() -> int:
     ap.add_argument("--rules", action="store_true", help="include parsed rules per standard")
     ap.add_argument("--mode", choices=["pins", "brief"], default="pins")
     ap.add_argument("--governance-dir",
-                    default=str(Path(__file__).resolve().parent.parent))
+                    default=os.environ.get("GOVERNANCE_DIR")
+                    or str(Path(__file__).resolve().parent.parent))
     args = ap.parse_args()
 
-    gov = Path(args.governance_dir)
+    gov = Path(args.governance_dir).expanduser().resolve()
+    if not (gov / "index.json").is_file():
+        sys.exit(f"select-standards: {gov} is not an ASPEC repo (no index.json)")
     index = json.loads((gov / "index.json").read_text())
     stacks = {s.strip() for s in args.stacks.split(",") if s.strip()}
     brief = args.brief_text.lower()

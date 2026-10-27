@@ -2,7 +2,7 @@
 id: SEC-SAST
 title: Static Application Security Testing
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -22,17 +22,17 @@ triggers:
   - code scanning
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\""
     expect: "exit 0 — stack scanner clean (missing scanner degrades to a documented warning at T1/T2)"
     layer: G
     rules: [SEC-SAST-01]
     tiers: [T1, T2]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T3"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T3"
     expect: "exit 0 — stack scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-SAST-01]
     tiers: [T3]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T4"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\" --tier T4"
     expect: "exit 0 — stack scanner clean; missing scanner FAILS at this tier"
     layer: G
     rules: [SEC-SAST-01]
@@ -122,7 +122,7 @@ choice was made, not that the answer is yes.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/sec-sast.sh` (T1/T2) | exit 0 — clean, or documented missing-scanner warning | SEC-SAST-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` (T1/T2) | exit 0 — clean, or documented missing-scanner warning | SEC-SAST-01 |
 | 2 | `… sec-sast.sh --tier T3` (T3) | exit 0 — clean; missing scanner fails | SEC-SAST-01 |
 | 3 | `… sec-sast.sh --tier T4` (T4) | exit 0 — clean; missing scanner fails | SEC-SAST-01 |
 | 4 | attest: CI runs the sast.yml fragment (T3+) | explicit yes recorded | SEC-SAST-02 |
@@ -147,7 +147,7 @@ dev = ["pytest>=7", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6"]
 Local gate and what passing looks like:
 
 ```
-$ bash ~/Dev/claude-code/governance/checks/sec-sast.sh --tier T3
+$ bash "$GOVERNANCE_DIR/checks/sec-sast.sh" --tier T3
 sec-sast: running: .venv/bin/bandit -r src -q
 sec-sast: clean
 ```
@@ -186,4 +186,5 @@ subprocess.run(["osascript", "-e", FIXED_SCRIPT])  # nosec B603 — argv list, c
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

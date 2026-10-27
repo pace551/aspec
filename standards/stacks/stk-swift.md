@@ -2,7 +2,7 @@
 id: STK-SWIFT
 title: Apple SwiftUI Stack
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -23,7 +23,7 @@ triggers:
   - keychain
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/stk-swift-verify.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/stk-swift-verify.sh\""
     expect: "exit 0 — swift test (SPM) or xcodebuild test (app project) green; degrades to a documented warning when Xcode tooling is absent (rule falls back to attestation)"
     layer: G
     rules: [STK-SWIFT-06]
@@ -164,7 +164,7 @@ VoiceOver reading "button" three times in a row is the failure this rule retires
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/stk-swift-verify.sh` | exit 0 — tests green (or documented degrade → attestation) | STK-SWIFT-06 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/stk-swift-verify.sh"` | exit 0 — tests green (or documented degrade → attestation) | STK-SWIFT-06 |
 | 2 | `[ ! -f Podfile ] && [ ! -f Cartfile ]` | exit 0 — SPM only | STK-SWIFT-04 |
 | 3 | `! git grep … "ObservableObject"` in *.swift | exit 0 — Observation framework in use | STK-SWIFT-02 |
 | 4 | `! git grep … UserDefaults secret-pattern` | exit 0 — no secrets in UserDefaults | STK-SWIFT-07 |
@@ -233,4 +233,5 @@ public final class CounterModel {
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.
