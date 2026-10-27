@@ -5,6 +5,9 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Coverage ratchet: "no coverage data" exits 3 instead of 2. Python exits 2 when it
+  can't open a script, so TST-RATCHET's check (which tolerates "no data yet") used to
+  pass when the ratchet script was missing. Covered by `checks/test_coverage_ratchet.py`.
 - Trigger matching: select-standards matches triggers on whole words with
   inflectional endings (-s/-es/-ed/-ing) instead of substrings; triggers of three
   characters or fewer match only exactly or with -s. Short triggers no longer fire
