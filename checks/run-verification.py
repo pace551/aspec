@@ -22,8 +22,10 @@ import argparse
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
+import tempfile
 from datetime import date, datetime
 from pathlib import Path
 
@@ -69,6 +71,39 @@ def find_standard(gov: Path, sid: str) -> dict | None:
         if m:
             return yaml.safe_load(m.group(1))
     return None
+
+
+def _kill_group(pgid: int) -> None:
+    try:
+        os.killpg(pgid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        pass
+
+
+def run_check(cmd: str, cwd: Path, env: dict, timeout: int) -> tuple[bool, str]:
+    """Run one verification command in its own process group; a timeout is a FAIL, never
+    a crash. The group is killed when the check ends, times out, or the run is
+    interrupted, so backgrounded builds/scanners don't outlive it. Output goes to temp
+    files, not pipes, so a descendant that escapes the group can't stall the report."""
+    with tempfile.TemporaryFile() as out, tempfile.TemporaryFile() as err:
+        proc = subprocess.Popen(["bash", "-c", cmd], cwd=cwd, env=env,
+                                stdout=out, stderr=err, start_new_session=True)
+        timed_out = False
+        try:
+            proc.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+        finally:
+            _kill_group(proc.pid)
+            proc.wait()
+        output = b""
+        for f in (out, err):
+            f.seek(0)
+            output += f.read()
+    text = output.decode("utf-8", errors="replace")
+    if timed_out:
+        return False, f"{text}\ntimed out after {timeout}s (process group killed)"
+    return proc.returncode == 0, text
 
 
 def main() -> int:
@@ -148,19 +183,16 @@ def main() -> int:
                 attestations.append({"standard": sid, "rules": rules,
                                      "item": str(v["cmd"])[8:]})
                 continue
-            proc = subprocess.run(
-                ["bash", "-c", str(v["cmd"])], cwd=project, text=True,
-                capture_output=True, timeout=args.timeout, check=False,
-                env={**os.environ, "GOVERNANCE_DIR": str(gov)},
-            )
-            ok = proc.returncode == 0
+            ok, output = run_check(str(v["cmd"]), project,
+                                   {**os.environ, "GOVERNANCE_DIR": str(gov)},
+                                   args.timeout)
             if not ok:
                 failures += 1
             results.append({
                 "kind": "check", "std": sid, "id": ",".join(rules) or sid,
                 "layer": v.get("layer"), "status": "PASS" if ok else "FAIL",
                 "detail": str(v["cmd"])[:100],
-                "output": "" if ok else (proc.stdout + proc.stderr)[-1500:],
+                "output": "" if ok else output[-1500:],
                 "expect": v.get("expect", ""),
             })
 
