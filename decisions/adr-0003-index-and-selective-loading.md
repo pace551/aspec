@@ -1,6 +1,6 @@
 # ADR-0003: Generated index.json + selective loading as the consumption model
 
-- **Status**: accepted
+- **Status**: accepted (pin semantics in Consequences superseded by ADR-0004)
 - **Date**: 2026-07-22
 - **Deciders**: the maintainer
 

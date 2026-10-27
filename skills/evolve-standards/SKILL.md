@@ -34,7 +34,10 @@ signals: the same rule waived in two projects is a candidate without a note.
 Per cluster, draft the smallest change: rule text edit, tier-tag change, new rule
 (next contiguous number, never renumber), trigger keyword, verification fix, or a new
 standard (rare — needs the template + AUTHORING pass). Version bump semantics: patch =
-wording/verification fix, minor = new rule or tier change, major = breaking rework.
+wording/verification fix that adds no requirement, minor = new rule or tier change, major
+= breaking rework. A minor/major bump FAILs every project pinned below it until that
+project re-runs `/govern` (ADR-0004), so don't inflate bumps — and never hide a new
+requirement in a patch.
 Present all proposed diffs with rationale + source notes. **STOP for approval**; the user
 picks per-diff.
 
@@ -62,7 +65,8 @@ Both must be clean. Mark promoted vault notes `status: promoted` (rejected →
 `status: rejected` + one-line reason in the note). Write the sweep retro note to the
 vault Inbox from `$GOV/templates/obsidian/governance-retro-template.md`. Commit the
 governance repo (conventional message listing standard version changes); remind that
-projects whose pins now trail upgrade deliberately via `/govern` on next touch.
+projects pinned behind a minor/major bump will FAIL `/verify-compliance` until they re-run
+`/govern` (patch bumps only WARN).
 
 ## Rules
 

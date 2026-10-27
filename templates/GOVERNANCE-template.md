@@ -33,6 +33,8 @@ Rules:
 - **Waiver expiry is mandatory** — `/verify-compliance` fails on any waiver past `expires`
   and nags within 14 days of it.
 - **Version pins are the upgrade mechanism** — `/govern` diffs pinned versions against
-  `index.json` and offers (never forces) upgrades, listing changed rules.
+  `index.json` and re-pins, listing changed rules. `/verify-compliance` tolerates patch
+  drift (WARN) but FAILs a standard on minor/major drift or a pin newer than the repo
+  until `/govern` re-pins (ADR-0004).
 - Hand-edits are allowed (it's your project) but `/verify-compliance` re-validates the YAML
   schema on every run.

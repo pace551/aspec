@@ -314,8 +314,9 @@
       <div class="dg-box accent dg-span">
         <b>Project manifest <span class="mono">GOVERNANCE.md</span></b>
         <p>Tier · pinned standard versions · waivers (rule-scoped, expiry mandatory) · external-action
-        approvals · PII inventory · attestations · <code>last_verified</code>. Pins make standards evolution
-        non-breaking: the corpus moves forward, projects upgrade deliberately.</p>
+        approvals · PII inventory · attestations · <code>last_verified</code>. Pins make upgrades deliberate:
+        patch releases run with a warning; a minor/major release fails verification until
+        <code>/govern</code> re-pins (ADR-0004).</p>
       </div>
     </div>
     <div class="dg-arrow">▼ &nbsp;the manifest is what gets enforced</div>

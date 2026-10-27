@@ -138,9 +138,11 @@ attestations:                     # advisory-rule self-reports, honest ones
 
 Two things worth internalizing:
 
-- **Pins make evolution non-breaking.** Standards move forward in this repo; your
-  project stays on its pinned versions until a `/govern` run offers the upgrade and you
-  take it. A `WARN` about pin drift in the verify table is that offer, not an error.
+- **Pins make upgrades deliberate.** Standards move forward in this repo. A patch
+  release (wording or verification fix) runs under your pin with a `WARN`; a minor or
+  major release (new rule, tier change, rework) FAILs that standard in `/verify-compliance`
+  until you re-run `/govern`, which re-pins and lists what changed. New rules never reach
+  your project silently (ADR-0004).
 - **Enforcement is wider than context.** `/govern` only *loads* the standards relevant
   to today's task (token budget), but `/verify-compliance` runs **everything pinned**.
   You can't dodge a rule by not reading it.
@@ -180,7 +182,9 @@ without a version bump — you cannot silently edit a rule.
 | `/verify-compliance` FAIL rows | Fix the code, not the check. Each standard's Verification section has remediation hints. Genuinely disagree → waiver (§5). |
 | `run-verification: no GOVERNANCE.md` | Run `/govern` first. |
 | `build-index: REFUSED … version still X` | You edited a standard without bumping `version` + changelog. Bump it — that's the C10 gate doing its job. |
-| WARN: pinned 1.0.0, repo has 1.1.0 | Informational. Re-run `/govern` to upgrade deliberately, or stay pinned. |
+| WARN: pinned 1.0.0, repo has 1.0.1 (patch) | A wording/verification fix; the current checks ran. Re-run `/govern` to re-pin when convenient. |
+| FAIL: pinned 1.0.0, repo has 1.1.0 | New rules or tier changes since your pin; that standard's checks didn't run. Re-run `/govern`, review the listed changes, re-verify (waive any new rule you can't meet yet). |
+| FAIL: pinned 1.1.0 is newer than the governance repo's 1.0.3 | Your ASPEC clone is behind the project — `git pull` it. |
 | Pre-commit rejects a "secret" that's a fixture | Make it an obvious fake (contain `EXAMPLE`), or add a scoped `.gitleaksignore` entry with a comment. |
 | Emergency bypass | `git commit --no-verify` exists and isn't blocked — but CI/verify will catch it, and the honest move is a waiver, not a bypass. |
 | A scanner isn't installed | Checks degrade with a printed warning at T1/T2 and fail loud at T3+. `brew install gitleaks tflint checkov hadolint trivy` as needed. |

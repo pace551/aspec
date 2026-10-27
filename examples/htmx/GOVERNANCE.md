@@ -8,7 +8,7 @@ stacks: [htmx, python, web]
 standards:
   - {id: SEC-SECRETS, version: 1.0.2}
   - {id: STK-PY, version: 1.0.2}
-  - {id: STK-HTMX, version: 1.0.0}
+  - {id: STK-HTMX, version: 1.0.1}
 waivers: []
 external_action_approvals: []
 pii_inventory: n/a
