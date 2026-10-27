@@ -37,7 +37,12 @@ calibration bar for depth, tone, and length — match them.
    merge resolves them); keep `requires:` minimal per template rule 7.
 7. **Triggers** are lowercase task-brief keywords a `/govern` intake would grep for —
    think "what words appear in a task that makes this standard relevant" (tools, nouns,
-   verbs), not taxonomy labels.
+   verbs), not taxonomy labels. Matching is whole-word with inflectional endings
+   (`deploy` matches "deployed"/"deploying", `retry` matches "retries"), never
+   substring; triggers of three characters or fewer match only exactly or with -s.
+   Derived words don't match, so add them explicitly (`deployment` alongside
+   `deploy`, `dockerfile` alongside `docker`). Known limitation: a brand name that is
+   also a verb inflects like any word (`stripe` matches "striping").
 8. **Stack keys vocabulary** (for `stacks:` frontmatter; canonical list in
    `checks/stack-keys.json`, enforced by lint and by `select-standards.py`):
    `python`, `typescript`, `go`, `rust`, `nextjs`, `vite-react`, `htmx`, `swiftui`,

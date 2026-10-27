@@ -7,7 +7,8 @@ Filters index.json without ever loading it into agent context. Selection semanti
   - stack-scoped standards match when their stacks intersect the project's; an
     unknown stack key (not in checks/stack-keys.json) is a usage error, never skipped
   - `required` at the tier → selected (stack permitting)
-  - `advisory` at the tier → selected only when a trigger keyword matches the brief
+  - `advisory` at the tier → selected only when a trigger matches whole words of the
+    brief (common English endings allowed; see trigger_re) — never a substring
   - transitive `requires` pulled in, capped at two hops
 
 Two modes (--mode):
@@ -42,6 +43,25 @@ RULE_RE = re.compile(
 )
 
 
+def trigger_re(trigger: str) -> re.Pattern[str]:
+    """Whole-word match for a trigger, allowing inflectional endings on its last word
+    (-s/-es/-ed/-ing, doubled final consonant, dropped e, y→ies), so `deploy`
+    matches "deployed" but `ci` never matches "decided". Triggers of three
+    characters or fewer (acronyms, short names) match only exactly or with -s."""
+    stem = re.escape(trigger)
+    if len(trigger) <= 3:
+        return re.compile(r"(?<![a-z0-9])" + stem + r"s?(?![a-z0-9])")
+    alts = [stem + r"(?:s|es|ed|d|ing)?"]
+    last = trigger[-1:]
+    if last.isalpha() and last not in "aeiouy":
+        alts.append(re.escape(trigger + last) + r"(?:ed|ing)")
+    if last == "e":
+        alts.append(re.escape(trigger[:-1]) + r"ing")
+    if last == "y":
+        alts.append(re.escape(trigger[:-1]) + r"(?:ies|ied)")
+    return re.compile(r"(?<![a-z0-9])(?:" + "|".join(alts) + r")(?![a-z0-9])")
+
+
 def load_rules(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8")
     return [
@@ -72,7 +92,7 @@ def main() -> int:
     if unknown := sorted(stacks - allowed):
         ap.error(f"unknown stack key(s): {', '.join(unknown)} "
                  f"(allowed: {', '.join(sorted(allowed))})")
-    brief = args.brief_text.lower()
+    brief = " ".join(args.brief_text.lower().split())
 
     by_id = {e["id"]: e for e in index["standards"]}
     selected: dict[str, dict] = {}
@@ -86,7 +106,7 @@ def main() -> int:
         stack_ok = e["stacks"] == "all" or bool(set(e["stacks"]) & stacks)
         if not stack_ok:
             continue
-        triggered = [t for t in e["triggers"] if t in brief]
+        triggered = [t for t in e["triggers"] if trigger_re(t).search(brief)]
         if applicability == "required" or triggered:
             selected[e["id"]] = {
                 "id": e["id"], "version": e["version"], "path": e["path"],
