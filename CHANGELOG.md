@@ -5,6 +5,14 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Trigger matching: select-standards matches triggers on whole words with
+  inflectional endings (-s/-es/-ed/-ing) instead of substrings; triggers of three
+  characters or fewer match only exactly or with -s. Short triggers no longer fire
+  inside other words ("decided" → `ci`, "stage" → `tag`, "share" → `sha`, "product"
+  → `prod`, "going" → `go`), which used to pin unrelated advisory standards;
+  inflected forms still match (`deploy` → "deployed", `retry` → "retries", `cache` →
+  "caching"). Known limitation: brand names that are also verbs inflect
+  (`stripe` → "striping").
 - Stack keys: select-standards rejects unknown `--stacks` keys (usage error listing
   the allowed keys) instead of silently dropping the stack-scoped standards — e.g.
   `postgres` used to omit the always-required STK-PG. The canonical list moves to
