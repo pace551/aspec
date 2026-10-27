@@ -49,6 +49,7 @@ if [ -z "$VAULT_PATH" ] || [ ! -d "$VAULT_PATH" ]; then
   fi
 fi
 
+mkdir -p "$(dirname "$CONFIG")"
 python3 - "$CONFIG" "$GOV" "$VAULT_PATH" <<'PYEOF'
 import json, sys
 path, gov, vault = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -101,8 +102,13 @@ fi
 # --- hooks ---
 if $DO_HOOKS; then
   SETTINGS="$HOME/.claude/settings.json"
-  BACKUP="$SETTINGS.bak.$(date +%Y%m%d%H%M%S)"
-  cp "$SETTINGS" "$BACKUP"
+  BACKUP=""
+  if [ -f "$SETTINGS" ]; then
+    BACKUP="$SETTINGS.bak.$(date +%Y%m%d%H%M%S)"
+    cp "$SETTINGS" "$BACKUP"
+  else
+    echo "{}" > "$SETTINGS"
+  fi
   python3 - "$SETTINGS" "$GOV" <<'EOF'
 import json, sys
 path, gov = sys.argv[1], sys.argv[2]
@@ -128,7 +134,11 @@ with open(path, "w") as f:
     f.write("\n")
 print(f"hooks wired into {path}")
 EOF
-  echo "settings backup: $BACKUP"
+  if [ -n "$BACKUP" ]; then
+    echo "settings backup: $BACKUP"
+  else
+    echo "no existing $SETTINGS — created a new one"
+  fi
 fi
 
 echo "to run verification commands by hand: export GOVERNANCE_DIR=\"$GOV\""
