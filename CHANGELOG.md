@@ -13,6 +13,10 @@ carry their own per-file changelogs.
   inflected forms still match (`deploy` → "deployed", `retry` → "retries", `cache` →
   "caching"). Known limitation: brand names that are also verbs inflect
   (`stripe` → "striping").
+- Version pins are enforced by semver level (ADR-0004): patch drift WARNs and runs the
+  current checks; minor/major drift, a pin newer than the governance repo, or a
+  non-semver pin FAILs that standard without running its checks. Previously any
+  mismatch was only a WARN, so new rules reached projects silently under old pins.
 - Stack keys: select-standards rejects unknown `--stacks` keys (usage error listing
   the allowed keys) instead of silently dropping the stack-scoped standards — e.g.
   `postgres` used to omit the always-required STK-PG. The canonical list moves to

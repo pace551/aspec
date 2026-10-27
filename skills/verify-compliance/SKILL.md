@@ -46,8 +46,10 @@ Constitution C9). Write them into `GOVERNANCE.md`'s `attestations:` list
 
 On full pass: `python3 $GOV/checks/run-verification.py --project <root> --stamp` (writes
 `last_verified`). Final summary states: checks passed/waived counts, attestations
-recorded (any `followed: false` called out), and any WARN about version pins drifting
-from the repo (suggest re-running `/govern` to upgrade deliberately).
+recorded (any `followed: false` called out), and any WARN about patch-level pin drift
+(suggest re-running `/govern` to re-pin). A pin FAIL — minor/major drift or a pin newer
+than the repo (ADR-0004) — blocks "done" like any other FAIL: re-run `/govern` (or update
+the governance repo), then re-verify.
 
 ## Rules
 

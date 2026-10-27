@@ -4,9 +4,12 @@
 Reads the project's GOVERNANCE.md YAML block, resolves each pinned standard in the
 governance repo, filters verification entries by the project tier, executes H/G commands
 from the project root, and emits the attestation checklist for layer-A entries. Waived
-rule IDs are skipped (expired waivers FAIL). Verification commands run with
-GOVERNANCE_DIR exported (pointing at the governance repo). Exit 0 only when every
-required H/G command passes and no waiver is expired.
+rule IDs are skipped (expired waivers FAIL). Pins are enforced by semver level
+(ADR-0004): patch drift WARNs and runs the current checks; minor/major drift, a pin
+newer than the repo, or a non-semver pin FAILs and skips that standard's checks.
+Verification commands run with GOVERNANCE_DIR exported (pointing at the governance
+repo). Exit 0 only when every required H/G command passes, no waiver is expired, and
+no pin FAILs.
 
 Usage:
   run-verification.py [--project DIR] [--governance-dir DIR] [--json] [--stamp]
@@ -28,6 +31,25 @@ import yaml
 
 YAML_BLOCK_RE = re.compile(r"```yaml\n(.*?)```", re.DOTALL)
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
+SEMVER_RE = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)")
+
+
+def pin_drift(pinned: str, current: str) -> tuple[str, str] | None:
+    """Pin vs repo version per ADR-0004: None when equal, else (WARN|FAIL, detail)."""
+    p, c = SEMVER_RE.fullmatch(pinned), SEMVER_RE.fullmatch(current)
+    if not p or not c:
+        return "FAIL", f"pin {pinned!r} / repo {current!r} not semver"
+    if pinned == current:
+        return None
+    pv, cv = tuple(map(int, p.groups())), tuple(map(int, c.groups()))
+    if pv > cv:
+        return "FAIL", (f"pinned {pinned} is newer than the governance repo's {current} "
+                        f"— update the governance repo")
+    if pv[:2] == cv[:2]:
+        return "WARN", (f"pinned {pinned}, repo has {current} (patch) — ran {current}; "
+                        f"/govern re-pins")
+    return "FAIL", (f"pinned {pinned}, repo has {current} (new rules or tier changes) "
+                    f"— re-run /govern to upgrade deliberately")
 
 
 def read_manifest(project: Path) -> tuple[dict, str, Path]:
@@ -103,10 +125,16 @@ def main() -> int:
                             "detail": "standard not found in governance repo"})
             failures += 1
             continue
-        if str(meta.get("version")) != pinned_ver:
-            results.append({"kind": "standard", "id": sid, "status": "WARN",
-                            "detail": f"pinned {pinned_ver}, repo has "
-                                      f"{meta.get('version')} — /govern offers upgrades"})
+        drift = pin_drift(pinned_ver, str(meta.get("version", "")))
+        if drift:
+            status, detail = drift
+            if status == "FAIL":
+                failures += 1
+                detail += " (checks not run)"
+            results.append({"kind": "standard", "id": sid, "status": status,
+                            "detail": detail})
+            if status == "FAIL":
+                continue
         for v in meta.get("verification") or []:
             vtiers = v.get("tiers")
             if vtiers and tier not in vtiers:

@@ -54,7 +54,8 @@ Format: `$GOV/templates/GOVERNANCE-template.md`. New project → create from tem
 Existing → update `tier`, `classified`, `stacks`, and `standards` pins (id+version from
 the **pins** run — the full applicable set, not just the brief's detailed subset). **Preserve** existing waivers, approvals, attestations,
 `last_verified`. If pins changed versions, list the changes to the user (upgrades are
-deliberate, never silent).
+deliberate, never silent); for a minor/major change, quote the standard's changelog
+entries since the old pin — those are the new rules the project now owes.
 
 ### 5. Emit the compliance brief
 
