@@ -8,6 +8,13 @@ carry their own per-file changelogs.
 - Coverage ratchet: "no coverage data" exits 3 instead of 2. Python exits 2 when it
   can't open a script, so TST-RATCHET's check (which tolerates "no data yet") used to
   pass when the ratchet script was missing. Covered by `checks/test_coverage_ratchet.py`.
+- run-verification: a check that exceeds `--timeout` is now a FAIL row ("timed out
+  after Ns") and the run continues. Previously the timeout raised an uncaught
+  exception, so no report was printed, and processes the check had started in the
+  background kept running. Each check now runs in its own process group, which is
+  killed when the check finishes, times out, or the run is interrupted (Ctrl-C).
+  Output is captured to temp files rather than pipes, so a child that detaches into
+  its own session can't stall the report by holding the output open.
 - Trigger matching: select-standards matches triggers on whole words with
   inflectional endings (-s/-es/-ed/-ing) instead of substrings; triggers of three
   characters or fewer match only exactly or with -s. Short triggers no longer fire
