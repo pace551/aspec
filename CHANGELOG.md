@@ -24,6 +24,9 @@ carry their own per-file changelogs.
   in cmds and bodies (covered by `checks/test_lint_framework.py`); select-standards
   expands `~` in `--governance-dir`/`GOVERNANCE_DIR` and fails loudly on a non-repo;
   dev-bootstrap hook-install example corrected to match /bootstrap-repo.
+- install.sh works on a machine without `~/.claude`: it creates the directory
+  before writing `aspec.json`, and `--hooks` creates `settings.json` when none exists
+  (backing up only an existing one). Covered by `checks/test_install.py`.
 
 ## 0.1.0 — 2026-07-22
 
