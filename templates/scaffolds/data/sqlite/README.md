@@ -25,6 +25,6 @@ server, which is the point (STK-SQLITE-01).
 
 - Migrations are forward-only, `NNNN_description.sql`, numbers never reused.
 - Migration files contain no `BEGIN`/`COMMIT` — the runner owns the transaction.
-- Verify: `bash ~/Dev/claude-code/governance/checks/sec-sast.sh` (no string-built SQL)
+- Verify: `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` (no string-built SQL)
   and the STK-SQLITE pragma grep both pass on a fresh merge because this fragment
   ships the pragma block and a numbered migration.

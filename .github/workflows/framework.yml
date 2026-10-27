@@ -16,6 +16,8 @@ jobs:
       - run: pip install pyyaml ruff
       - name: Framework self-lint (schema, rules, index freshness)
         run: python3 checks/lint-framework.py
+      - name: Check-script unit tests
+        run: python3 -m unittest discover -s checks -p "test_*.py" -v
       - name: Ruff over check scripts
         run: ruff check checks/
       - name: Shell syntax

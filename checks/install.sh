@@ -131,4 +131,5 @@ EOF
   echo "settings backup: $BACKUP"
 fi
 
+echo "to run verification commands by hand: export GOVERNANCE_DIR=\"$GOV\""
 echo "install.sh: done"

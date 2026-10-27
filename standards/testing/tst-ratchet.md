@@ -2,7 +2,7 @@
 id: TST-RATCHET
 title: Coverage Ratchet
 family: TST
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -21,7 +21,7 @@ triggers:
   - coverage.json
 requires: []
 verification:
-  - cmd: "sh -c 'python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 2 ]'"
+  - cmd: "sh -c 'python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 2 ]'"
     expect: "exit 0 — coverage ≥ baseline − tolerance (exit 2 'no coverage data yet' tolerated on fresh scaffolds; the stack gate produces the data)"
     layer: G
     rules: [TST-RATCHET-01, TST-RATCHET-02]
@@ -135,16 +135,16 @@ Lifecycle of the baseline in a Python T2 project:
 ```
 # First run — initialize and commit (development mode, no --check)
 $ .venv/bin/pytest -q --cov --cov-report=json >/dev/null
-$ python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py
+$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
 coverage-ratchet: baseline initialized at 84.10%
 $ git add .coverage-baseline && git commit -m "chore: initialize coverage baseline (84.10%)"
 
 # Later — a feature lands with tests; the ratchet ratchets
-$ python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py
+$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
 coverage-ratchet: raised baseline 84.10% → 86.55%        # commit this with the feature
 
 # Verification — read-only, tree untouched
-$ python3 ~/Dev/claude-code/governance/checks/coverage-ratchet.py --check
+$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py" --check
 coverage-ratchet: OK (86.55% ≥ 86.55%)
 
 # Regression — new code, no tests
@@ -176,4 +176,5 @@ test job so `coverage.json` already exists.
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

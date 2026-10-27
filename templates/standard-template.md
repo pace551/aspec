@@ -26,6 +26,8 @@ triggers:                      # lowercase keywords /govern matches against the 
 requires: []                   # standard IDs co-loaded with this one (kept minimal)
 verification:                  # executed by /verify-compliance, in order
   - cmd: "exact command, run from project root"
+                               # framework scripts: "$GOVERNANCE_DIR/checks/…"
+                               # (exported by the runner); never an absolute/home path
     expect: "exit 0"           # human-facing description; the MACHINE contract is
                                # always "exit 0 = pass" — waiver logic lives in
                                # /verify-compliance, never in expect

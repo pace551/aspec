@@ -6,8 +6,8 @@ classified: 2026-07-22
 tier_override: null
 stacks: [htmx, python, web]
 standards:
-  - {id: SEC-SECRETS, version: 1.0.1}
-  - {id: STK-PY, version: 1.0.1}
+  - {id: SEC-SECRETS, version: 1.0.2}
+  - {id: STK-PY, version: 1.0.2}
   - {id: STK-HTMX, version: 1.0.0}
 waivers: []
 external_action_approvals: []

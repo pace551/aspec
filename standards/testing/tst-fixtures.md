@@ -2,7 +2,7 @@
 id: TST-FIXTURES
 title: Test Data & Fixtures
 family: TST
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -23,7 +23,7 @@ triggers:
   - mock data
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/secret-scan.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/secret-scan.sh\""
     expect: "exit 0 — no real secret patterns in fixtures or cassettes"
     layer: G
     rules: [TST-FIXTURES-01]
@@ -131,7 +131,7 @@ green checkmark.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/secret-scan.sh` | exit 0 — no real secrets in fixtures | TST-FIXTURES-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/secret-scan.sh"` | exit 0 — no real secrets in fixtures | TST-FIXTURES-01 |
 | 2 | attest: no prod data / PII; fake secrets | explicit yes recorded | TST-FIXTURES-01 |
 | 3 | attest: deterministic (seeds, frozen time) | explicit yes recorded | TST-FIXTURES-02 |
 | 4 | attest: network-free default run | explicit yes recorded | TST-FIXTURES-03 |
@@ -200,4 +200,5 @@ addopts = "-m 'not network'"
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

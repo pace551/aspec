@@ -24,16 +24,16 @@
     "version": "1.0.0"
   },
   "ARC-ERRORS": {
-    "hash": "3d16a5f7a4ebb6f9669e8851c1d929ea2e40d923c4f85f57bea0ab6030414037",
-    "version": "1.0.0"
+    "hash": "0792bfdf59dc9af57cc4b2e81582f0a9cbf9c336d1e869b4fcc354d7ec01cec5",
+    "version": "1.0.1"
   },
   "ARC-IDEMPOTENCY": {
     "hash": "d8746f24da78cf44779efa5379cb088b6eb6d64f1a5a26d722540a04ae63f573",
     "version": "1.0.0"
   },
   "ARC-MODULARITY": {
-    "hash": "ebe605fff49b96280c7866950499f154e6967837ce6d31898aa16a13ab29d5f3",
-    "version": "1.0.0"
+    "hash": "ee852dcf7b4583b889e081b906c21cfb9c5045d5bcad97da2fc7c274fc6997a7",
+    "version": "1.0.1"
   },
   "ARC-PATTERNS": {
     "hash": "38d74eebbdc373cbeafdc4017c9241cd8a6eea1ba19680bab4ab5d8fdedc47bf",
@@ -52,12 +52,12 @@
     "version": "1.0.1"
   },
   "DEV-BOOTSTRAP": {
-    "hash": "38c2694a118c1140c7da22416944f3c3a242d03227b09bfbecaee98dabed8a99",
-    "version": "1.0.0"
+    "hash": "3a636c60af9f5e00cb26f40461531edbcc5b64a9e62b4a352a1d62552082eb6b",
+    "version": "1.0.1"
   },
   "DEV-CI": {
-    "hash": "3878e33ed2a44fb477c7e0258f5dba7251d4d3139c397b6cb2bd1b2f0ac37cef",
-    "version": "1.0.0"
+    "hash": "93bb901f707f6bee83c4785497b9be5096c4323ad37e004df33afa767f141d4a",
+    "version": "1.0.1"
   },
   "DEV-DEPS": {
     "hash": "b438630e1fdf37700386302e125bee4081bbbb275704285da8be0af197e13829",
@@ -76,8 +76,8 @@
     "version": "1.0.0"
   },
   "INF-CONTAINERS": {
-    "hash": "a16c82dfda486c771fb7a18b39a0f307943074a9dbdf06ebb8c138f9735674f0",
-    "version": "1.0.2"
+    "hash": "e4a237c15b4fa9da861c4ad51d8b2148c5b6e3b369b5bf55b51c9a0231def1e9",
+    "version": "1.0.3"
   },
   "INF-EDGE": {
     "hash": "a1826d6fd0622672b261e72cffba4fcb03eb67c7b585a952e5acab91444c9511",
@@ -92,8 +92,8 @@
     "version": "1.0.2"
   },
   "INF-TF": {
-    "hash": "274394e007624c6c77fdc515229e151d2a94846de5500a99b3510f0ca1da4c09",
-    "version": "1.0.1"
+    "hash": "695f61e48652f5a0a01e2bfe7182614e020e949c6cd0824482eb9b290f711a55",
+    "version": "1.0.2"
   },
   "LEG-COMMERCIAL": {
     "hash": "054288e7cccb3ede1abf571b49347832792d0582618bad337bbe877c4a4f204c",
@@ -144,40 +144,40 @@
     "version": "1.0.0"
   },
   "SEC-CRYPTO": {
-    "hash": "0c7807cf757c9e00e052b5207991316498be942f24e1af9336f839c12518b023",
-    "version": "1.0.0"
-  },
-  "SEC-INPUT": {
-    "hash": "0ff34f52858b6fe17b72894713aa73d32b3f61c740673d03b502f7a5c31d2bf7",
-    "version": "1.0.0"
-  },
-  "SEC-SAST": {
-    "hash": "dedb57d2eef3b22c67128bda009195e1eefc0da4a0ca04ce2fe48143a34f531b",
-    "version": "1.0.0"
-  },
-  "SEC-SECRETS": {
-    "hash": "73963784241a7485c43b5705eff33f74bb3d71179e9d458a8a09a29d9a73acee",
+    "hash": "4afa893b49715cb0f8da99dc4d5eb850e1d7d92e58d05c02aac6155ee645c16b",
     "version": "1.0.1"
   },
+  "SEC-INPUT": {
+    "hash": "da46f76eb871d1c280033e13270d131bea0a657f9e1ca0504efb0c3bd59074d5",
+    "version": "1.0.1"
+  },
+  "SEC-SAST": {
+    "hash": "8415c7682ed27fc0b9c0e2db14f2b6cfc72d864b2c1d0d3dc1b9b5f54d8ea4e9",
+    "version": "1.0.1"
+  },
+  "SEC-SECRETS": {
+    "hash": "eff23eaf70da9fb522f05e02ab78ec966f4461f94f2b4baea79abc21a23c664e",
+    "version": "1.0.2"
+  },
   "SEC-SUPPLY": {
-    "hash": "0679fe3f3ea07d9d59a4b8183618b01769fb41bb3efec8f9f67c8e8f3b546ff6",
-    "version": "1.0.0"
+    "hash": "81611c16fe32642ca189497998ee2fd77412279f71d823461380770d4b1262f9",
+    "version": "1.0.1"
   },
   "SEC-THREAT": {
     "hash": "371f44927c6e00a958868dc4eb893efebee0b1cc001ecaef0fa0cc1d820748b9",
     "version": "1.0.0"
   },
   "SEC-WEB": {
-    "hash": "e7da9fca435f768d6d3c66319a87565327fd8cb1023049e79380f22a5479f845",
-    "version": "1.0.0"
+    "hash": "f6238fd0264002b3b1e393bf1204491a0a1f5706ac628074e875fc50b1605204",
+    "version": "1.0.1"
   },
   "STK-DDB": {
     "hash": "cf9f37645fa75d263747bc1fdad4f33b44ce59bae071b4fd24e53d4725e88af5",
     "version": "1.0.1"
   },
   "STK-GO": {
-    "hash": "d7287f86dfd95f1b80b368d8f1e454aa7a77c68a15ba21250a47866667b056ff",
-    "version": "1.0.0"
+    "hash": "36499c2d22da087de4ee39d011e61087baf0a40f07b47fd9bf6a6368972dcbbf",
+    "version": "1.0.1"
   },
   "STK-HTMX": {
     "hash": "e81d8266b448967eadc09ac9d8d9cfbcfe6e71980e125ce1fa12e9c1f3cefd4d",
@@ -192,36 +192,36 @@
     "version": "1.0.0"
   },
   "STK-PY": {
-    "hash": "438917f23621a9c121eafc9d675a03454459ea91ec30c808d2e48512caf27725",
-    "version": "1.0.1"
+    "hash": "c85d9ef34ab5c35acf6469e2d2c30b92f6f92b3937a8d565cb257a8f10242b37",
+    "version": "1.0.2"
   },
   "STK-REDIS": {
     "hash": "aabf22fba858bcdd317c0db8b0a2186579e313babab8b6367e3428afffdaeb22",
     "version": "1.0.0"
   },
   "STK-RUST": {
-    "hash": "263f3bcabd8866d12adfc5e53fb83c2b78eafda348c9189c3eabc102568bd83b",
-    "version": "1.0.0"
+    "hash": "8092f2c032f8a6fe0bdcb919a36bea7110214c4461fe8931cc054c5ad08dcd9a",
+    "version": "1.0.1"
   },
   "STK-SQLITE": {
-    "hash": "acd4e3f1a057750236ebbb38f1b176b5346b7d43cac0e1561a15b174447de9a5",
-    "version": "1.0.0"
+    "hash": "474516efbe775c6ab6fb8ef92c4b8a4f88bb9997c1a34144f95d9c65c006d336",
+    "version": "1.0.1"
   },
   "STK-SWIFT": {
-    "hash": "aad720700bb7c6984c5a71fea7530d0b784a244c6cea98ab3f5c651d2f8e6b5a",
-    "version": "1.0.0"
+    "hash": "4c3b192d6f50003d2c0c88e2c9b8c096fe00073c32371eee54155fe61d647a79",
+    "version": "1.0.1"
   },
   "STK-TS": {
-    "hash": "45053718817838236303a509fdf7735b31456926c538dbb027a37f9899850ef4",
-    "version": "1.0.0"
+    "hash": "62e78b75dd010c44dcef5e23c72d8d0353907194d87150af9c87aceb2a58dda2",
+    "version": "1.0.1"
   },
   "STK-VITE": {
     "hash": "30db2d8c632c8710126f19aef68f4bcaa020542f7ef042fa3c05094350d1f235",
     "version": "1.0.1"
   },
   "TST-FIXTURES": {
-    "hash": "b1eb8f289a26a964608084bbf8b068def0c3140301459f7c6f1f496700755609",
-    "version": "1.0.0"
+    "hash": "b842fd2adbec446e6ca7bbc1df3d36f98f18c5b1ee457c635bc1e57296e9404f",
+    "version": "1.0.1"
   },
   "TST-INTEG": {
     "hash": "40cc3da30a2116434c08acf2193ed82a5ddc1517c669dfbd6b41b4b4c1caaf06",
@@ -232,16 +232,16 @@
     "version": "1.0.0"
   },
   "TST-RATCHET": {
-    "hash": "76146e46529c4970f72a065f25354b01e22ba0b9d727d6ba4eccaa1acd4b0e59",
-    "version": "1.0.0"
+    "hash": "5851fa90379bd7547aa5f16b8a565ca298535b7716d2c625b6b9a7975f43455e",
+    "version": "1.0.1"
   },
   "TST-VERIFY": {
     "hash": "d615cc017939fbd583e385b0b627adec09f2663f84883a23e43b6ad0923feffb",
     "version": "1.0.0"
   },
   "UX-A11Y": {
-    "hash": "7278577270086179a889853cfeb7aa027037e3c59cd9ac232eedb25e7c278d7a",
-    "version": "1.0.0"
+    "hash": "82691e093a8f8c409858ff33289392e0f8ff7b6cdb5a7d9d03bc99465ebfe4dd",
+    "version": "1.0.1"
   },
   "UX-DESIGN": {
     "hash": "aa70f05bf03e3d2f5d6655a9e16144bf6417664bab8dc30936ef06111a16a287",

@@ -2,7 +2,7 @@
 id: ARC-MODULARITY
 title: Modularity & Boundaries
 family: ARC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -24,7 +24,7 @@ triggers:
   - shared code
 requires: []
 verification:
-  - cmd: "python3 ~/Dev/claude-code/governance/checks/import-cycles.py"
+  - cmd: "python3 \"$GOVERNANCE_DIR/checks/import-cycles.py\""
     expect: "exit 0 — first-party import graph is acyclic (no-op when no Python package present)"
     layer: G
     rules: [ARC-MODULARITY-01]
@@ -135,7 +135,7 @@ heavy infrastructure (a T3+ concern).
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `python3 ~/Dev/claude-code/governance/checks/import-cycles.py` (T2+) | exit 0 — acyclic (or no Python package) | ARC-MODULARITY-01 |
+| 1 | `python3 "$GOVERNANCE_DIR/checks/import-cycles.py"` (T2+) | exit 0 — acyclic (or no Python package) | ARC-MODULARITY-01 |
 | 2–6 | attestation checklist (one entry per rule) | explicit yes recorded | ARC-MODULARITY-02…06 |
 
 **Remediation:** cycle reported → move the shared piece into a lower module both sides
@@ -162,7 +162,7 @@ src/myproj/
 
 Direction check: `source_http → domain` is legal; `domain → source_http` would put
 `httpx` in the pure ring — rule 02 violation and, sooner or later, a cycle that
-`python3 ~/Dev/claude-code/governance/checks/import-cycles.py` reports (rule 01).
+`python3 "$GOVERNANCE_DIR/checks/import-cycles.py"` reports (rule 01).
 
 ## Anti-Patterns
 
@@ -188,4 +188,5 @@ Direction check: `source_http → domain` is legal; `domain → source_http` wou
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

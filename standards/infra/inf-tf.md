@@ -2,7 +2,7 @@
 id: INF-TF
 title: Terraform/OpenTofu on AWS
 family: INF
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -25,7 +25,7 @@ triggers:
   - state bucket
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/inf-tf-scan.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/inf-tf-scan.sh\""
     expect: "exit 0 — fmt/validate clean; tflint+checkov clean when installed (warns when absent)"
     layer: G
     rules: [INF-TF-04]
@@ -179,7 +179,7 @@ a move, not a destroy/create.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/inf-tf-scan.sh` | exit 0 — fmt/validate/tflint/checkov clean (documented warnings when tools absent) | INF-TF-04 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/inf-tf-scan.sh"` | exit 0 — fmt/validate/tflint/checkov clean (documented warnings when tools absent) | INF-TF-04 |
 | 2 | `! git ls-files \| grep -qE "\.tfstate(\.backup)?$"` | no tracked state files | INF-TF-02 |
 | 3 | tracked `.tf` files ⇒ tracked `.terraform.lock.hcl` | lockfile committed | INF-TF-08 |
 | 4 | tracked `.tf` files ⇒ `backend "s3"` present (T3+) | remote state configured | INF-TF-03 |
@@ -238,5 +238,6 @@ data "aws_ssm_parameter" "api_key" {
 
 ## Changelog
 
+- **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

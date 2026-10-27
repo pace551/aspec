@@ -2,7 +2,7 @@
 id: STK-SQLITE
 title: SQLite
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -25,7 +25,7 @@ verification:
     expect: "exit 0 — canonical pragma block (WAL + foreign_keys + busy_timeout) present in the tree"
     layer: G
     rules: [STK-SQLITE-02]
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-sast.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-sast.sh\""
     expect: "exit 0 — no string-built SQL (bandit B608 / semgrep; shared gate with SEC-SAST)"
     layer: G
     rules: [STK-SQLITE-03]
@@ -154,7 +154,7 @@ required. Money is integer cents in a STRICT `INTEGER` column, never `REAL`.
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
 | 1 | chained grep for `journal_mode…WAL`, `foreign_keys…ON`, `busy_timeout` | all three patterns found in the tree | STK-SQLITE-02 |
-| 2 | `bash ~/Dev/claude-code/governance/checks/sec-sast.sh` | exit 0 — no string-built SQL findings | STK-SQLITE-03 |
+| 2 | `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` | exit 0 — no string-built SQL findings | STK-SQLITE-03 |
 | 3 | `[ ! -d migrations ] \|\| ls migrations \| grep -qE "^[0-9]+_.+[.]sql$"` (T2+) | migrations dir absent, or contains numbered files | STK-SQLITE-04 |
 | 4–7 | attestation checklist (one per rule) | explicit yes recorded | STK-SQLITE-01, -05, -06, -07 |
 
@@ -213,4 +213,5 @@ Scaffold fragment (`templates/scaffolds/data/sqlite/`): `pragmas.sql`, `migrate.
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

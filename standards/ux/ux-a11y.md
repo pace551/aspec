@@ -2,7 +2,7 @@
 id: UX-A11Y
 title: Accessibility
 family: UX
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -24,7 +24,7 @@ triggers:
   - form label
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/ux-a11y.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/ux-a11y.sh\""
     expect: "exit 0 — axe-core scan clean (degrades to documented warning if npx/driver or app missing)"
     layer: G
     rules: [UX-A11Y-01]
@@ -136,7 +136,7 @@ Cheapest implementation: define animations inside a
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/ux-a11y.sh` (T3+) | exit 0 — axe clean; skips with warning if app not running; degrades with warning if tooling missing | UX-A11Y-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/ux-a11y.sh"` (T3+) | exit 0 — axe clean; skips with warning if app not running; degrades with warning if tooling missing | UX-A11Y-01 |
 | 2–6 | attestation checklist (one entry per rule) | explicit yes recorded in GOVERNANCE.md | UX-A11Y-02…06 |
 
 **Remediation:** axe `color-contrast` → fix the token in UX-DESIGN's palette, not the one
@@ -164,7 +164,7 @@ attest.
 }
 ```
 
-Gate locally before pushing: `bash ~/Dev/claude-code/governance/checks/ux-a11y.sh
+Gate locally before pushing: `bash "$GOVERNANCE_DIR/checks/ux-a11y.sh"
 http://localhost:3000`.
 
 ## Anti-Patterns
@@ -190,4 +190,5 @@ http://localhost:3000`.
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

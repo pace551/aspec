@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-10-06",
+  "generated": "2026-10-27",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -219,7 +219,7 @@
       "id": "ARC-ERRORS",
       "title": "Error Handling & Resilience",
       "family": "ARC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -248,7 +248,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-errors.md",
-      "tokens_est": 2524
+      "tokens_est": 2563
     },
     {
       "id": "ARC-IDEMPOTENCY",
@@ -289,7 +289,7 @@
       "id": "ARC-MODULARITY",
       "title": "Modularity & Boundaries",
       "family": "ARC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -318,7 +318,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-modularity.md",
-      "tokens_est": 2278
+      "tokens_est": 2314
     },
     {
       "id": "ARC-PATTERNS",
@@ -459,7 +459,7 @@
       "id": "INF-CONTAINERS",
       "title": "Containers & ECS",
       "family": "INF",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -489,7 +489,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-containers.md",
-      "tokens_est": 3056
+      "tokens_est": 3095
     },
     {
       "id": "INF-EDGE",
@@ -611,7 +611,7 @@
       "id": "INF-TF",
       "title": "Terraform/OpenTofu on AWS",
       "family": "INF",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -644,7 +644,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-tf.md",
-      "tokens_est": 3048
+      "tokens_est": 3086
     },
     {
       "id": "LEG-COMMERCIAL",
@@ -994,7 +994,7 @@
       "id": "DEV-BOOTSTRAP",
       "title": "Repository Bootstrap",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1025,13 +1025,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-bootstrap.md",
-      "tokens_est": 2477
+      "tokens_est": 2502
     },
     {
       "id": "DEV-CI",
       "title": "CI Baseline",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "n/a",
@@ -1058,7 +1058,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-ci.md",
-      "tokens_est": 2200
+      "tokens_est": 2233
     },
     {
       "id": "DEV-DEPS",
@@ -1262,7 +1262,7 @@
       "id": "SEC-CRYPTO",
       "title": "Cryptography & Transport",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1290,13 +1290,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-crypto.md",
-      "tokens_est": 2688
+      "tokens_est": 2723
     },
     {
       "id": "SEC-INPUT",
       "title": "Input Validation & Injection Defense",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1326,13 +1326,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-input.md",
-      "tokens_est": 2990
+      "tokens_est": 3024
     },
     {
       "id": "SEC-SAST",
       "title": "Static Application Security Testing",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1359,13 +1359,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-sast.md",
-      "tokens_est": 2156
+      "tokens_est": 2187
     },
     {
       "id": "SEC-SECRETS",
       "title": "Secrets Management",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1392,13 +1392,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-secrets.md",
-      "tokens_est": 2106
+      "tokens_est": 2145
     },
     {
       "id": "SEC-SUPPLY",
       "title": "Supply Chain Security",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1426,7 +1426,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-supply.md",
-      "tokens_est": 2469
+      "tokens_est": 2504
     },
     {
       "id": "SEC-THREAT",
@@ -1464,7 +1464,7 @@
       "id": "SEC-WEB",
       "title": "Web Hardening",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1496,7 +1496,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-web.md",
-      "tokens_est": 2353
+      "tokens_est": 2389
     },
     {
       "id": "STK-DDB",
@@ -1536,7 +1536,7 @@
       "id": "STK-GO",
       "title": "Go Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1566,7 +1566,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-go.md",
-      "tokens_est": 2741
+      "tokens_est": 2782
     },
     {
       "id": "STK-HTMX",
@@ -1684,7 +1684,7 @@
       "id": "STK-PY",
       "title": "Python Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1714,7 +1714,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-py.md",
-      "tokens_est": 2693
+      "tokens_est": 2735
     },
     {
       "id": "STK-REDIS",
@@ -1756,7 +1756,7 @@
       "id": "STK-RUST",
       "title": "Rust Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1786,13 +1786,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-rust.md",
-      "tokens_est": 2963
+      "tokens_est": 3004
     },
     {
       "id": "STK-SQLITE",
       "title": "SQLite",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1820,13 +1820,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-sqlite.md",
-      "tokens_est": 2640
+      "tokens_est": 2679
     },
     {
       "id": "STK-SWIFT",
       "title": "Apple SwiftUI Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1856,13 +1856,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-swift.md",
-      "tokens_est": 2792
+      "tokens_est": 2830
     },
     {
       "id": "STK-TS",
       "title": "TypeScript/Node Stack",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1894,7 +1894,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-ts.md",
-      "tokens_est": 3139
+      "tokens_est": 3180
     },
     {
       "id": "STK-VITE",
@@ -1937,7 +1937,7 @@
       "id": "TST-FIXTURES",
       "title": "Test Data & Fixtures",
       "family": "TST",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1965,7 +1965,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-fixtures.md",
-      "tokens_est": 2437
+      "tokens_est": 2476
     },
     {
       "id": "TST-INTEG",
@@ -2037,7 +2037,7 @@
       "id": "TST-RATCHET",
       "title": "Coverage Ratchet",
       "family": "TST",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2063,7 +2063,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-ratchet.md",
-      "tokens_est": 2191
+      "tokens_est": 2224
     },
     {
       "id": "TST-VERIFY",
@@ -2103,7 +2103,7 @@
       "id": "UX-A11Y",
       "title": "Accessibility",
       "family": "UX",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2134,7 +2134,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/ux/ux-a11y.md",
-      "tokens_est": 2217
+      "tokens_est": 2253
     },
     {
       "id": "UX-DESIGN",

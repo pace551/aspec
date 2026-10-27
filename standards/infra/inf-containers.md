@@ -2,7 +2,7 @@
 id: INF-CONTAINERS
 title: Containers & ECS
 family: INF
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -23,7 +23,7 @@ triggers:
   - containerize
 requires: []
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/inf-container-scan.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/inf-container-scan.sh\""
     expect: "exit 0 — hadolint + trivy config clean when installed; built-in pin/USER checks otherwise"
     layer: G
     rules: [INF-CONTAINERS-01, INF-CONTAINERS-02, INF-CONTAINERS-03, INF-CONTAINERS-05]
@@ -184,7 +184,7 @@ No log files inside containers: they die with the task.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/inf-container-scan.sh` | exit 0 — scanners clean, or fallback checks pass with warning | INF-CONTAINERS-01, -02, -03, -05 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/inf-container-scan.sh"` | exit 0 — scanners clean, or fallback checks pass with warning | INF-CONTAINERS-01, -02, -03, -05 |
 | 2 | tracked Dockerfiles all contain `^USER ` | exit 0 | INF-CONTAINERS-02 |
 | 3 | tracked Dockerfile ⇒ `.dockerignore` exists | exit 0 | INF-CONTAINERS-04 |
 | 4-9 | attestation checklist (one per rule; ECS entries T3+) | explicit yes recorded | INF-CONTAINERS-03, -06, -07, -08, -09, -10 |
@@ -237,6 +237,7 @@ plus `awslogs` logConfiguration, `readonlyRootFilesystem`, a `healthCheck`, and
 
 ## Changelog
 
+- **1.0.3** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

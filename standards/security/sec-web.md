@@ -2,7 +2,7 @@
 id: SEC-WEB
 title: Web Hardening
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -23,7 +23,7 @@ triggers:
   - browser
 requires: [SEC-INPUT]
 verification:
-  - cmd: "bash ~/Dev/claude-code/governance/checks/sec-web-headers.sh"
+  - cmd: "bash \"$GOVERNANCE_DIR/checks/sec-web-headers.sh\""
     expect: "exit 0 — required headers present on http://localhost:3000 (pass the real URL in CI; skips gracefully if the app is not running)"
     layer: G
     rules: [SEC-WEB-01]
@@ -120,7 +120,7 @@ not.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `bash ~/Dev/claude-code/governance/checks/sec-web-headers.sh [URL]` | exit 0 — required headers present (skip with warning if app not running) | SEC-WEB-01 |
+| 1 | `bash "$GOVERNANCE_DIR/checks/sec-web-headers.sh" [URL]` | exit 0 — required headers present (skip with warning if app not running) | SEC-WEB-01 |
 | 2 | attest: CORS deny-by-default, explicit origins (T3+) | explicit yes recorded | SEC-WEB-02 |
 | 3 | attest: auth + expensive endpoints rate limited (T3+) | explicit yes recorded | SEC-WEB-03 |
 | 4 | attest: strictest-bearable cookie flags (T3+) | explicit yes recorded | SEC-WEB-04 |
@@ -156,7 +156,7 @@ async def security_headers(request, call_next):
 Verified against the running app:
 
 ```
-$ bash ~/Dev/claude-code/governance/checks/sec-web-headers.sh http://localhost:8000
+$ bash "$GOVERNANCE_DIR/checks/sec-web-headers.sh" http://localhost:8000
 sec-web-headers: note — HSTS check skipped for non-https URL
 sec-web-headers: warning — advisory header absent: Permissions-Policy
 sec-web-headers: pass (http://localhost:8000)
@@ -204,4 +204,5 @@ app.add_middleware(
 
 ## Changelog
 
+- **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.
