@@ -14,6 +14,7 @@ violations (each printed with file and reason).
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -30,11 +31,7 @@ FAMILY_DIRS = {
     "DATA": "data", "AI": "ai", "LEG": "legal",
 }
 FAMILIES = set(FAMILY_DIRS)
-STACK_KEYS = {
-    "python", "typescript", "go", "rust", "nextjs", "vite-react", "htmx", "swiftui",
-    "sqlite", "postgresql", "dynamodb", "redis", "terraform", "containers",
-    "serverless", "aws", "web",
-}
+STACK_KEYS = set(json.loads((ROOT / "checks" / "stack-keys.json").read_text()))
 TIER_VALUES = {"required", "advisory", "n/a"}
 TIER_NAMES = {"T1", "T2", "T3", "T4"}
 TIER_LINE_RE = re.compile(r"^\*\*Tiers\*\*: (.+?) — \*\*Layer\*\*: (.+)$", re.MULTILINE)

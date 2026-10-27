@@ -38,7 +38,8 @@ calibration bar for depth, tone, and length — match them.
 7. **Triggers** are lowercase task-brief keywords a `/govern` intake would grep for —
    think "what words appear in a task that makes this standard relevant" (tools, nouns,
    verbs), not taxonomy labels.
-8. **Stack keys vocabulary** (for `stacks:` frontmatter, lint-enforced allowlist):
+8. **Stack keys vocabulary** (for `stacks:` frontmatter; canonical list in
+   `checks/stack-keys.json`, enforced by lint and by `select-standards.py`):
    `python`, `typescript`, `go`, `rust`, `nextjs`, `vite-react`, `htmx`, `swiftui`,
    `sqlite`, `postgresql`, `dynamodb`, `redis`, `terraform`, `containers`, `serverless`,
    `aws`, `web` (any browser-facing stack). Cross-cutting standards usually say `all`.

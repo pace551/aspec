@@ -27,8 +27,9 @@ From the repo (or the plan, for greenfield): `pyproject.toml`→python ·
 `package.json`→typescript (+nextjs if next dep, +vite-react if vite+react) ·
 `go.mod`→go · `Cargo.toml`→rust · `Package.swift`/`*.xcodeproj`→swiftui ·
 `*.tf`→terraform,aws · `Dockerfile`→containers · lambda/serverless config→serverless,aws ·
-sqlite/postgres/dynamo/redis usage in deps or config→that store · any browser-facing
-surface→web. Allowed keys are the lint allowlist in `$GOV/templates/AUTHORING.md`.
+sqlite/postgresql/dynamodb/redis usage in deps or config→that key · any browser-facing
+surface→web. Use the exact keys from `$GOV/checks/stack-keys.json`; `select-standards.py`
+rejects any other key (usage error, exit 2) — fix the key, never drop it.
 
 ### 3. Select standards (deterministic — do not browse standards/ by hand)
 
