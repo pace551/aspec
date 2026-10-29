@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-10-27",
+  "generated": "2026-10-29",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -684,7 +684,7 @@
       "id": "LEG-LICENSING",
       "title": "Licensing",
       "family": "LEG",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -712,7 +712,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/legal/leg-licensing.md",
-      "tokens_est": 1813
+      "tokens_est": 2431
     },
     {
       "id": "OPS-ALERTS",
