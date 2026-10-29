@@ -11,7 +11,8 @@ carry their own per-file changelogs.
   stays hand-written (`skip-changelog`). On the release PR, `checks/release-prep.py`
   sets the LICENSE Change Date to the release date + 3 years and moves the Unreleased
   entries under the version heading; it refuses to fold entries into a version that
-  already has a section. Covered by `checks/test_release_prep.py`.
+  already has a section. Covered by `checks/test_release_prep.py`. The workflow runs on
+  every push to `main` and can be started by hand (Actions → release → Run workflow).
 - License: the BSL Additional Use Grant now states that it does not cover offering
   ASPEC, or a derivative, to third parties as a product or service (sold, licensed,
   hosted, or bundled into a commercial offering). Using ASPEC to build commercial
