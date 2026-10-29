@@ -17,6 +17,11 @@ every future task, so this repo holds itself to its own strictest rules.
   are the calibration references for depth and tone.
 - **PRs are always a single squashed commit.** Fixups during review get squashed into
   the PR's one commit on the branch and force-pushed with `--force-with-lease`.
+- **Framework changes get a `CHANGELOG.md` entry under `## Unreleased`** (hand-written
+  prose). Releases are cut by merging release-please's release PR (`.github/workflows/
+  release.yml`); it moves those entries under the version heading and sets the LICENSE
+  Change Date via `checks/release-prep.py`. Never edit `version.txt` or
+  `.release-please-manifest.json` by hand.
 - Skills in `skills/` are canonical; `checks/install.sh` copies them to `~/.claude/skills/`.
   Edit here, then reinstall — never edit the installed copies.
 
