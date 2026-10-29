@@ -2,6 +2,9 @@
 # Full-history scan so an old leak surfaces even after deletion.
 gitleaks:
   runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    pull-requests: write # gitleaks-action comments on PR lines with leaks
   steps:
     - uses: actions/checkout@v4
       with:
