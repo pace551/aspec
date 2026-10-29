@@ -11,6 +11,11 @@ carry their own per-file changelogs.
   products is unchanged. Change Date moves to 2029-10-28 (publication + 3 years, the
   original offset); it is meant to move forward with each release. Versions already
   published keep the terms they were published under.
+- License: the grant now says that software built with ASPEC, including code
+  generated from or copied out of its templates and scaffolds, is not an offering of
+  ASPEC under the resale exclusion, and may be distributed under terms of its
+  author's choosing. Without this, a product built from a scaffold could be read as
+  a "derivative" excluded from the grant.
 - Coverage ratchet: "no coverage data" exits 3 instead of 2. Python exits 2 when it
   can't open a script, so TST-RATCHET's check (which tolerates "no data yet") used to
   pass when the ratchet script was missing. Covered by `checks/test_coverage_ratchet.py`.
