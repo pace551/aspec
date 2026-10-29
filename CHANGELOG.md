@@ -5,6 +5,12 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- License: the BSL Additional Use Grant now states that it does not cover offering
+  ASPEC, or a derivative, to third parties as a product or service (sold, licensed,
+  hosted, or bundled into a commercial offering). Using ASPEC to build commercial
+  products is unchanged. Change Date moves to 2029-10-28 (publication + 3 years, the
+  original offset); it is meant to move forward with each release. Versions already
+  published keep the terms they were published under.
 - Coverage ratchet: "no coverage data" exits 3 instead of 2. Python exits 2 when it
   can't open a script, so TST-RATCHET's check (which tolerates "no data yet") used to
   pass when the ratchet script was missing. Covered by `checks/test_coverage_ratchet.py`.

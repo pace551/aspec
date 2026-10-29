@@ -9,8 +9,11 @@ Additional Use Grant: You may use the Licensed Work to govern your own software
                       development projects, including commercial ones. This grant
                       covers using, copying, modifying, and distributing the Licensed
                       Work as part of your internal development process or as a
-                      component of your development toolchain.
-Change Date:          2029-09-15
+                      component of your development toolchain. This grant does not
+                      include offering the Licensed Work, or a derivative of it, to
+                      third parties as a product or service, whether sold, licensed,
+                      hosted, or bundled into a commercial offering.
+Change Date:          2029-10-28
 Change License:       MIT
 
 License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
