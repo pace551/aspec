@@ -5,6 +5,13 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Releases: release-please (`.github/workflows/release.yml`) keeps a release PR open
+  from the conventional commits on `main`; merging it tags `vX.Y.Z` and publishes a
+  GitHub release whose notes are this file's section for that version. The changelog
+  stays hand-written (`skip-changelog`). On the release PR, `checks/release-prep.py`
+  sets the LICENSE Change Date to the release date + 3 years and moves the Unreleased
+  entries under the version heading; it refuses to fold entries into a version that
+  already has a section. Covered by `checks/test_release_prep.py`.
 - License: the BSL Additional Use Grant now states that it does not cover offering
   ASPEC, or a derivative, to third parties as a product or service (sold, licensed,
   hosted, or bundled into a commercial offering). Using ASPEC to build commercial

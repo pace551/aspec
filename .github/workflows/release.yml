@@ -1,0 +1,68 @@
+# Release automation. release-please keeps a release PR open from the conventional
+# commits on main (skip-changelog: CHANGELOG.md stays hand-written); merging that PR
+# tags vX.Y.Z and publishes a GitHub release. checks/release-prep.py adds what
+# release-please can't do: the BSL Change Date (release date + 3 years) and moving the
+# CHANGELOG's Unreleased entries under the release heading, both inside the release PR
+# so they are reviewed and ship in the tagged release.
+#
+# Third-party actions are pinned to commit SHAs (SEC-SUPPLY): this job holds a write token.
+# PRs and pushes made with GITHUB_TOKEN don't trigger other workflows, so framework CI
+# doesn't run on the release PR; it only touches version files, LICENSE and CHANGELOG.md.
+name: release
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # release PR branch, tags, GitHub releases
+      pull-requests: write # open and update the release PR
+    steps:
+      - id: rp
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+
+      # Merged release PR → the release exists; give it the hand-written notes.
+      - if: steps.rp.outputs.release_created == 'true'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Release notes from CHANGELOG.md
+        if: steps.rp.outputs.release_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.rp.outputs.tag_name }}
+          VERSION: ${{ steps.rp.outputs.version }}
+        run: python3 checks/release-prep.py notes "$VERSION" | gh release edit "$TAG" --notes-file -
+
+      # Release PR created or refreshed → re-apply the release-date edits on its branch
+      # (release-please rebuilds the branch from main on every push, so this reruns).
+      # The edits are amended into release-please's own commit so the PR stays a single
+      # commit (CLAUDE.md), and pushed with a lease pinned to the commit checked out here:
+      # if anything else moved the branch meanwhile, the push fails instead of clobbering it.
+      - if: steps.rp.outputs.prs_created == 'true'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ fromJSON(steps.rp.outputs.pr).headBranchName }}
+          fetch-depth: 2 # amending in a depth-1 clone drops the commit's parent
+      - name: Set Change Date and CHANGELOG release heading
+        if: steps.rp.outputs.prs_created == 'true'
+        env:
+          BRANCH: ${{ fromJSON(steps.rp.outputs.pr).headBranchName }}
+        run: |
+          case "$BRANCH" in
+            release-please--*) ;;
+            *) echo "refusing to rewrite '$BRANCH': not a release-please branch" >&2; exit 1 ;;
+          esac
+          python3 checks/release-prep.py prepare
+          if git diff --quiet; then exit 0; fi
+          before=$(git rev-parse HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -a --amend --no-edit
+          if [ "$(git rev-parse HEAD^)" != "$(git rev-parse "$before^")" ]; then
+            echo "amended commit lost its parent; not pushing" >&2; exit 1
+          fi
+          git push --force-with-lease="refs/heads/$BRANCH:$before" origin "HEAD:refs/heads/$BRANCH"
