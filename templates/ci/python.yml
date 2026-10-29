@@ -18,6 +18,10 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege for GITHUB_TOKEN (SEC-AUTHZ-04); jobs widen only what they need.
+permissions:
+  contents: read
+
 jobs:
   # fragment: lint.yml — {{CMD_LINT}} = scripts/lint.sh
   # (= .venv/bin/ruff format --check . && .venv/bin/ruff check .)
@@ -73,6 +77,9 @@ jobs:
   # fragment: gitleaks.yml — SEC-SECRETS-01 (layer G); full history scan.
   gitleaks:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # gitleaks-action comments on PR lines with leaks
     steps:
       - uses: actions/checkout@v4
         with:

@@ -12,6 +12,9 @@ Conventions:
     the same ones the local `scripts/lint.sh` / `scripts/test.sh` run (one source of truth
     for what "passing" means; hooks and CI never disagree).
   - `{{SETUP_STEPS}}` — the stack's toolchain setup block (see stack workflows).
+- Stack workflows set `permissions: contents: read` at the top level (SEC-AUTHZ-04).
+  A fragment that needs more declares a job-level `permissions:` block (e.g. `gitleaks.yml`
+  adds `pull-requests: write` for its PR comments); never widen the workflow default.
 - Every job pins actions to a major version tag; at T3+ `SEC-SUPPLY` upgrades pins to
   full commit SHAs (`/bootstrap-repo --tier T3` does this mechanically).
 - Required job set per tier is defined in `DEV-CI` (checks/dev-ci-present.sh verifies).
