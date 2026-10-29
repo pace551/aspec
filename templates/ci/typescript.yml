@@ -126,3 +126,19 @@ jobs:
         run: npm ci
       - name: Dependency vulnerability audit
         run: npm audit --omit=dev --audit-level=high
+
+  # fragment: license-audit.yml — {{CMD_LICENSES}} = license-checker (LEG-LICENSING-01, T4)
+  license-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Dependency license audit
+        run: >
+          npx license-checker-rseidelsohn --production --excludePrivatePackages
+          --onlyAllow "MIT;BSD-2-Clause;BSD-3-Clause;Apache-2.0;ISC;0BSD;CC0-1.0;Unlicense"

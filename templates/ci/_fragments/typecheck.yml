@@ -1,5 +1,6 @@
-# Fragment: typecheck — DEV-CI. Stacks without a separate typechecker (Go, Rust) fold
-# this into build/test and omit the job.
+# Fragment: typecheck — DEV-CI. Stacks without a separate typechecker (Go, Rust, and
+# Python until STK-PY names one) use the no-op variant at the bottom of this file:
+# DEV-CI-01 keeps the job name on every stack so branch protection can require it.
 typecheck:
   runs-on: ubuntu-latest
   steps:
@@ -7,3 +8,10 @@ typecheck:
     # {{SETUP_STEPS}}
     - name: Typecheck
       run: {{CMD_TYPECHECK}}
+
+# No-op variant — the compiler (or nothing, for Python) carries the check elsewhere.
+# typecheck:
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Typecheck (no-op)
+#       run: echo "no separate typechecker — {{WHY}}"

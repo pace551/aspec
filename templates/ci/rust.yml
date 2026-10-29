@@ -6,10 +6,10 @@
 # Scripts contract (_common/README.md): lint/test jobs run scripts/lint.sh and
 # scripts/test.sh — the exact commands the pre-commit/pre-push hooks run.
 #
-# fragment: typecheck.yml — omitted by design: rustc typechecks in build/test
-# (see fragment comment).
-# fragment: sast.yml — folded into lint by design: clippy IS the Rust SAST tool
-# (see the SEC-SAST per-stack table); a separate job would run the same command.
+# fragment: typecheck.yml — no-op variant: rustc typechecks in build/test, but
+# DEV-CI-01 keeps the job name (see fragment comment).
+# fragment: sast.yml — clippy, the Rust SAST tool (SEC-SAST per-stack table). It
+# repeats lint's clippy pass so T1/T2, which prune lint, still run SAST in CI.
 #
 # {{SETUP_STEPS}} resolved for rust:
 #   - uses: dtolnay/rust-toolchain@stable        (components: rustfmt, clippy)
@@ -39,6 +39,14 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Lint
         run: scripts/lint.sh
+
+  # fragment: typecheck.yml (no-op variant) — DEV-CI-01 keeps the job name so branch
+  # protection lists the same required checks on every stack; rustc typechecks in the test job.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Typecheck (no-op)
+        run: echo "no separate typechecker — rustc typechecks in the test job"
 
   # fragment: test.yml — {{CMD_TEST_COV}} = scripts/test.sh
   # (cargo-llvm-cov runs the suite and emits lcov.info for the ratchet)
@@ -96,6 +104,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # fragment: sast.yml — {{CMD_SAST}} = clippy, the Rust SAST tool per the SEC-SAST table.
+  # Same command as lint's clippy pass, kept as its own job because T1/T2 prune lint
+  # (hooks carry it) but keep sast.
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Static application security testing
+        run: cargo clippy --all-targets -- -D warnings
+
   # fragment: sca.yml — {{CMD_SCA}} = cargo audit against Cargo.lock (STK-RUST-05, T2+)
   sca:
     runs-on: ubuntu-latest
@@ -108,3 +130,17 @@ jobs:
           tool: cargo-audit
       - name: Dependency vulnerability audit
         run: cargo audit
+
+  # fragment: license-audit.yml — {{CMD_LICENSES}} = cargo-deny against deny.toml's
+  # allowlist (LEG-LICENSING-01, T4)
+  license-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-deny
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny
+      - name: Dependency license audit
+        run: cargo deny check licenses
