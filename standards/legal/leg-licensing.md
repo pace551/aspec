@@ -2,7 +2,7 @@
 id: LEG-LICENSING
 title: Licensing
 family: LEG
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -63,8 +63,8 @@ distribution.
 **Tiers**: T1–T3 advisory · T4 required — **Layer**: G
 
 Install the `templates/ci/_fragments/license-audit.yml` fragment: it runs the per-stack scanner
-(`pip-licenses` for Python, `license-checker` for npm, `go-licenses` for Go) and fails on
-any license outside the allowlist. The audit runs on every dependency change, not
+(`pip-licenses` for Python, `license-checker` for npm, `go-licenses` for Go, `cargo-deny`
+for Rust) and fails on any license outside the allowlist. The audit runs on every dependency change, not
 annually — the dangerous moment is adoption. Advisory below T4 because obligations bind
 on distribution/commercial use, but running it early at T3 is cheap insurance against
 ripping out a load-bearing dependency later.
@@ -118,20 +118,51 @@ a web bundle → replace with an OFL equivalent.
 
 ## Worked Example
 
-Python job from the `templates/ci/_fragments/license-audit.yml` fragment:
+Python job, as composed in `templates/ci/python.yml`:
 
 ```yaml
 license-audit:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
-    - run: |
-        python3 -m venv .venv && .venv/bin/pip install -q -e . pip-licenses
-        .venv/bin/pip-licenses --fail-on="GPL;GPLv2;GPLv3;LGPL;AGPLv3;Unknown" \
-          --format=markdown --output-file=license-report.md
-    - uses: actions/upload-artifact@v4
-      with: {name: license-report, path: license-report.md}
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.14"
+    - name: Install
+      run: python -m venv .venv && .venv/bin/pip install -e '.[dev]'
+    - name: Dependency license audit
+      run: |
+        .venv/bin/pip install --quiet pip-licenses
+        project=$(.venv/bin/python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])")
+        allow="MIT;BSD-2-Clause;BSD-3-Clause;Apache-2.0;ISC;PSF-2.0;MPL-2.0"
+        allow+=";MIT License;BSD License;Apache Software License;ISC License (ISCL)"
+        allow+=";Python Software Foundation License;Mozilla Public License 2.0 (MPL 2.0)"
+        allow+=";Apache-2.0 OR BSD-2-Clause;Apache-2.0 OR BSD-3-Clause;Apache-2.0 OR MIT;MIT OR Apache-2.0"
+        .venv/bin/pip-licenses --ignore-packages "$project" --format=json --output-file=licenses.json
+        .venv/bin/python - "$allow" <<'PY'
+        import json, sys
+        allow = {name.lower() for name in sys.argv[1].split(";")}
+        bad = [p for p in json.load(open("licenses.json"))
+               if not all(lic.strip().lower() in allow for lic in p["License"].split("; "))]
+        for p in bad:
+            print(f"license not allowed: {p['Name']} {p['Version']}: {p['License']}", file=sys.stderr)
+        sys.exit(1 if bad else 0)
+        PY
 ```
+
+Why it is shaped this way, so it fails closed:
+
+- **Allowlist, not denylist.** `--fail-on "GPL;…"` passes every license nobody thought to
+  list (`CC-BY-NC-4.0`, `SSPL`, a custom EULA).
+- **Every declared license must be allowed.** pip-licenses' own `--allow-only` passes a
+  package when *any one* of its classifiers is allowed, so `BSD License` + `LGPLv3`
+  would pass; the inline check requires all of them.
+- **Exact matching.** PEP 639 packages report SPDX expressions; `--partial-match` would
+  accept `MIT AND CC-BY-NC-4.0` because it contains `MIT`. Expressions pass only when
+  listed verbatim, so the list carries the SPDX ids, their classifier names, and the
+  common `OR` pairings of allowed licenses. An unlisted `OR` fails until reviewed.
+- **The project itself is skipped** (`--ignore-packages`), since a fresh project may not
+  declare a license yet; its dependencies are still audited.
 
 A GOVERNANCE.md record of a conscious copyleft decision:
 
@@ -150,6 +181,7 @@ license_decisions:
 | Annual license review instead of CI | Obligation adopted in March, discovered in January | Audit on every dependency change (LEG-LICENSING-01) |
 | "GPL is banned" as a blanket rule | Overcorrection; sometimes the obligation is fine | Human decision per case, recorded (LEG-LICENSING-02) |
 | Public repo with no LICENSE "so it's free" | Default is all-rights-reserved — nobody can legally use it | Explicit MIT via DEV-BOOTSTRAP (LEG-LICENSING-03) |
+| A license gate that fails open: a denylist, an any-classifier match, or substring matching | The licenses nobody listed, the second classifier, and `MIT AND …` all pass silently | Allowlist with exact matching where every declared license must be allowed (Worked Example) |
 | Treating npm `license` field as ground truth | Metadata lies; transitive deps differ | Scanner over the installed tree |
 | Bundling a "free" font into a web app | Free-for-desktop ≠ web embedding rights | Check terms; prefer OFL (LEG-LICENSING-04) |
 | Claude Code silently swapping in a copyleft dep | Liability decision made by an agent | Flag and stop for the user (LEG-LICENSING-02) |
@@ -166,3 +198,7 @@ license_decisions:
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-10-29) — Worked Example replaced with the `templates/ci/python.yml`
+  job: the old `--fail-on` denylist passed any license it didn't name and audited the
+  project's own unlicensed package. Adds a fail-open anti-pattern row and names
+  `cargo-deny` as the Rust scanner. No rule changes.
