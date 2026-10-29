@@ -22,7 +22,7 @@ Conventions:
 | Fragment | Gate | Tier |
 |---|---|---|
 | `lint.yml` | format + lint | T3+ CI (T1/T2 via pre-commit hook) |
-| `typecheck.yml` | static types | T3+ (stacks with a typechecker) |
+| `typecheck.yml` | static types | T3+ (no-op variant on stacks without a typechecker) |
 | `test.yml` | unit/integration tests | T3+ CI (T1/T2 via pre-push hook) |
 | `coverage-ratchet.yml` | coverage never decreases | T2+ |
 | `gitleaks.yml` | secret scan | all tiers with CI |

@@ -8,8 +8,8 @@
 # job installs golangci-lint first so the script takes its primary path, not the
 # local fallback.
 #
-# fragment: typecheck.yml — omitted by design: the Go compiler typechecks in
-# build/test; there is no separate typechecker job (see fragment comment).
+# fragment: typecheck.yml — no-op variant: the Go compiler typechecks in build/test,
+# but DEV-CI-01 keeps the job name (see fragment comment).
 #
 # {{SETUP_STEPS}} resolved for go:
 #   - uses: actions/setup-go@v5                  (go-version-file: go.mod, built-in module cache)
@@ -39,6 +39,14 @@ jobs:
         run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
       - name: Lint
         run: scripts/lint.sh
+
+  # fragment: typecheck.yml (no-op variant) — DEV-CI-01 keeps the job name so branch
+  # protection lists the same required checks on every stack; the Go compiler typechecks in the test job.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Typecheck (no-op)
+        run: echo "no separate typechecker — the Go compiler typechecks in the test job"
 
   # fragment: test.yml — {{CMD_TEST_COV}} = scripts/test.sh (emits coverage.out)
   test:
@@ -110,3 +118,20 @@ jobs:
           go-version-file: go.mod
       - name: Dependency vulnerability audit
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+  # fragment: license-audit.yml — {{CMD_LICENSES}} = go-licenses (LEG-LICENSING-01, T4).
+  # --ignore skips this module's own packages (it may ship no LICENSE file); their
+  # dependencies are still checked.
+  license-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install go-licenses
+        run: go install github.com/google/go-licenses/v2@latest
+      - name: Dependency license audit
+        run: >
+          go-licenses check ./... --ignore "$(go list -m)"
+          --allowed_licenses=MIT,BSD-2-Clause,BSD-3-Clause,Apache-2.0,ISC

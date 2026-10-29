@@ -1,0 +1,14 @@
+# cargo-deny config for the T4 license-audit CI job (LEG-LICENSING-01): every
+# dependency license must be on this allowlist; anything else fails pending a human
+# decision recorded in GOVERNANCE.md.
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0", # unicode-ident, pulled in by most proc-macro crates
+]
+# This crate itself is `publish = false` (Cargo.toml), so its own license isn't checked.
+private = { ignore = true }

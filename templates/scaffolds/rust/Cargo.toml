@@ -4,6 +4,9 @@ name = "{{PROJECT_NAME}}"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
+# Unpublished by default so cargo-deny skips this crate in the license audit
+# (deny.toml). Publishing to crates.io: remove this and set `license`.
+publish = false
 description = "{{ONE_LINE_DESCRIPTION}}"
 
 [dependencies]
