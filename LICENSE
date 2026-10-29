@@ -12,7 +12,12 @@ Additional Use Grant: You may use the Licensed Work to govern your own software
                       component of your development toolchain. This grant does not
                       include offering the Licensed Work, or a derivative of it, to
                       third parties as a product or service, whether sold, licensed,
-                      hosted, or bundled into a commercial offering.
+                      hosted, or bundled into a commercial offering. Software you
+                      develop using the Licensed Work, including code generated from
+                      or copied out of its templates and scaffolds, is not an
+                      offering of the Licensed Work under the preceding sentence, and
+                      you may use and distribute that software under terms of your
+                      choosing.
 Change Date:          2029-10-28
 Change License:       MIT
 
