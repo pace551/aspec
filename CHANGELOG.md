@@ -5,6 +5,8 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+## 0.2.0 — 2026-10-29
+
 - Releases: release-please (`.github/workflows/release.yml`) keeps a release PR open
   from the conventional commits on `main`; merging it tags `vX.Y.Z` and publishes a
   GitHub release whose notes are this file's section for that version. The changelog
