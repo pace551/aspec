@@ -6,8 +6,11 @@
 # so they are reviewed and ship in the tagged release.
 #
 # Third-party actions are pinned to commit SHAs (SEC-SUPPLY): this job holds a write token.
-# PRs and pushes made with GITHUB_TOKEN don't trigger other workflows, so framework CI
-# doesn't run on the release PR; it only touches version files, LICENSE and CHANGELOG.md.
+# Framework CI does run on the release PR (the ruleset requires self-lint and gitleaks),
+# but the PR comes from github-actions[bot], so the repo's first-time-contributor policy
+# held those runs for maintainer approval on the first release (v0.2.0). With a merged
+# commit the bot should no longer count as first-time; if approval keeps being asked
+# for, give release-please a GitHub App token.
 name: release
 on:
   push:
