@@ -52,12 +52,12 @@
     "version": "1.0.1"
   },
   "DEV-BOOTSTRAP": {
-    "hash": "3a636c60af9f5e00cb26f40461531edbcc5b64a9e62b4a352a1d62552082eb6b",
-    "version": "1.0.1"
+    "hash": "6e352b321a1a456b315b0c6aa51cd3c86c0879dc88e9b82456916fd3b2c0eb87",
+    "version": "1.0.2"
   },
   "DEV-CI": {
-    "hash": "93bb901f707f6bee83c4785497b9be5096c4323ad37e004df33afa767f141d4a",
-    "version": "1.0.1"
+    "hash": "b4735ab5ccae276f52db643b84f0eb5b8acf5d478b2d3c790ff301e85fb3844a",
+    "version": "1.0.2"
   },
   "DEV-DEPS": {
     "hash": "b438630e1fdf37700386302e125bee4081bbbb275704285da8be0af197e13829",
@@ -68,8 +68,8 @@
     "version": "1.0.1"
   },
   "DEV-GIT": {
-    "hash": "e8c21d71c1d65fbb8eee0e1c11c7d06f2a558713a3eb9b90f6cc6cbfa9470fb7",
-    "version": "1.0.1"
+    "hash": "936d3588d791dad0343bbbefbc1136a0eb61a101bd3d6d20ddf464e3b19cd70c",
+    "version": "1.0.2"
   },
   "DEV-REVIEW": {
     "hash": "989129878090003d08181291477825276bb1e201f6f95ef229797824ef8fa0b3",

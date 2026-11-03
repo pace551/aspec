@@ -5,6 +5,14 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Verification fixes for git gates (DEV-BOOTSTRAP 1.0.2, DEV-CI 1.0.2, DEV-GIT 1.0.2).
+  The hook checks (DEV-BOOTSTRAP-06, DEV-CI-02) looked only in `.git/hooks/`, so every
+  repo whose hooks came from `install-git-hooks.sh` (`core.hooksPath` = `.githooks`)
+  failed them; they now ask `git rev-parse --git-path hooks`. The linear-history check
+  (DEV-GIT-03) ran `git log --merges -20`, which returns merge commits from all of
+  history, so a single old merge failed it forever; it now inspects the last 20 commits.
+  Covered by `checks/test_git_gate_checks.py`.
+
 ## 0.2.0 — 2026-10-29
 
 - Releases: release-please (`.github/workflows/release.yml`) keeps a release PR open

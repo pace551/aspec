@@ -2,7 +2,7 @@
 id: DEV-BOOTSTRAP
 title: Repository Bootstrap
 family: DEV
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -44,7 +44,7 @@ verification:
     expect: "exit 0 — non-empty .gitignore at repo root"
     layer: G
     rules: [DEV-BOOTSTRAP-05]
-  - cmd: "sh -c '[ -x .git/hooks/pre-commit ] && [ -x .git/hooks/pre-push ]'"
+  - cmd: "sh -c 'd=$(git rev-parse --git-path hooks) && [ -x \"$d/pre-commit\" ] && [ -x \"$d/pre-push\" ]'"
     expect: "exit 0 — both hooks installed and executable"
     layer: G
     rules: [DEV-BOOTSTRAP-06]
@@ -159,14 +159,15 @@ Private repos satisfy this rule trivially.
 | 3 | `[ -s CLAUDE.md ]` | non-empty file | DEV-BOOTSTRAP-03 |
 | 4 | `[ -s GOVERNANCE.md ]` | non-empty file | DEV-BOOTSTRAP-04 |
 | 5 | `[ -s .gitignore ]` | non-empty file | DEV-BOOTSTRAP-05 |
-| 6 | `[ -x .git/hooks/pre-commit ] && [ -x .git/hooks/pre-push ]` | both executable | DEV-BOOTSTRAP-06 |
+| 6 | `pre-commit` and `pre-push` executable in `$(git rev-parse --git-path hooks)` (honors `core.hooksPath`) | both executable | DEV-BOOTSTRAP-06 |
 | 7 | `[ -f .coverage-baseline ]` (T2+) | file committed | DEV-BOOTSTRAP-07 |
 | 8 | attestation: public ⇒ license file | explicit yes | DEV-BOOTSTRAP-08 |
 
 **Remediation:** any missing item → run `/bootstrap-repo` (idempotent; it retrofits
 without touching existing content) · `master` default → `git branch -m master main` and
-update the GitHub default branch · hooks present but not executable → `chmod +x
-.git/hooks/pre-commit .git/hooks/pre-push`.
+update the GitHub default branch · hooks missing → rerun
+`templates/scaffolds/_common/install-git-hooks.sh` · hooks present but not executable →
+`chmod +x "$(git rev-parse --git-path hooks)"/pre-commit "$(git rev-parse --git-path hooks)"/pre-push`.
 
 ## Worked Example
 
@@ -174,8 +175,8 @@ A freshly bootstrapped T2 Python repo, in full:
 
 ```
 myproj/
-├── .git/hooks/pre-commit    # from templates/scaffolds/_common/, executable
-├── .git/hooks/pre-push      # from templates/scaffolds/_common/, executable
+├── .githooks/pre-commit     # from templates/scaffolds/_common/ (core.hooksPath), executable
+├── .githooks/pre-push       # from templates/scaffolds/_common/ (core.hooksPath), executable
 ├── .gitignore               # .env, .venv/, __pycache__/, dist/, .DS_Store
 ├── .env.example             # only if a credential exists (SEC-SECRETS-02)
 ├── .coverage-baseline       # written by first ratchet run, committed
@@ -213,5 +214,6 @@ bash "$GOVERNANCE_DIR/templates/scaffolds/_common/install-git-hooks.sh"
 
 ## Changelog
 
+- **1.0.2** (2026-11-03) — DEV-BOOTSTRAP-06 check finds hooks via `git rev-parse --git-path hooks`; it only looked in `.git/hooks/`, so it failed on every repo whose hooks came from `install-git-hooks.sh` (which sets `core.hooksPath` to `.githooks`). Remediation and Worked Example updated to match. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path. The hook-install example now matches what /bootstrap-repo runs (install-git-hooks.sh).
 - **1.0.0** (2026-07-22) — Initial version.

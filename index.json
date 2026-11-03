@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-10-29",
+  "generated": "2026-11-03",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -994,7 +994,7 @@
       "id": "DEV-BOOTSTRAP",
       "title": "Repository Bootstrap",
       "family": "DEV",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1025,13 +1025,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-bootstrap.md",
-      "tokens_est": 2502
+      "tokens_est": 2640
     },
     {
       "id": "DEV-CI",
       "title": "CI Baseline",
       "family": "DEV",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "n/a",
@@ -1058,7 +1058,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-ci.md",
-      "tokens_est": 2233
+      "tokens_est": 2303
     },
     {
       "id": "DEV-DEPS",
@@ -1132,7 +1132,7 @@
       "id": "DEV-GIT",
       "title": "Git & PR Conventions",
       "family": "DEV",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1160,7 +1160,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-git.md",
-      "tokens_est": 2352
+      "tokens_est": 2415
     },
     {
       "id": "DEV-REVIEW",

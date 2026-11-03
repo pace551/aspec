@@ -2,7 +2,7 @@
 id: DEV-GIT
 title: Git & PR Conventions
 family: DEV
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -27,7 +27,7 @@ verification:
     expect: "exit 0 — last 20 commit subjects all conventional (empty repos pass)"
     layer: G
     rules: [DEV-GIT-01]
-  - cmd: "sh -c 'git rev-parse --verify -q main >/dev/null || exit 0; [ -z \"$(git log --merges -20 --pretty=%h main --)\" ]'"
+  - cmd: "sh -c 'git rev-parse --verify -q main >/dev/null || exit 0; [ -z \"$(git log -20 --format=%p main -- | awk \"NF>1\")\" ]'"
     expect: "exit 0 — no merge commits in recent main history (linear)"
     layer: G
     rules: [DEV-GIT-03]
@@ -145,7 +145,7 @@ changed and why*; provenance lives in trailers where tooling can parse it.
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
 | 1 | last-20 commit subjects vs conventional grammar | exit 0 (no offenders; empty repo passes) | DEV-GIT-01 |
-| 2 | `git log --merges main` recent window empty | exit 0 (linear history) | DEV-GIT-03 |
+| 2 | no merge commit (2+ parents) among the last 20 commits on `main` | exit 0 (linear history) | DEV-GIT-03 |
 | 3 | current branch is `main` or `{type}/{slug}` (T2+) | exit 0 | DEV-GIT-04 |
 | 4–7 | attestation checklist (one per rule) | explicit yes recorded | DEV-GIT-02, -05, -06, -07 |
 
@@ -205,3 +205,4 @@ Bug #12 — payment marked late despite the 3-day grace window.
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-11-03) — DEV-GIT-03 check now inspects the last 20 commits on `main`. `git log --merges -20` returned up to 20 merge commits from all of history, so one old merge failed the check forever. No rule changes.
