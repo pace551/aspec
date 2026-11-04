@@ -2,13 +2,14 @@
 id: SEC-INPUT
 title: Input Validation & Injection Defense
 family: SEC
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - input validation
@@ -242,5 +243,6 @@ interpreted as SQL, shell, or path structure.
 
 ## Changelog
 
+- **1.0.2** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

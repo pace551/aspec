@@ -79,6 +79,7 @@ def main() -> int:
             "version": version,
             "status": meta.get("status", ""),
             "tiers": meta.get("tiers", {}),
+            "published": meta.get("published", "n/a"),
             "stacks": meta.get("stacks", "all"),
             "triggers": meta.get("triggers", []),
             "requires": meta.get("requires", []),

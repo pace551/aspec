@@ -52,28 +52,28 @@
     "version": "1.0.1"
   },
   "DEV-BOOTSTRAP": {
-    "hash": "6e352b321a1a456b315b0c6aa51cd3c86c0879dc88e9b82456916fd3b2c0eb87",
-    "version": "1.0.2"
+    "hash": "8aa522fbd8ce28ffa3c63ee0df9dbbc4b84d8a574a2a36abc14549952d63cb8f",
+    "version": "1.0.3"
   },
   "DEV-CI": {
-    "hash": "b4735ab5ccae276f52db643b84f0eb5b8acf5d478b2d3c790ff301e85fb3844a",
-    "version": "1.0.2"
+    "hash": "4ec3ad67acf109af56660230c2bcfea4c34328a274e14927e452d4b36dd427c5",
+    "version": "1.0.3"
   },
   "DEV-DEPS": {
-    "hash": "b438630e1fdf37700386302e125bee4081bbbb275704285da8be0af197e13829",
-    "version": "1.0.0"
-  },
-  "DEV-DOCS": {
-    "hash": "5a55666f5b46beca457d7cc6885c7489c8474c795bc14edec1aac3bfa61a400e",
+    "hash": "177c8747723831d5f927945f6544eba7aabae8b92755a1826f2adcbda06642f1",
     "version": "1.0.1"
   },
-  "DEV-GIT": {
-    "hash": "936d3588d791dad0343bbbefbc1136a0eb61a101bd3d6d20ddf464e3b19cd70c",
+  "DEV-DOCS": {
+    "hash": "72b4bd5e015f02ca367463bdacb4834f280418c4fbda6417dbccf1d83e0256ad",
     "version": "1.0.2"
   },
+  "DEV-GIT": {
+    "hash": "da5d31852ccf7562459dbed4323db7783dce1484f325c297cec8561c68a3f16c",
+    "version": "1.0.3"
+  },
   "DEV-REVIEW": {
-    "hash": "989129878090003d08181291477825276bb1e201f6f95ef229797824ef8fa0b3",
-    "version": "1.0.0"
+    "hash": "de0e2cb750c5730c043c131cb5d8c6658c6738c447f2f7a5ef1360e3f609d3ea",
+    "version": "1.0.1"
   },
   "INF-CONTAINERS": {
     "hash": "e4a237c15b4fa9da861c4ad51d8b2148c5b6e3b369b5bf55b51c9a0231def1e9",
@@ -96,12 +96,12 @@
     "version": "1.0.2"
   },
   "LEG-COMMERCIAL": {
-    "hash": "054288e7cccb3ede1abf571b49347832792d0582618bad337bbe877c4a4f204c",
-    "version": "1.0.1"
+    "hash": "755c3ce602deea9537d9eecbcb5d5d118781da200949b217211402e3c5e03262",
+    "version": "1.0.2"
   },
   "LEG-LICENSING": {
-    "hash": "dd14c9cade24b77ef6c4c978ee0c2ea8af97b4421112201d852f2fb1709d71d2",
-    "version": "1.0.2"
+    "hash": "4385d8b835ddb5dfcaacd3815979ec95e0b9f6e78fb9f120ad4aac6ad2067fe4",
+    "version": "1.0.3"
   },
   "OPS-ALERTS": {
     "hash": "f67af9ca52a099b13ec900b3cc3b033407939e8ade05ef0afc3c53eb01d4ee80",
@@ -136,40 +136,40 @@
     "version": "1.0.0"
   },
   "SEC-AUTHN": {
-    "hash": "69af94c21f8d5c3e5d5368ddfbbc52e57e0240319aff70e072ec64544347b2ef",
-    "version": "1.0.1"
-  },
-  "SEC-AUTHZ": {
-    "hash": "0390c811d4349d9627baa1e0ba6b30ba7866b49cc4500b2f32db1dc155463039",
-    "version": "1.0.0"
-  },
-  "SEC-CRYPTO": {
-    "hash": "4afa893b49715cb0f8da99dc4d5eb850e1d7d92e58d05c02aac6155ee645c16b",
-    "version": "1.0.1"
-  },
-  "SEC-INPUT": {
-    "hash": "da46f76eb871d1c280033e13270d131bea0a657f9e1ca0504efb0c3bd59074d5",
-    "version": "1.0.1"
-  },
-  "SEC-SAST": {
-    "hash": "8415c7682ed27fc0b9c0e2db14f2b6cfc72d864b2c1d0d3dc1b9b5f54d8ea4e9",
-    "version": "1.0.1"
-  },
-  "SEC-SECRETS": {
-    "hash": "eff23eaf70da9fb522f05e02ab78ec966f4461f94f2b4baea79abc21a23c664e",
+    "hash": "4a1d3a829097a390724a01ba29560826e868f6e4def1dd692ce62fb7836426d1",
     "version": "1.0.2"
   },
-  "SEC-SUPPLY": {
-    "hash": "81611c16fe32642ca189497998ee2fd77412279f71d823461380770d4b1262f9",
+  "SEC-AUTHZ": {
+    "hash": "731cb37262ef515a948bda7480b8c00f4b0dabab88cfde6f7607898d5546f0e8",
     "version": "1.0.1"
+  },
+  "SEC-CRYPTO": {
+    "hash": "cfcd204b8d412c3c7b7447d036235d6018c80ccadf18bfb5ed65f83402b9e545",
+    "version": "1.0.2"
+  },
+  "SEC-INPUT": {
+    "hash": "1752fcb39629bf3cf2e75c832d1ab31d534d1edc937e7f3d28b252e179d6811c",
+    "version": "1.0.2"
+  },
+  "SEC-SAST": {
+    "hash": "e5451bb0081dcf4d6327c06fe8b10460245c0a1519a0db6f583a11c728604103",
+    "version": "1.0.2"
+  },
+  "SEC-SECRETS": {
+    "hash": "6294729d4c8f5030d45ff5b18e431376526745d0f3b1dfda57ed2b6aced7b7b7",
+    "version": "1.0.3"
+  },
+  "SEC-SUPPLY": {
+    "hash": "299c5695159cacf52720f76f0635a9d88f16ce2182f447f50ca972c9e9972f83",
+    "version": "1.0.2"
   },
   "SEC-THREAT": {
-    "hash": "371f44927c6e00a958868dc4eb893efebee0b1cc001ecaef0fa0cc1d820748b9",
-    "version": "1.0.0"
+    "hash": "c3a5e165fc47c807ce9887da9221e8b6e4f81e33aca0b71884a9e97f12474322",
+    "version": "1.0.1"
   },
   "SEC-WEB": {
-    "hash": "f6238fd0264002b3b1e393bf1204491a0a1f5706ac628074e875fc50b1605204",
-    "version": "1.0.1"
+    "hash": "a3ba744517f1b273e45dcd0c4c65addee99ade90c7fe206a3af70c43836a5521",
+    "version": "1.0.2"
   },
   "STK-DDB": {
     "hash": "cf9f37645fa75d263747bc1fdad4f33b44ce59bae071b4fd24e53d4725e88af5",
@@ -220,24 +220,24 @@
     "version": "1.0.1"
   },
   "TST-FIXTURES": {
-    "hash": "b842fd2adbec446e6ca7bbc1df3d36f98f18c5b1ee457c635bc1e57296e9404f",
-    "version": "1.0.1"
-  },
-  "TST-INTEG": {
-    "hash": "40cc3da30a2116434c08acf2193ed82a5ddc1517c669dfbd6b41b4b4c1caaf06",
-    "version": "1.0.0"
-  },
-  "TST-POLICY": {
-    "hash": "e68cfd57115e3c8ff4301a26642cad75de34f7d48f93dba87c7cee1fce9ed376",
-    "version": "1.0.0"
-  },
-  "TST-RATCHET": {
-    "hash": "995ea26a2d8acc1ea57370aa51e9bc1d9c6c1117cc1dcc62c75fbc9202ce4a3d",
+    "hash": "277d88fcdde0a8d556df78f97d30724648befd5825fe3fe3f48da491e96bd3e8",
     "version": "1.0.2"
   },
+  "TST-INTEG": {
+    "hash": "dd32157194b212e88eb51d94ab7da89748b52aad958222d74e83b31b4c42d00d",
+    "version": "1.0.1"
+  },
+  "TST-POLICY": {
+    "hash": "1d9587d11c53245177cad4a253e49d3717bc38bf30f3154c942b37a5a68d0384",
+    "version": "1.0.1"
+  },
+  "TST-RATCHET": {
+    "hash": "845f0297dbf8541c43592ee07df9080a9a6457d782750d5b358a0243840924bc",
+    "version": "1.0.3"
+  },
   "TST-VERIFY": {
-    "hash": "d615cc017939fbd583e385b0b627adec09f2663f84883a23e43b6ad0923feffb",
-    "version": "1.0.0"
+    "hash": "09f390a94cc27a64a3125bb363251a60eda842c91f66ffff9044d0b80cb9dafe",
+    "version": "1.0.1"
   },
   "UX-A11Y": {
     "hash": "82691e093a8f8c409858ff33289392e0f8ff7b6cdb5a7d9d03bc99465ebfe4dd",

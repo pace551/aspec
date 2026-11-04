@@ -28,7 +28,10 @@ Apply top-down; **first match wins**:
 Carve-out — **published libraries/packages** (code others run, no service the user operates):
 classify by rubric lines 3-4 as usual, but supply-chain families (SEC, TST, DEV, LEG
 licensing) apply at T3 weight. Service-only standards (staging, a11y, perf budgets,
-observability) don't apply — there is no deployment to govern.
+observability) don't apply — there is no deployment to govern. Mechanically (ADR-0005):
+the manifest sets `published_package: true`, and each standard's `published` key says
+whether it applies; those marked `required`/`advisory` are selected and verified at
+max(tier, T3), the rest follow the tier.
 
 Rules of application:
 

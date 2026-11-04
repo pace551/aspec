@@ -2,13 +2,14 @@
 id: SEC-AUTHZ
 title: Authorization
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
+published: n/a
 stacks: all
 triggers:
   - authorization
@@ -189,4 +190,5 @@ runtime policy (SEC-AUTHZ-04): `s3:GetObject` on `arn:aws:s3:::myapp-statements/
 
 ## Changelog
 
+- **1.0.1** (2026-11-04) — Adds `published: n/a` (ADR-0005): it guards a running service or a business, not a published package. No change for projects that aren't published packages.
 - **1.0.0** (2026-07-22) — Initial version.

@@ -2,13 +2,14 @@
 id: SEC-AUTHN
 title: Authentication
 family: SEC
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
+published: n/a
 stacks: all
 triggers:
   - login
@@ -203,3 +204,4 @@ At T3, prefer deleting both snippets and letting Clerk/Cognito own the flow
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-11-04) — Adds `published: n/a` (ADR-0005): it guards a running service or a business, not a published package. No change for projects that aren't published packages.

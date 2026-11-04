@@ -2,13 +2,14 @@
 id: DEV-DEPS
 title: Dependency Management
 family: DEV
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - dependency
@@ -198,4 +199,5 @@ npm view zod version            # current release, from npm, now
 
 ## Changelog
 
+- **1.0.1** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.0** (2026-07-22) — Initial version.

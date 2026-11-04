@@ -2,13 +2,14 @@
 id: DEV-GIT
 title: Git & PR Conventions
 family: DEV
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - commit
@@ -206,3 +207,4 @@ Bug #12 — payment marked late despite the 3-day grace window.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
 - **1.0.2** (2026-11-03) — DEV-GIT-03 check now inspects the last 20 commits on `main`. `git log --merges -20` returned up to 20 merge commits from all of history, so one old merge failed the check forever. No rule changes.
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.

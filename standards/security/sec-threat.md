@@ -2,13 +2,14 @@
 id: SEC-THREAT
 title: Threat Modeling
 family: SEC
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
+published: advisory
 stacks: all
 triggers:
   - threat model
@@ -168,4 +169,5 @@ compliance.
 
 ## Changelog
 
+- **1.0.1** (2026-11-04) — Adds `published: advisory` (ADR-0005): published packages get its T3 applicability as advisory. No change for projects that aren't published packages.
 - **1.0.0** (2026-07-22) — Initial version.

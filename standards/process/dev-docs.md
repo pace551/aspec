@@ -2,13 +2,14 @@
 id: DEV-DOCS
 title: Documentation & ADRs
 family: DEV
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
   T2: required
   T3: required
   T4: required
+published: advisory
 stacks: all
 triggers:
   - readme
@@ -178,3 +179,4 @@ future-me would absolutely ask about.
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-11-04) — Adds `published: advisory` (ADR-0005): published packages get its T3 applicability as advisory. No change for projects that aren't published packages.

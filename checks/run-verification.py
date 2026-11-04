@@ -2,8 +2,9 @@
 """run-verification.py — deterministic executor behind /verify-compliance.
 
 Reads the project's GOVERNANCE.md YAML block, resolves each pinned standard in the
-governance repo, filters verification entries by the project tier, executes H/G commands
-from the project root, and emits the attestation checklist for layer-A entries. Waived
+governance repo, filters verification entries by the project tier (for a
+`published_package: true` project, max(tier, T3) on standards whose `published` key is
+required/advisory, ADR-0005), executes H/G commands from the project root, and emits the attestation checklist for layer-A entries. Waived
 rule IDs are skipped (expired waivers FAIL). Pins are enforced by semver level
 (ADR-0004): patch drift WARNs and runs the current checks; minor/major drift, a pin
 newer than the repo, or a non-semver pin FAILs and skips that standard's checks.
@@ -125,6 +126,10 @@ def main() -> int:
     tier = manifest.get("tier")
     if tier not in ("T1", "T2", "T3", "T4"):
         sys.exit(f"run-verification: bad tier {tier!r} in GOVERNANCE.md")
+    published = manifest.get("published_package", False)
+    if not isinstance(published, bool):
+        sys.exit(f"run-verification: published_package must be true or false, "
+                 f"got {published!r}")
 
     now = datetime.now().astimezone().date()
     today = now.isoformat()
@@ -170,9 +175,13 @@ def main() -> int:
                             "detail": detail})
             if status == "FAIL":
                 continue
+        # ADR-0005: a published package runs the standards that opt in at T3 weight
+        check_tier = tier
+        if published and meta.get("published") in ("required", "advisory"):
+            check_tier = max(tier, "T3")
         for v in meta.get("verification") or []:
             vtiers = v.get("tiers")
-            if vtiers and tier not in vtiers:
+            if vtiers and check_tier not in vtiers:
                 continue
             rules = [str(r) for r in (v.get("rules") or [])]
             if rules and set(rules) <= waived:
@@ -203,13 +212,15 @@ def main() -> int:
         gpath.write_text(gtext.replace(YAML_BLOCK_RE.search(gtext).group(1), new_yaml),
                          encoding="utf-8")
 
-    report = {"tier": tier, "passed": passed, "failures": failures,
+    report = {"tier": tier, "published_package": published, "passed": passed,
+              "failures": failures,
               "results": results, "attestations_pending": attestations}
     if args.json:
         json.dump(report, sys.stdout, indent=2)
         print()
     else:
-        print(f"verify-compliance · tier {tier} · "
+        print(f"verify-compliance · tier {tier}"
+              f"{' · published package' if published else ''} · "
               f"{'PASS' if passed else f'FAIL ({failures})'}")
         for r in results:
             line = f"  [{r['status']:>6}] {r.get('std', '')} {r['id']} — {r['detail']}"

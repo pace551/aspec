@@ -19,6 +19,8 @@ tiers:                         # applicability per tier: required | advisory | n
   T2: required
   T3: required
   T4: required
+published: required            # published packages (ADR-0005): required | advisory | n/a;
+                               # mandatory for SEC/TST/DEV/LEG, optional (default n/a) elsewhere
 stacks: all                    # `all`, or a list of stack keys, e.g. [python, nextjs]
 triggers:                      # lowercase keywords /govern matches against the task brief
   - example keyword

@@ -10,6 +10,11 @@ Filters index.json without ever loading it into agent context. Selection semanti
   - `advisory` at the tier → selected only when a trigger matches whole words of the
     brief (common English endings allowed; see trigger_re) — never a substring
   - transitive `requires` pulled in, capped at two hops
+  - --published (a published package, ADR-0005): a standard whose `published` key is
+    `required`/`advisory` takes that applicability when it is stronger than the tier's
+    (never weaker), then follows the rules above; every selected entry carries
+    `effective_tier`, the tier its rule tags and checks are read at (max(tier, T3) for
+    those opted-in standards, else the tier)
 
 Two modes (--mode):
   pins   (default) everything applicable at the tier — feeds GOVERNANCE.md pins; all of
@@ -22,7 +27,7 @@ Two modes (--mode):
 
 Usage:
   select-standards.py --tier T1 --stacks python,sqlite --brief-text "words of the task"
-                      [--mode pins|brief] [--rules] [--governance-dir DIR]
+                      [--published] [--mode pins|brief] [--rules] [--governance-dir DIR]
 
 Output: JSON to stdout — pins: {selected, token_estimate, excluded_count};
 brief: {detailed (with rules), listed, context_tokens}.
@@ -36,6 +41,8 @@ import os
 import re
 import sys
 from pathlib import Path
+
+STRENGTH = {"n/a": 0, "advisory": 1, "required": 2}
 
 RULE_RE = re.compile(
     r"^### ([A-Z]+-[A-Z0-9]+-\d{2}) — (.+?)\n+\*\*Tiers\*\*: (.+?) — \*\*Layer\*\*: (.+?)$",
@@ -62,6 +69,15 @@ def trigger_re(trigger: str) -> re.Pattern[str]:
     return re.compile(r"(?<![a-z0-9])(?:" + "|".join(alts) + r")(?![a-z0-9])")
 
 
+def effective_tier(e: dict, tier: str, published: bool) -> str:
+    """Tier a standard's rule tags and checks are read at: max(tier, T3) for a published
+    package's opted-in standards (ADR-0005), else the project tier. run-verification.py
+    applies the same rule to checks; /govern reads rule tags at it for the brief."""
+    if published and e.get("published") in ("required", "advisory"):
+        return max(tier, "T3")
+    return tier
+
+
 def load_rules(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8")
     return [
@@ -77,6 +93,8 @@ def main() -> int:
     ap.add_argument("--stacks", default="", help="comma-separated stack keys")
     ap.add_argument("--brief-text", default="", help="task description for trigger matching")
     ap.add_argument("--rules", action="store_true", help="include parsed rules per standard")
+    ap.add_argument("--published", action="store_true",
+                    help="published package: apply standards' `published` key (ADR-0005)")
     ap.add_argument("--mode", choices=["pins", "brief"], default="pins")
     ap.add_argument("--governance-dir",
                     default=os.environ.get("GOVERNANCE_DIR")
@@ -100,7 +118,10 @@ def main() -> int:
     for e in index["standards"]:
         if e["status"] != "active":
             continue
-        applicability = e["tiers"].get(args.tier, "n/a")
+        tier_applicability = e["tiers"].get(args.tier, "n/a")
+        applicability = tier_applicability
+        if args.published and STRENGTH[e.get("published", "n/a")] > STRENGTH[applicability]:
+            applicability = e["published"]
         if applicability == "n/a":
             continue
         stack_ok = e["stacks"] == "all" or bool(set(e["stacks"]) & stacks)
@@ -108,11 +129,17 @@ def main() -> int:
             continue
         triggered = [t for t in e["triggers"] if trigger_re(t).search(brief)]
         if applicability == "required" or triggered:
+            if applicability != "required":
+                matched_on = f"triggers: {', '.join(triggered)}"
+            elif tier_applicability == "required":
+                matched_on = "required"
+            else:
+                matched_on = "published package"
             selected[e["id"]] = {
                 "id": e["id"], "version": e["version"], "path": e["path"],
                 "title": e["title"], "applicability": applicability,
-                "matched_on": "required" if applicability == "required"
-                else f"triggers: {', '.join(triggered)}",
+                "matched_on": matched_on,
+                "effective_tier": effective_tier(e, args.tier, args.published),
                 "tokens_est": e.get("tokens_est", 0),
             }
 
@@ -131,6 +158,7 @@ def main() -> int:
                         "title": e["title"],
                         "applicability": e["tiers"].get(args.tier, "advisory"),
                         "matched_on": f"required-by {sid}",
+                        "effective_tier": effective_tier(e, args.tier, args.published),
                         "tokens_est": e.get("tokens_est", 0),
                     }
                     pulled.append(req)
@@ -155,10 +183,12 @@ def main() -> int:
                 detailed.append(entry)
             else:
                 listed.append({"id": sid, "title": entry["title"],
-                               "applicability": entry["applicability"]})
+                               "applicability": entry["applicability"],
+                               "effective_tier": entry["effective_tier"]})
         out = {
             "tier": args.tier,
             "stacks": sorted(stacks),
+            "published": args.published,
             "detailed": detailed,
             "listed": listed,
             "note": "ALL standards above are pinned+enforced; `listed` ones load on "
@@ -178,6 +208,7 @@ def main() -> int:
     out = {
         "tier": args.tier,
         "stacks": sorted(stacks),
+        "published": args.published,
         "selected": sorted(selected.values(), key=lambda x: x["id"]),
         "token_estimate": sum(e["tokens_est"] for e in selected.values()),
         "excluded_count": len(index["standards"]) - len(selected),

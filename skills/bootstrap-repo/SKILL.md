@@ -12,7 +12,8 @@ Governance repo: `$GOV`.
 
 ### 1. Intake
 
-Need: project name/path, primary stack(s), tier. Tier or stacks unknown → run `/govern`
+Need: project name/path, primary stack(s), tier, and whether it is a published package
+(ADR-0005; fills `{{PUBLISHED_PACKAGE}}` with `true`/`false`). Any of these unknown → run `/govern`
 first (it classifies and writes the manifest; this skill consumes it). Existing non-empty
 directory → this is a RETROFIT: never overwrite existing files, only add missing ones,
 and list what was added.
@@ -35,11 +36,18 @@ and list what was added.
   jobs DEV-CI doesn't require for the tier; keep `{{…}}`-free (stack templates are
   concrete — if a placeholder survives, resolve it from the scaffold's scripts).
   T4: also add `license-audit`. T3+: pin action refs to SHAs per SEC-SUPPLY.
+- **Published package** (`published_package: true`, ADR-0005), any tier: DEV-CI and
+  SEC-SUPPLY are opted in, so build CI as for T3 (T4 if the tier is T4) even at T1/T2:
+  the T3 job set, action refs pinned to SHAs.
+- **T3+ and published packages**: add dependency-update automation (DEV-DEPS-02): the
+  `renovate.json` from DEV-DEPS's Worked Example at the repo root. Enabling the Renovate
+  GitHub app is manual; list it under step 6.
 
 ### 4. Baselines & stack init
 
 Install the toolchain (create `.venv` + dev deps / `npm install` / `go mod tidy` /
-`cargo build` as the stack requires). Then initialize the ratchet at T2+:
+`cargo build` as the stack requires). Then initialize the ratchet at T2+, or at any tier
+for a published package (TST-RATCHET and DEV-BOOTSTRAP are opted in, ADR-0005):
 run `scripts/test.sh` and `python3 .governance/coverage-ratchet.py` (writes
 `.coverage-baseline`; commit it).
 

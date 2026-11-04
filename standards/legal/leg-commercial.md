@@ -2,13 +2,14 @@
 id: LEG-COMMERCIAL
 title: Commercial Baseline
 family: LEG
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: n/a
   T2: n/a
   T3: advisory
   T4: required
+published: n/a
 stacks: all
 triggers:
   - launch
@@ -190,3 +191,4 @@ commercial_baseline:   # LEG-COMMERCIAL — walked 2026-07-22, re-attested each 
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-11-04) — Adds `published: n/a` (ADR-0005): it guards a running service or a business, not a published package. No change for projects that aren't published packages.

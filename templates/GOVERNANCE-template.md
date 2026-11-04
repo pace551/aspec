@@ -11,6 +11,7 @@ machine surface — keep it valid YAML; prose goes below it.
 tier: T1                        # T1 | T2 | T3 | T4
 classified: 2026-07-22          # date of last /govern run
 tier_override: null             # or {from: T2, to: T1, reason: "...", date: YYYY-MM-DD}
+published_package: false        # true: code others install; opted-in standards at T3 weight (ADR-0005)
 stacks: [python, sqlite]        # stack keys from index.json
 standards:                      # pinned selected set — upgrades are deliberate
   - {id: SEC-SECRETS, version: 1.0.0}

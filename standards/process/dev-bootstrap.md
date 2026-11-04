@@ -2,13 +2,14 @@
 id: DEV-BOOTSTRAP
 title: Repository Bootstrap
 family: DEV
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - new repo
@@ -214,6 +215,7 @@ bash "$GOVERNANCE_DIR/templates/scaffolds/_common/install-git-hooks.sh"
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-11-03) — DEV-BOOTSTRAP-06 check finds hooks via `git rev-parse --git-path hooks`; it only looked in `.git/hooks/`, so it failed on every repo whose hooks came from `install-git-hooks.sh` (which sets `core.hooksPath` to `.githooks`). Remediation and Worked Example updated to match. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path. The hook-install example now matches what /bootstrap-repo runs (install-git-hooks.sh).
 - **1.0.0** (2026-07-22) — Initial version.

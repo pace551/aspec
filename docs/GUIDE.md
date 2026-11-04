@@ -123,6 +123,7 @@ old tier because re-governing feels like ceremony is the one move the framework 
 ```yaml
 tier: T2                          # classification (+ tier_override if you overruled it)
 classified: 2026-07-22
+published_package: false          # true for code others install: opted-in standards at T3 weight
 stacks: [python, sqlite]
 standards:                        # THE PIN SET — versions this project is governed by
   - {id: SEC-SECRETS, version: 1.0.1}
