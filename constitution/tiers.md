@@ -25,13 +25,19 @@ Apply top-down; **first match wins**:
 3. Primary output is analysis, a model, a report, or a decision input → **T2**
 4. Otherwise → **T1**
 
-Carve-out — **published libraries/packages** (code others run, no service the user operates):
-classify by rubric lines 3-4 as usual, but supply-chain families (SEC, TST, DEV, LEG
-licensing) apply at T3 weight. Service-only standards (staging, a11y, perf budgets,
-observability) don't apply — there is no deployment to govern. Mechanically (ADR-0005):
-the manifest sets `published_package: true`, and each standard's `published` key says
-whether it applies; those marked `required`/`advisory` are selected and verified at
-max(tier, T3), the rest follow the tier.
+Carve-out — **published libraries/packages** (code others install and run): classify by
+the rubric as usual, but supply-chain families (SEC, TST, DEV, LEG licensing) apply at
+T3 weight. A package that matches neither line 1 nor 2 lands on line 3 or 4, so
+service-only standards (staging, a11y, perf budgets, observability) don't apply — there
+is no deployment to govern. Lines 1–2 still apply when they match (e.g. a package that
+is sold), and a project that also operates a service is classified for that service as
+usual, with its package side flagged as well. Mechanically (ADR-0005): the manifest
+sets `published_package: true`, and each standard's `published` key says whether it
+applies; those marked `required`/`advisory` are selected and verified at max(tier, T3),
+the rest follow the tier. The flag only ever adds requirements: a published package
+that rubric line 1 or 2 puts at T3/T4 keeps everything its tier requires, commercial
+and licensing duties included, and a service-only standard that genuinely doesn't apply
+gets a waiver (C9), never a silent drop.
 
 Rules of application:
 
