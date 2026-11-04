@@ -2,7 +2,7 @@
 id: SEC-SAST
 title: Static Application Security Testing
 family: SEC
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -75,7 +75,7 @@ shared fragment. Dependency CVEs are SEC-SUPPLY's job, not this one's.
 
 | Stack | Required scanner | Command | Notes |
 |---|---|---|---|
-| python | bandit | `.venv/bin/bandit -r src -q` | config and justified skips per STK-PY-04 |
+| python | bandit | `.venv/bin/bandit -r src -q` (script collection: `-c pyproject.toml -r . -q`) | config and justified skips per STK-PY-04 |
 | typescript | eslint security plugins + semgrep | `semgrep scan --config p/security-audit` | `eslint-plugin-security` (+ typescript-eslint) live in the project's own lint config; semgrep is the runnable gate |
 | go | go vet + gosec | `go vet ./... && gosec ./...` | vet is the floor, gosec the security pass |
 | rust | clippy | `cargo clippy -- -D warnings` | `cargo audit` is SEC-SUPPLY-01, not SAST — the boundary is code analysis here, dependency CVEs there |
@@ -187,6 +187,7 @@ subprocess.run(["osascript", "-e", FIXED_SCRIPT])  # nosec B603 — argv list, c
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — Per-stack table: Python script collections (STK-PY-01) run bandit over the repo with `[tool.bandit]` exclusions instead of `src/`, matching STK-PY-04 and `sec-sast.sh`. No rule changes.
 - **1.0.2** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

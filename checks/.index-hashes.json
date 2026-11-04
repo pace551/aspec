@@ -152,8 +152,8 @@
     "version": "1.0.2"
   },
   "SEC-SAST": {
-    "hash": "e5451bb0081dcf4d6327c06fe8b10460245c0a1519a0db6f583a11c728604103",
-    "version": "1.0.2"
+    "hash": "c196577303582bad3e9cb64240629c3b05c507fb4cb337384629b47467fa9973",
+    "version": "1.0.3"
   },
   "SEC-SECRETS": {
     "hash": "6294729d4c8f5030d45ff5b18e431376526745d0f3b1dfda57ed2b6aced7b7b7",
@@ -192,8 +192,8 @@
     "version": "1.0.0"
   },
   "STK-PY": {
-    "hash": "c85d9ef34ab5c35acf6469e2d2c30b92f6f92b3937a8d565cb257a8f10242b37",
-    "version": "1.0.2"
+    "hash": "edf188d4eead4bff9f939b966d08d89863978696041d8191504797f3a07e5fd6",
+    "version": "1.0.3"
   },
   "STK-REDIS": {
     "hash": "aabf22fba858bcdd317c0db8b0a2186579e313babab8b6367e3428afffdaeb22",
