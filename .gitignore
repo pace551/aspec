@@ -6,6 +6,11 @@
 .idea/
 .vscode/
 
+# per-clone git hooks (templates/scaffolds/_common/install-git-hooks.sh); this repo's
+# CI runs checks/ directly, so the vendored copies aren't committed here
+.githooks/
+.governance/
+
 # toolchains inside examples (recreated by their READMEs)
 examples/*/.venv/
 examples/*/node_modules/

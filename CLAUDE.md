@@ -48,7 +48,16 @@ python3 checks/lint-framework.py        # self-lint everything
 python3 -m unittest discover -s checks -p "test_*.py"   # check-script unit tests
 uvx ruff@0.17.1 check checks/           # same ruff version CI pins (framework.yml)
 checks/secret-scan.sh --staged          # pre-commit secret gate
+scripts/lint.sh                         # lint gate (pre-commit hook): lint, ruff, shell syntax
+scripts/test.sh                         # test gate (pre-push hook): the unit tests
+GOVERNANCE_DIR=$PWD python3 checks/run-verification.py --project .   # this repo's own /verify-compliance
 ```
+
+Once per clone, install the git hooks (DEV-BOOTSTRAP-06):
+`GOVERNANCE_DIR=$PWD bash templates/scaffolds/_common/install-git-hooks.sh`. It creates
+the gitignored `.githooks/` and `.governance/`.
+
+This repo's own tier, pins, and approvals live in `GOVERNANCE.md` (T1).
 
 Python 3.14, PyYAML available system-wide. `gitleaks` optional (scripts fall back to
 pattern scan); install with `brew install gitleaks` for full coverage.
