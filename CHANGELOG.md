@@ -5,6 +5,13 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Python script collections (STK-PY 1.0.3, SEC-SAST 1.0.3): STK-PY-01's `src/` layout now
+  applies to packages. A script collection (standalone scripts run by path, none
+  importing another first-party module) keeps its scripts in one directory with tests
+  beside them; once scripts share a helper module it is a package and moves to `src/`.
+  STK-PY-04's check and `sec-sast.sh` scan `src/`, or for a script collection the repo
+  with `[tool.bandit]` exclusions. `src/` projects are unaffected. Covered by
+  `checks/test_python_bandit_target.py`.
 - tiers.md and ADR-0005 now state that `published_package` only adds requirements: a
   published package at T3/T4 (e.g. sold) keeps all tier-required standards, and waives
   any service-only one that doesn't apply rather than dropping it. Packages are

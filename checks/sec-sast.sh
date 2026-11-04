@@ -64,9 +64,15 @@ if [[ -f pyproject.toml || -f setup.py ]]; then
   [[ -x .venv/bin/bandit ]] && BANDIT=".venv/bin/bandit"
   [[ -z "$BANDIT" ]] && command -v bandit >/dev/null 2>&1 && BANDIT="bandit"
   if [[ -n "$BANDIT" ]]; then
-    TARGET="."
-    [[ -d src ]] && TARGET="src"
-    run "$BANDIT" -r "$TARGET" -q
+    # package: src/ · otherwise the repo, with pyproject.toml's [tool.bandit] exclusions
+    # (a script collection, STK-PY-01); bandit ignores a pyproject.toml without that table
+    if [[ -d src ]]; then
+      run "$BANDIT" -r src -q
+    elif [[ -f pyproject.toml ]]; then
+      run "$BANDIT" -c pyproject.toml -r . -q
+    else
+      run "$BANDIT" -r . -q
+    fi
   else
     missing "bandit" "add bandit to the project's [dev] extras (STK-PY) or: pipx install bandit"
   fi

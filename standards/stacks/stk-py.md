@@ -2,7 +2,7 @@
 id: STK-PY
 title: Python Stack
 family: STK
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: required
@@ -29,7 +29,7 @@ verification:
     expect: "exit 0"
     layer: G
     rules: [STK-PY-03]
-  - cmd: ".venv/bin/bandit -r src -q"
+  - cmd: "sh -c 'if [ -d src ]; then .venv/bin/bandit -r src -q; elif [ -f pyproject.toml ]; then .venv/bin/bandit -c pyproject.toml -r . -q; else .venv/bin/bandit -r . -q; fi'"
     expect: "exit 0 (skips justified per STK-PY-04)"
     layer: G
     rules: [STK-PY-04]
@@ -47,7 +47,7 @@ verification:
     layer: G
     rules: [STK-PY-02]
     tiers: [T2, T3, T4]
-  - cmd: "attest: pyproject.toml is the single config home with src/ layout"
+  - cmd: "attest: pyproject.toml is the single config home, with src/ layout (or a script collection whose scripts import no first-party module)"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-PY-01]
@@ -72,7 +72,7 @@ last_review: 2026-07-22
 ## Abstract
 
 House rules for every Python project, codifying the conventions proven in the `oracle/`
-suite: one `pyproject.toml` as the single config home, `src/` layout, a dedicated `.venv`
+suite: one `pyproject.toml` as the single config home, `src/` layout for packages, a dedicated `.venv`
 invoked by path (never activation), ruff for lint+format, bandit and pip-audit as security
 gates, pytest with the coverage ratchet. Identical toolchain at every tier — what scales
 with tier is test depth and CI, not which tools run. Scaffold:
@@ -81,7 +81,7 @@ with tier is test depth and CI, not which tools run. Scaffold:
 
 ## Normative Rules
 
-### STK-PY-01 — `pyproject.toml` MUST be the single configuration home, with `src/` layout
+### STK-PY-01 — `pyproject.toml` MUST be the single configuration home, with `src/` layout for packages
 
 **Tiers**: all required — **Layer**: A (attestation; structure is set once at bootstrap)
 
@@ -90,6 +90,16 @@ Project metadata, dependencies, and tool config (`[tool.ruff]`, `[tool.pytest.in
 `requirements.txt`-as-source-of-truth (a lockfile export is fine, see STK-PY-06). Code
 lives under `src/{package}/`, tests under `tests/` — the src layout is what makes "it
 imports because CWD is the repo" bugs impossible.
+
+That bug needs first-party imports, so the layout rule is for **packages**: any project
+whose code is imported, whether by its own modules, by other projects, or by being built
+and installed. A **script collection** is exempt from it: standalone scripts run by path,
+where no script imports another first-party module (tooling and ops repos). Its scripts
+live in one named directory, its tests may sit beside them and load scripts by file path
+(`importlib`), never through the working directory, and `pyproject.toml` still holds
+everything else (`[tool.pytest.ini_options] testpaths`, `[tool.bandit] exclude_dirs` for
+STK-PY-04). The line is bright: once two scripts share a helper module, it is a package
+and moves to `src/`.
 
 ### STK-PY-02 — Tests MUST run via pytest and coverage MUST never drop below the committed baseline
 
@@ -120,11 +130,12 @@ select = ["E", "F", "I", "UP", "B", "W"]
 `ruff format` replaces black. Rule suppressions are inline `# noqa: XXX` with a reason,
 never blanket `ignore` lists added to make CI green.
 
-### STK-PY-04 — bandit MUST pass over `src/`, with every skip justified
+### STK-PY-04 — bandit MUST pass over `src/` (a script collection's repo), with every skip justified
 
 **Tiers**: all required — **Layer**: G
 
-`bandit -r src -q`. Skips are declared per-project (e.g. oracle's
+`bandit -r src -q`; a script collection (STK-PY-01) scans the repo with its
+`[tool.bandit] exclude_dirs`: `bandit -c pyproject.toml -r . -q`. Skips are declared per-project (e.g. oracle's
 `-s B101,B107,B110,B112`) and each skipped check gets a one-line justification in the
 project `CLAUDE.md` or CI file. `# nosec` inline requires a trailing comment saying why.
 SQL construction, `subprocess`, `pickle`, and `yaml.load` findings are never skipped —
@@ -182,7 +193,7 @@ this form.
 |---|---|---|---|
 | 1 | `.venv/bin/ruff check .` | exit 0 | STK-PY-03 |
 | 2 | `.venv/bin/ruff format --check .` | exit 0 | STK-PY-03 |
-| 3 | `.venv/bin/bandit -r src -q` | exit 0 | STK-PY-04 |
+| 3 | `.venv/bin/bandit` over `src/`, or `-c pyproject.toml -r .` for a script collection | exit 0 | STK-PY-04 |
 | 4 | `.venv/bin/pip-audit` (T2+) | exit 0 / per-CVE waivers | STK-PY-05 |
 | 5 | `.venv/bin/pytest -q` | exit 0 (or 5: no tests yet) | STK-PY-02 |
 | 6 | pytest `--cov` → `coverage-ratchet.py --check` (T2+) | ≥ `.coverage-baseline` | STK-PY-02 |
@@ -226,6 +237,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 |---|---|---|
 | `source .venv/bin/activate` in scripts/CI | Breaks under launchd/CI/sub-agents | `.venv/bin/<tool>` paths (STK-PY-08) |
 | Flat layout (`myproj.py` beside tests) | Imports work only from repo root; masks packaging bugs | `src/` layout (STK-PY-01) |
+| A "script collection" whose scripts import a shared helper module | The CWD-import bug is back, under an exemption meant for standalone scripts | It's a package now: move to `src/` (STK-PY-01) |
 | f-string / `%` SQL construction | Injection; bandit B608 | Parameterized queries (driver placeholders) |
 | Blanket `[tool.ruff.lint] ignore = [...]` to silence CI | Erases the signal permanently | Fix, or inline `# noqa` with reason |
 | `pip install` into system Python | Version drift across projects; sudo traps | Per-project `.venv` (STK-PY-02) |
@@ -242,6 +254,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — STK-PY-01's `src/` layout applies to packages; a script collection (standalone scripts run by path, none importing another first-party module) keeps its scripts in one directory with tests beside them. STK-PY-04's check scans `src/`, or otherwise the repo with `-c pyproject.toml` so a script collection's `[tool.bandit]` exclusions apply (`checks/sec-sast.sh` likewise). Adds no requirement: `src/` projects behave as before.
 - **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Format-review fixes: per-entry tier scoping, single-rule
   attestations, pytest exit-5 tolerance on fresh scaffolds, ratchet runs read-only.
