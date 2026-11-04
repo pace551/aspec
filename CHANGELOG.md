@@ -5,6 +5,11 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- The framework repo now governs itself: a root `GOVERNANCE.md` (T1, eight pinned
+  standards, the maintainer's push/PR approval, attestations; `/verify-compliance`
+  passes), and `scripts/lint.sh` / `scripts/test.sh`, the hook gates, running the same
+  steps as the framework CI's self-lint job. Git hooks install per clone (see
+  CLAUDE.md); `.githooks/` and `.governance/` are gitignored here.
 - Verification fixes for git gates (DEV-BOOTSTRAP 1.0.2, DEV-CI 1.0.2, DEV-GIT 1.0.2).
   The hook checks (DEV-BOOTSTRAP-06, DEV-CI-02) looked only in `.git/hooks/`, so every
   repo whose hooks came from `install-git-hooks.sh` (`core.hooksPath` = `.githooks`)
