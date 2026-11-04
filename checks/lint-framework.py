@@ -34,6 +34,7 @@ FAMILIES = set(FAMILY_DIRS)
 STACK_KEYS = set(json.loads((ROOT / "checks" / "stack-keys.json").read_text()))
 TIER_VALUES = {"required", "advisory", "n/a"}
 TIER_NAMES = {"T1", "T2", "T3", "T4"}
+PUBLISHED_FAMILIES = {"SEC", "TST", "DEV", "LEG"}
 TIER_LINE_RE = re.compile(r"^\*\*Tiers\*\*: (.+?) — \*\*Layer\*\*: (.+)$", re.MULTILINE)
 STATUSES = {"draft", "active", "deprecated"}
 LAYERS = {"H", "G", "A"}
@@ -64,6 +65,20 @@ def hardcoded_cmd_path(cmd: str) -> bool:
 
 def hardcoded_body_path(body: str) -> bool:
     return bool(GOV_PATH_RE.search(body) or ABS_GOV_PATH_RE.search(body))
+
+
+def published_errors(meta: dict, rel: str) -> list[str]:
+    """ADR-0005: `published` is mandatory on the families the published-package carve-out
+    covers, so none is unclassified by omission; optional (default n/a) elsewhere."""
+    value = meta.get("published")
+    if value is None:
+        if meta.get("family") in PUBLISHED_FAMILIES:
+            return [(f"{rel}: frontmatter missing `published` (required for "
+                     f"{', '.join(sorted(PUBLISHED_FAMILIES))} standards, ADR-0005)")]
+        return []
+    if value not in TIER_VALUES:
+        return [f"{rel}: published must be one of {sorted(TIER_VALUES)}"]
+    return []
 
 
 def lint_file(path: Path, all_ids: set[str]) -> list[str]:
@@ -103,6 +118,7 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     for t in ("T1", "T2", "T3", "T4"):
         if tiers.get(t) not in TIER_VALUES:
             errs.append(f"{rel}: tiers.{t} must be one of {sorted(TIER_VALUES)}")
+    errs += published_errors(meta, rel)
 
     stacks = meta.get("stacks")
     if stacks != "all" and not (isinstance(stacks, list) and stacks):

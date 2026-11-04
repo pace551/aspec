@@ -2,13 +2,14 @@
 id: DEV-CI
 title: CI Baseline
 family: DEV
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: n/a
   T2: advisory
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - ci
@@ -196,6 +197,7 @@ lines, and the fragment files themselves. Promotion to T4 is one job
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-11-03) — DEV-CI-02 check finds hooks via `git rev-parse --git-path hooks`, so repos whose hooks came from `install-git-hooks.sh` (`core.hooksPath` = `.githooks`) pass. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

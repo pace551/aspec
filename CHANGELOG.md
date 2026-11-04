@@ -5,6 +5,20 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Published packages (ADR-0005): the tiers.md carve-out now has tooling. A manifest sets
+  `published_package: true`; every SEC, TST, DEV and LEG standard declares `published:
+  required | advisory | n/a` (linted, optional elsewhere). For a published package,
+  `select-standards.py --published` selects the opted-in standards at that
+  applicability (never weaker than the tier's), and `run-verification.py` runs their
+  checks at max(tier, T3). The 22 standards are classified per ADR-0005 (patch bumps:
+  no project could carry the flag before). Each selected entry reports `effective_tier`,
+  and `/govern` reads rule tier tags at it, so a published T1 package's brief keeps
+  T3-required rules. `/govern` asks whether a project is published; `/bootstrap-repo`
+  builds T3 CI, the coverage baseline and dependency-update automation for published
+  packages at any tier. Templates (incl. the GOVERNANCE seed), AUTHORING.md, tiers.md
+  and the guide document the flag. Covered by `checks/test_published_package.py`.
+- `/bootstrap-repo` at T3+ now adds `renovate.json` (DEV-DEPS-02); a fresh T3 scaffold
+  used to fail that check.
 - The framework repo now governs itself: a root `GOVERNANCE.md` (T1, eight pinned
   standards, the maintainer's push/PR approval, attestations; `/verify-compliance`
   passes), and `scripts/lint.sh` / `scripts/test.sh`, the hook gates, running the same

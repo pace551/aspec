@@ -20,6 +20,10 @@ what you know of the task/project. Sources: the user's brief, existing `GOVERNAN
 - Genuinely ambiguous between two tiers → ONE `AskUserQuestion`: both candidate tiers as
   options, each labeled with the rubric line that triggers it. Never silently guess.
 - User overrides your classification → accept, record as `tier_override` in the manifest.
+- **Published package?** Code others install and run (a library, package, CLI, framework,
+  or template set), with no service the user operates → `published_package: true`
+  (ADR-0005). The tier stays what the rubric says; the flag makes the standards that opt
+  in apply at T3 weight. Unsure → ask in the same `AskUserQuestion`, never guess.
 
 ### 2. Detect stacks
 
@@ -37,21 +41,24 @@ Two runs of the same tool:
 
 ```bash
 # a) the pin set — everything applicable at this tier, for GOVERNANCE.md
-python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> \
+python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
   --brief-text "<the task description, verbatim>" --mode pins
 # b) the context brief — rule detail only where this task needs it (≤~15k tokens)
-python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> \
+python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
   --brief-text "<the task description, verbatim>" --mode brief
 ```
 
+Pass `--published` on both runs exactly when the manifest has `published_package: true`.
+
 Do NOT load `index.json` or unselected standards into context. `brief` gives `detailed`
 (with parsed rules) + `listed` (id/title one-liners) — **both are pinned and enforced**;
-`listed` standards load on demand while working in their area.
+`listed` standards load on demand while working in their area. Every entry carries
+`effective_tier`: read that standard's rule tier tags at it, not at the project tier.
 
 ### 4. Write or update `GOVERNANCE.md`
 
 Format: `$GOV/templates/GOVERNANCE-template.md`. New project → create from template.
-Existing → update `tier`, `classified`, `stacks`, and `standards` pins (id+version from
+Existing → update `tier`, `classified`, `published_package`, `stacks`, and `standards` pins (id+version from
 the **pins** run — the full applicable set, not just the brief's detailed subset). **Preserve** existing waivers, approvals, attestations,
 `last_verified`. If pins changed versions, list the changes to the user (upgrades are
 deliberate, never silent); for a minor/major change, quote the standard's changelog
@@ -63,7 +70,9 @@ Compact, in your reply — not a file:
 
 - Tier + one-line why (which rubric line fired).
 - **Hard rules for this task**: from the brief's `detailed` entries, the rule IDs +
-  one-line statements that are `required` at this tier — what the session must honor.
+  one-line statements that are `required` at each entry's `effective_tier` — what the
+  session must honor. That is the project tier, except for a published package's
+  opted-in standards, which read at T3 or above (the tier verification enforces).
 - The `listed` standards as a one-line-each roll call (also pinned; loaded on demand).
 - Reminder line: "Done = `/verify-compliance` green (Constitution C2)."
 

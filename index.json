@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-11-03",
+  "generated": "2026-11-04",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -18,6 +18,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "prompt",
@@ -51,6 +52,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "model selection",
@@ -85,6 +87,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "prompt injection",
@@ -118,6 +121,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "api",
@@ -153,6 +157,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "background job",
@@ -191,6 +196,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "config",
@@ -227,6 +233,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "error handling",
@@ -262,6 +269,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "idempotency",
@@ -297,6 +305,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "module",
@@ -332,6 +341,7 @@
         "T3": "advisory",
         "T4": "advisory"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "architecture",
@@ -368,6 +378,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "migration",
@@ -401,6 +412,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "pii",
@@ -434,6 +446,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "retention",
@@ -467,6 +480,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "containers"
       ],
@@ -503,6 +517,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "aws",
         "web"
@@ -544,6 +559,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "aws"
       ],
@@ -581,6 +597,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "serverless"
       ],
@@ -619,6 +636,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "terraform",
         "aws"
@@ -650,7 +668,7 @@
       "id": "LEG-COMMERCIAL",
       "title": "Commercial Baseline",
       "family": "LEG",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "n/a",
@@ -658,6 +676,7 @@
         "T3": "advisory",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "launch",
@@ -678,13 +697,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/legal/leg-commercial.md",
-      "tokens_est": 2309
+      "tokens_est": 2359
     },
     {
       "id": "LEG-LICENSING",
       "title": "Licensing",
       "family": "LEG",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -692,6 +711,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "license",
@@ -712,7 +732,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/legal/leg-licensing.md",
-      "tokens_est": 2431
+      "tokens_est": 2486
     },
     {
       "id": "OPS-ALERTS",
@@ -726,6 +746,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "alert",
@@ -762,6 +783,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "backup",
@@ -797,6 +819,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "deploy",
@@ -832,6 +855,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "cost",
@@ -866,6 +890,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "incident",
@@ -900,6 +925,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "logging",
@@ -935,6 +961,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "performance",
@@ -969,6 +996,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "release",
@@ -994,7 +1022,7 @@
       "id": "DEV-BOOTSTRAP",
       "title": "Repository Bootstrap",
       "family": "DEV",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1002,6 +1030,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "new repo",
@@ -1025,13 +1054,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-bootstrap.md",
-      "tokens_est": 2640
+      "tokens_est": 2694
     },
     {
       "id": "DEV-CI",
       "title": "CI Baseline",
       "family": "DEV",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "n/a",
@@ -1039,6 +1068,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "ci",
@@ -1058,13 +1088,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-ci.md",
-      "tokens_est": 2303
+      "tokens_est": 2357
     },
     {
       "id": "DEV-DEPS",
       "title": "Dependency Management",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1072,6 +1102,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "dependency",
@@ -1095,13 +1126,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-deps.md",
-      "tokens_est": 2292
+      "tokens_est": 2347
     },
     {
       "id": "DEV-DOCS",
       "title": "Documentation & ADRs",
       "family": "DEV",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1109,6 +1140,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "advisory",
       "stacks": "all",
       "triggers": [
         "readme",
@@ -1126,13 +1158,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-docs.md",
-      "tokens_est": 2041
+      "tokens_est": 2090
     },
     {
       "id": "DEV-GIT",
       "title": "Git & PR Conventions",
       "family": "DEV",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1140,6 +1172,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "commit",
@@ -1160,13 +1193,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-git.md",
-      "tokens_est": 2415
+      "tokens_est": 2469
     },
     {
       "id": "DEV-REVIEW",
       "title": "Code Review",
       "family": "DEV",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1174,6 +1207,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "code review",
@@ -1191,13 +1225,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/process/dev-review.md",
-      "tokens_est": 1879
+      "tokens_est": 1934
     },
     {
       "id": "SEC-AUTHN",
       "title": "Authentication",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1205,6 +1239,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "login",
@@ -1224,13 +1259,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-authn.md",
-      "tokens_est": 2396
+      "tokens_est": 2446
     },
     {
       "id": "SEC-AUTHZ",
       "title": "Authorization",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1238,6 +1273,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "authorization",
@@ -1256,13 +1292,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-authz.md",
-      "tokens_est": 2340
+      "tokens_est": 2390
     },
     {
       "id": "SEC-CRYPTO",
       "title": "Cryptography & Transport",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1270,6 +1306,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "encryption",
@@ -1290,13 +1327,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-crypto.md",
-      "tokens_est": 2723
+      "tokens_est": 2777
     },
     {
       "id": "SEC-INPUT",
       "title": "Input Validation & Injection Defense",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1304,6 +1341,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "input validation",
@@ -1326,13 +1364,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-input.md",
-      "tokens_est": 3024
+      "tokens_est": 3079
     },
     {
       "id": "SEC-SAST",
       "title": "Static Application Security Testing",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1340,6 +1378,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "sast",
@@ -1359,13 +1398,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-sast.md",
-      "tokens_est": 2187
+      "tokens_est": 2242
     },
     {
       "id": "SEC-SECRETS",
       "title": "Secrets Management",
       "family": "SEC",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1373,6 +1412,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "secret",
@@ -1392,13 +1432,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-secrets.md",
-      "tokens_est": 2145
+      "tokens_est": 2199
     },
     {
       "id": "SEC-SUPPLY",
       "title": "Supply Chain Security",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1406,6 +1446,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "dependency",
@@ -1426,13 +1467,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-supply.md",
-      "tokens_est": 2504
+      "tokens_est": 2558
     },
     {
       "id": "SEC-THREAT",
       "title": "Threat Modeling",
       "family": "SEC",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1440,6 +1481,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "advisory",
       "stacks": "all",
       "triggers": [
         "threat model",
@@ -1458,13 +1500,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-threat.md",
-      "tokens_est": 2131
+      "tokens_est": 2181
     },
     {
       "id": "SEC-WEB",
       "title": "Web Hardening",
       "family": "SEC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1472,6 +1514,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -1496,7 +1539,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/security/sec-web.md",
-      "tokens_est": 2389
+      "tokens_est": 2439
     },
     {
       "id": "STK-DDB",
@@ -1510,6 +1553,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "dynamodb"
       ],
@@ -1544,6 +1588,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "go"
       ],
@@ -1580,6 +1625,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "htmx"
       ],
@@ -1618,6 +1664,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "nextjs"
       ],
@@ -1655,6 +1702,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "postgresql"
       ],
@@ -1692,6 +1740,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "python"
       ],
@@ -1728,6 +1777,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "redis"
       ],
@@ -1764,6 +1814,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "rust"
       ],
@@ -1800,6 +1851,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "sqlite"
       ],
@@ -1834,6 +1886,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "swiftui"
       ],
@@ -1870,6 +1923,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "typescript"
       ],
@@ -1908,6 +1962,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "vite-react"
       ],
@@ -1937,7 +1992,7 @@
       "id": "TST-FIXTURES",
       "title": "Test Data & Fixtures",
       "family": "TST",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1945,6 +2000,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "fixture",
@@ -1965,13 +2021,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-fixtures.md",
-      "tokens_est": 2476
+      "tokens_est": 2530
     },
     {
       "id": "TST-INTEG",
       "title": "Integration & E2E Testing",
       "family": "TST",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1979,6 +2035,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "advisory",
       "stacks": "all",
       "triggers": [
         "integration test",
@@ -1998,13 +2055,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-integ.md",
-      "tokens_est": 2225
+      "tokens_est": 2275
     },
     {
       "id": "TST-POLICY",
       "title": "Test Policy",
       "family": "TST",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -2012,6 +2069,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "test",
@@ -2031,13 +2089,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-policy.md",
-      "tokens_est": 2234
+      "tokens_est": 2289
     },
     {
       "id": "TST-RATCHET",
       "title": "Coverage Ratchet",
       "family": "TST",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2045,6 +2103,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "coverage",
@@ -2063,13 +2122,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-ratchet.md",
-      "tokens_est": 2270
+      "tokens_est": 2325
     },
     {
       "id": "TST-VERIFY",
       "title": "Verification-First Delivery",
       "family": "TST",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -2077,6 +2136,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "required",
       "stacks": "all",
       "triggers": [
         "verify",
@@ -2097,7 +2157,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-verify.md",
-      "tokens_est": 2261
+      "tokens_est": 2316
     },
     {
       "id": "UX-A11Y",
@@ -2111,6 +2171,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -2148,6 +2209,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -2185,6 +2247,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": "all",
       "triggers": [
         "email",
@@ -2220,6 +2283,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -2257,6 +2321,7 @@
         "T3": "n/a",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -2291,6 +2356,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],
@@ -2327,6 +2393,7 @@
         "T3": "required",
         "T4": "required"
       },
+      "published": "n/a",
       "stacks": [
         "web"
       ],

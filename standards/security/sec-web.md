@@ -2,13 +2,14 @@
 id: SEC-WEB
 title: Web Hardening
 family: SEC
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
+published: n/a
 stacks: [web]
 triggers:
   - security headers
@@ -204,5 +205,6 @@ app.add_middleware(
 
 ## Changelog
 
+- **1.0.2** (2026-11-04) — Adds `published: n/a` (ADR-0005): it guards a running service or a business, not a published package. No change for projects that aren't published packages.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

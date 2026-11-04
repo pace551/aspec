@@ -2,13 +2,14 @@
 id: TST-RATCHET
 title: Coverage Ratchet
 family: TST
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - coverage
@@ -176,6 +177,7 @@ test job so `coverage.json` already exists.
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-10-27) — "No coverage data" is now exit 3 instead of 2, because Python also
   exits 2 when it can't open the script; a missing ratchet script used to pass this check.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.

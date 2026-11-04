@@ -2,13 +2,14 @@
 id: LEG-LICENSING
 title: Licensing
 family: LEG
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
   T2: advisory
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - license
@@ -202,3 +203,4 @@ license_decisions:
   job: the old `--fail-on` denylist passed any license it didn't name and audited the
   project's own unlicensed package. Adds a fail-open anti-pattern row and names
   `cargo-deny` as the Rust scanner. No rule changes.
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.

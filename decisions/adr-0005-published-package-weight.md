@@ -1,6 +1,6 @@
 # ADR-0005: Apply T3 weight to published packages per standard
 
-- **Status**: proposed
+- **Status**: accepted
 - **Date**: 2026-11-04
 - **Deciders**: the maintainer
 

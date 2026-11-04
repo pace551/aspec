@@ -2,13 +2,14 @@
 id: SEC-SECRETS
 title: Secrets Management
 family: SEC
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - secret
@@ -184,6 +185,7 @@ an SSM SecureString `/mytool/prod/anthropic-api-key`, and inject via the task de
 
 ## Changelog
 
+- **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Format-review fixes: attestations split to one entry per rule;
   SEC-SECRETS-06 entry tier-scoped to T3+.

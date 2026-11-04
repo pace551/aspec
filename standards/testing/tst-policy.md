@@ -2,13 +2,14 @@
 id: TST-POLICY
 title: Test Policy
 family: TST
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
   T2: required
   T3: required
   T4: required
+published: required
 stacks: all
 triggers:
   - test
@@ -182,4 +183,5 @@ exists to catch.
 
 ## Changelog
 
+- **1.0.1** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.0** (2026-07-22) — Initial version.

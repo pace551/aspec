@@ -30,6 +30,11 @@ calibration bar for depth, tone, and length — match them.
    prose, and per-command tier scoping uses the verification entry's `tiers:` key. A rule
    with `required` anywhere needs H/G verification coverage or the literal marker
    `**Layer**: A (attestation)`.
+   **Published packages** (ADR-0005): set `published:` to `required` when the risk the
+   standard guards ships to the people who install a package (dependencies, licensing,
+   code flaws, supply chain, change control), `n/a` when it guards a running service or a
+   business, `advisory` in between. Mandatory on SEC/TST/DEV/LEG standards (linted).
+   Changing an existing standard's value is a minor bump, like any applicability change.
 5. **Length**: ≤350 lines per doc; Abstract ≤120 words; T4-only docs proportionate
    (~120-180 lines), never padded.
 6. **Cross-reference by ID** (`SEC-SECRETS`, `OPS-OBS`) — never by path. Reference

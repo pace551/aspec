@@ -4,6 +4,7 @@
 tier: {{TIER}}
 classified: {{DATE}}
 tier_override: null
+published_package: {{PUBLISHED_PACKAGE}}   # true for code others install (ADR-0005)
 stacks: {{STACKS}}
 standards: []        # pinned by /govern
 waivers: []
