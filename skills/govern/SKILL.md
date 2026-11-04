@@ -21,9 +21,10 @@ what you know of the task/project. Sources: the user's brief, existing `GOVERNAN
   options, each labeled with the rubric line that triggers it. Never silently guess.
 - User overrides your classification → accept, record as `tier_override` in the manifest.
 - **Published package?** Code others install and run (a library, package, CLI, framework,
-  or template set), with no service the user operates → `published_package: true`
-  (ADR-0005). The tier stays what the rubric says; the flag makes the standards that opt
-  in apply at T3 weight. Unsure → ask in the same `AskUserQuestion`, never guess.
+  or template set) → `published_package: true` (ADR-0005), even if the project also
+  operates a service: the tier covers the service, and the flag only adds the
+  package-side standards at T3 weight. The tier stays what the rubric says. Unsure → ask
+  in the same `AskUserQuestion`, never guess.
 
 ### 2. Detect stacks
 

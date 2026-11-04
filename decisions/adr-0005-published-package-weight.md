@@ -63,3 +63,16 @@ families), the GOVERNANCE and standard templates, `AUTHORING.md`, `tiers.md` (th
 carve-out points at the flag), and `/govern`, which must ask whether a project is
 published. This repo then sets the flag, re-pins, and fixes or records whatever fails,
 which replaces the "known gap" note in its `GOVERNANCE.md`.
+
+Clarified 2026-11-04 (Devin reviews of #28 and #30): the flag only adds requirements.
+This supersedes the narrower scope quoted under Context ("no service the user
+operates"): packages are classified by the full rubric, and `/govern` sets the flag for
+code others install whether or not the project also runs a service. `published: n/a`
+means "no uplift", never "remove". A published package that rubric line 1 or 2 puts at
+T3/T4 (e.g. one that is sold) keeps every standard its tier requires, including
+service-only ones like SEC-AUTHN and commercial ones like LEG-COMMERCIAL; any that
+genuinely don't apply are waived explicitly (C9). The flag also applies to a project
+that operates a service as well as publishing code: its tier covers the service, and
+the flag adds the package side. Letting `n/a` remove tier-required standards was
+rejected: a project that is both a library and a running service would silently lose
+its authentication and web-hardening rules.

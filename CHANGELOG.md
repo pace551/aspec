@@ -5,6 +5,12 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- tiers.md and ADR-0005 now state that `published_package` only adds requirements: a
+  published package at T3/T4 (e.g. sold) keeps all tier-required standards, and waives
+  any service-only one that doesn't apply rather than dropping it. Packages are
+  classified by the full rubric (lines 3–4 are the usual outcome, not a rule), and
+  `/govern` sets the flag for code others install even when the project also operates
+  a service.
 - Published packages (ADR-0005): the tiers.md carve-out now has tooling. A manifest sets
   `published_package: true`; every SEC, TST, DEV and LEG standard declares `published:
   required | advisory | n/a` (linted, optional elsewhere). For a published package,
