@@ -29,7 +29,6 @@ standards:
 waivers: []
 external_action_approvals:
   - {action: "push branches and open pull requests on github.com/pace551/aspec", granted: 2026-10-28}
-  - {action: "squash-merge PRs whose Devin review has no open finding or flag and whose required checks pass (release-please PRs excluded)", granted: 2026-11-04}
 pii_inventory: n/a
 last_verified: 2026-11-05
 attestations:
@@ -58,7 +57,7 @@ attestations:
   - {rule_id: TST-POLICY-03, followed: true, note: "scripts/*.sh are glue over existing gates; run directly, plus negative runs (Python 3.9 only, ruff violation)", date: 2026-11-03}
   - {rule_id: TST-POLICY-05, followed: true, note: "no coverage percentage gate anywhere in this repo's CI (grep)", date: 2026-11-03}
   - {rule_id: TST-VERIFY-01, followed: true, note: "lint (scripts/lint.sh), unit tests (scripts/test.sh), hooks on the real commit and push, then run-verification", date: 2026-11-03}
-  - {rule_id: TST-VERIFY-02, followed: false, note: "xargs fix: the skill's step-1 command ran on the real vault and found all 5 spaced notes; standards cmds ran via bash in temp git repos. Still open: release.yml's App token has run once but no release PR yet, so held-CI is unconfirmed", date: 2026-11-05}
+  - {rule_id: TST-VERIFY-02, followed: true, note: "release.yml App token exercised by its real run: release PR #39 opened as aspec-release[bot], its framework CI started without an approval click, and the release-date amend committed as the App bot (run 42081910035); #38's xargs fix ran on the real vault through the installed skill", date: 2026-11-05}
   - {rule_id: TST-VERIFY-03, followed: true, note: "gate commands come from CLAUDE.md and mirror framework.yml", date: 2026-11-03}
   - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran and what didn't", date: 2026-11-05}
   - {rule_id: DEV-CI-03, followed: true, note: "no infra dirs and no web surface, so iac-scan, a11y and lighthouse don't apply", date: 2026-11-04}
@@ -126,12 +125,12 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
 - **Known shortfalls**, recorded as `followed: false` above (C9): no lockfile for the
   toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); no `/code-review`
   or `/security-review` rung (DEV-REVIEW-01/02); three scripts untested (TST-POLICY-04);
-  input validation by hand rather than a schema library (SEC-INPUT-01); the release
-  App-token switch not yet exercised by a live run (TST-VERIFY-02).
+  input validation by hand rather than a schema library (SEC-INPUT-01).
 - **Release secrets:** `release.yml` authenticates as a GitHub App installed on this repo
   only — client ID in the `RELEASE_APP_CLIENT_ID` repository variable, private key in
   the `RELEASE_APP_PRIVATE_KEY` Actions secret. Rotate the key in the App's settings and
   replace the secret; nothing is stored locally.
-- **Approvals (C7):** pushing branches and opening PRs (2026-10-28), and squash-merging
-  PRs whose Devin review is clean and required checks pass (2026-11-04). Release-please
-  release PRs are merged by the maintainer, which is when releases happen.
+- **Approvals (C7):** pushing branches and opening PRs (2026-10-28). The maintainer
+  approves and merges every PR, release-please's included. The 2026-11-04 approval to
+  squash-merge clean PRs was withdrawn on 2026-11-05, after #38 was merged while a
+  non-required CodeQL check was still pending.
