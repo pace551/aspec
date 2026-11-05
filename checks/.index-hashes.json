@@ -32,8 +32,8 @@
     "version": "1.0.0"
   },
   "ARC-MODULARITY": {
-    "hash": "3959031e031d32af897aea872c6a79196840b067321ee68d6ccc0681d0b66ee2",
-    "version": "1.0.2"
+    "hash": "aba4a013f7a473b6e4146ba561006d8a38bebb8378d473190339540d9fb2c92f",
+    "version": "1.0.3"
   },
   "ARC-PATTERNS": {
     "hash": "38d74eebbdc373cbeafdc4017c9241cd8a6eea1ba19680bab4ab5d8fdedc47bf",
@@ -76,20 +76,20 @@
     "version": "1.0.1"
   },
   "INF-CONTAINERS": {
-    "hash": "e4a237c15b4fa9da861c4ad51d8b2148c5b6e3b369b5bf55b51c9a0231def1e9",
-    "version": "1.0.3"
+    "hash": "4841e9fc65799a5288961deb5bfe47764adbb821ec9777c11d5f6b244329e819",
+    "version": "1.0.4"
   },
   "INF-EDGE": {
     "hash": "a1826d6fd0622672b261e72cffba4fcb03eb67c7b585a952e5acab91444c9511",
     "version": "1.0.1"
   },
   "INF-ENVS": {
-    "hash": "792e9e52d7d11cf14c959aaabd76afa162a9eb5c6f2096ed23f352527922cfab",
-    "version": "1.0.1"
+    "hash": "148de30b35a4532f551006513243351c2d3dab889af03d02579fdd75c107af87",
+    "version": "1.0.2"
   },
   "INF-SERVERLESS": {
-    "hash": "06c80c1a7507356ad7be9408f571132a47c92a85f849824a01a2d94c4b32233c",
-    "version": "1.0.2"
+    "hash": "e5d0ec777ebd697000dff8ace922555aedc62a4d1c846a02f487cda401b47b9d",
+    "version": "1.0.3"
   },
   "INF-TF": {
     "hash": "695f61e48652f5a0a01e2bfe7182614e020e949c6cd0824482eb9b290f711a55",

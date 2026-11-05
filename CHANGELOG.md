@@ -5,6 +5,22 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- File lists reach `xargs` NUL-separated, so paths with spaces aren't split. `/evolve-standards`
+  found no learning notes at all: every note `/harvest-learnings` writes is named
+  `YYYY-MM-DD governance <slug>.md`, and its candidate search also piped to `rg`, which
+  `xargs` can't run where `rg` is only a shell function (Claude Code). Step 1 is now
+  `grep -rl --null … | xargs -0 grep -l …` with the vault path quoted. INF-ENVS 1.0.2,
+  INF-CONTAINERS 1.0.4 and INF-SERVERLESS 1.0.3 had verification commands that passed a
+  noncompliant workflow, Dockerfile or `.tf` file whose path held a space; ARC-MODULARITY
+  1.0.3 fixes its file-size one-liner (all patch bumps). `lint-framework` rejects a piped
+  `xargs` without `-0`/`--null` in standards and skills, reading xargs' options by arity
+  (`-n 1 -0` is safe; `-P0` and `-I0` set a value of 0 and aren't). `checks/inf-container-scan.sh`
+  and `checks/inf-tf-scan.sh` looped over a word-split list, so `svc a/Dockerfile` or
+  `infra/my mod/` reached hadolint, trivy, tofu, tflint and checkov as two paths; they now
+  read `find -print0` into bash arrays (bash 3.2-safe). A directory `find` can't enter
+  now stops either scanner with exit 2 ("scan incomplete") instead of being skipped, and
+  the excluded trees (`.git`, `node_modules`, `.venv`, `.terraform`) are pruned rather than
+  walked, so an unreadable one can't abort the scan.
 - Release PRs no longer wait for a maintainer to approve their CI runs. GitHub holds the
   `pull_request` runs of any PR that `GITHUB_TOKEN` opens or pushes to, so
   `.github/workflows/release.yml` now mints a short-lived GitHub App installation token

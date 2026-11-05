@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-11-04",
+  "generated": "2026-11-05",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -297,7 +297,7 @@
       "id": "ARC-MODULARITY",
       "title": "Modularity & Boundaries",
       "family": "ARC",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -327,7 +327,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-modularity.md",
-      "tokens_est": 2400
+      "tokens_est": 2445
     },
     {
       "id": "ARC-PATTERNS",
@@ -472,7 +472,7 @@
       "id": "INF-CONTAINERS",
       "title": "Containers & ECS",
       "family": "INF",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -503,7 +503,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-containers.md",
-      "tokens_est": 3095
+      "tokens_est": 3143
     },
     {
       "id": "INF-EDGE",
@@ -551,7 +551,7 @@
       "id": "INF-ENVS",
       "title": "Environments & Promotion",
       "family": "INF",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -583,13 +583,13 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-envs.md",
-      "tokens_est": 2992
+      "tokens_est": 3039
     },
     {
       "id": "INF-SERVERLESS",
       "title": "Serverless (Lambda + API Gateway)",
       "family": "INF",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -622,7 +622,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/infra/inf-serverless.md",
-      "tokens_est": 3371
+      "tokens_est": 3414
     },
     {
       "id": "INF-TF",

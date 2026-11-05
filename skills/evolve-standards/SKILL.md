@@ -22,9 +22,13 @@ changelog + regenerated index + clean self-lint. Governance repo:
 ### 1. Gather candidates
 
 ```bash
-rg -l "type: governance-learning" $VAULT/ | \
-  xargs rg -l "status: candidate"
+grep -rl --null "type: governance-learning" "$VAULT/" | \
+  xargs -0 grep -l "status: candidate"
 ```
+
+Names are NUL-separated because learning notes are named `YYYY-MM-DD governance <slug>.md`
+(plain `xargs` would split them at the spaces), and both sides are `grep`: `xargs` can only
+exec a binary, and inside Claude Code `rg` may be a shell function.
 
 Read each note; cluster by implicated standard/rule ID. Also mine recurring-waiver
 signals: the same rule waived in two projects is a candidate without a note.

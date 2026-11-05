@@ -105,6 +105,57 @@ def bare_python_launch(text: str) -> bool:
     return bool(BARE_PYTHON_RE.search(text))
 
 
+# Plain xargs splits its input on whitespace, so a path with a space becomes two
+# nonexistent paths and the check silently passes (or finds nothing). File lists go to
+# xargs NUL-separated: the producer emits NULs (`-print0`, `--null`, `-z`, `-0`) and
+# xargs reads them with `-0`/`--null`. Only piped xargs (`| xargs`, also across a `\`
+# line continuation) is checked, so prose that names xargs isn't. Options are parsed by
+# arity (GNU + BSD), so `-n 1 -0` is NUL-safe while `-P0`/`-I0` (a value of 0) are not.
+XARGS_RE = re.compile(r"\|\s*(?:\\\n\s*)?xargs(?![\w-])([^\n|;&`'\"()]*)")
+XARGS_SHORT_WITH_ARG = set("adEILnPsJRS")  # value attached or as the next word
+XARGS_SHORT_OPTIONAL_ARG = set("eil")  # GNU: value only when attached
+XARGS_LONG_WITH_ARG = {
+    "--arg-file",
+    "--delimiter",
+    "--max-args",
+    "--max-chars",
+    "--max-lines",
+    "--max-procs",
+    "--process-slot-var",
+}
+
+
+def xargs_reads_nul(args: list[str]) -> bool:
+    """True when xargs' own options (before the command it runs) include -0/--null."""
+    i = 0
+    while i < len(args):
+        tok = args[i]
+        i += 1
+        if tok == "--" or not tok.startswith("-") or tok == "-":
+            return False  # end of options: the command starts here
+        if tok.startswith("--"):
+            name = tok.split("=", 1)[0]
+            if name == "--null":
+                return True
+            if "=" not in tok and name in XARGS_LONG_WITH_ARG:
+                i += 1
+            continue
+        for j, ch in enumerate(tok[1:], 1):
+            if ch == "0":
+                return True
+            if ch in XARGS_SHORT_WITH_ARG:
+                if j == len(tok) - 1:
+                    i += 1  # the value is the next word
+                break
+            if ch in XARGS_SHORT_OPTIONAL_ARG:
+                break
+    return False
+
+
+def unsafe_xargs(text: str) -> bool:
+    return any(not xargs_reads_nul(m.group(1).split()) for m in XARGS_RE.finditer(text))
+
+
 def published_errors(meta: dict, rel: str) -> list[str]:
     """ADR-0005: `published` is mandatory on the families the published-package carve-out
     covers, so none is unclassified by omission; optional (default n/a) elsewhere."""
@@ -213,6 +264,11 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
                 f"{rel}: verification[{i}] cmd runs a framework script with a bare "
                 f'python — use "$GOVERNANCE_DIR/.venv/bin/python"'
             )
+        if not is_attest and unsafe_xargs(str(v["cmd"])):
+            errs.append(
+                f"{rel}: verification[{i}] cmd pipes a file list to xargs without -0 — "
+                "paths with spaces split; emit NUL-separated names and use xargs -0"
+            )
         if not is_attest and hardcoded_cmd_path(str(v["cmd"])):
             errs.append(
                 f"{rel}: verification[{i}] cmd hardcodes a home/absolute "
@@ -247,6 +303,11 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
         errs.append(
             f"{rel}: body runs a framework script with a bare python — use "
             '"$GOVERNANCE_DIR/.venv/bin/python"'
+        )
+    if unsafe_xargs(body):
+        errs.append(
+            f"{rel}: body pipes a file list to xargs without -0 — paths with spaces "
+            "split; emit NUL-separated names and use xargs -0"
         )
 
     # Tier-line grammar + enforcement backing: every rule block carries exactly one
@@ -312,10 +373,16 @@ def main() -> int:
         errors.extend(lint_file(path, all_ids))
     if not only:
         for skill in sorted((ROOT / "skills").rglob("SKILL.md")):
-            if bare_python_launch(skill.read_text(encoding="utf-8")):
+            skill_text = skill.read_text(encoding="utf-8")
+            if bare_python_launch(skill_text):
                 errors.append(
                     f"{skill.relative_to(ROOT)}: runs a framework script with a bare python "
                     "— use $GOV/.venv/bin/python"
+                )
+            if unsafe_xargs(skill_text):
+                errors.append(
+                    f"{skill.relative_to(ROOT)}: pipes a file list to xargs without -0 — "
+                    "paths with spaces split; emit NUL-separated names and use xargs -0"
                 )
 
     if only:

@@ -2,7 +2,7 @@
 id: ARC-MODULARITY
 title: Modularity & Boundaries
 family: ARC
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -116,7 +116,7 @@ wrong abstraction costs more than the duplication ever did.
 
 A smell threshold, not a limit: a cohesive 600-line module may stand after inspection,
 but the inspection happens and splits follow responsibility seams — never `utils2.py`.
-Self-check one-liner: `find src -name '*.py' | xargs wc -l | sort -rn | head`. The same
+Self-check one-liner: `find src -name '*.py' -print0 | xargs -0 wc -l | sort -rn | head`. The same
 threshold flags god objects (`ARC-PATTERNS` table): if every change touches this file,
 the seam is overdue regardless of line count.
 
@@ -188,6 +188,7 @@ Direction check: `source_http → domain` is legal; `domain → source_http` wou
 
 ## Changelog
 
+- **1.0.3** (2026-11-05) — The file-size self-check one-liner passes names NUL-separated (`find -print0 | xargs -0`) so paths with spaces are counted. No rule changes.
 - **1.0.2** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

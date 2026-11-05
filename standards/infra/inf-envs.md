@@ -2,7 +2,7 @@
 id: INF-ENVS
 title: Environments & Promotion
 family: INF
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -28,7 +28,7 @@ verification:
     expect: "exit 0 — no workflow references long-lived AWS keys"
     layer: G
     rules: [INF-ENVS-03]
-  - cmd: "sh -c '[ ! -d .github/workflows ] || { f=$(grep -rl \"configure-aws-credentials\" .github/workflows || true); [ -z \"$f\" ] || ! echo \"$f\" | xargs grep -L \"role-to-assume\" | grep -q .; }'"
+  - cmd: "sh -c '[ ! -d .github/workflows ] || ! grep -rl --null \"configure-aws-credentials\" .github/workflows | xargs -0 -r grep -L \"role-to-assume\" | grep -q .'"
     expect: "exit 0 — every configure-aws-credentials step assumes an OIDC role"
     layer: G
     rules: [INF-ENVS-03]
@@ -263,3 +263,4 @@ jobs:
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.2** (2026-11-05) — Verification fix: the file list reaches `xargs` NUL-separated (`grep -rl --null` → `xargs -0 -r`), so a workflow whose path contains a space is checked instead of passing unchecked. No rule changes.

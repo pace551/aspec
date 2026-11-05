@@ -28,13 +28,28 @@ while [[ $# -gt 0 ]]; do
 done
 cd "$PROJECT" 2>/dev/null || { echo "inf-container-scan: cannot cd to '$PROJECT'" >&2; exit 2; }
 
-DOCKERFILES=$(find . \( -name 'Dockerfile' -o -name 'Dockerfile.*' -o -name '*.Dockerfile' \) \
-    -not -path './.git/*' -not -path '*/node_modules/*' -not -path '*/.venv/*' | sort)
-if [[ -z "$DOCKERFILES" ]]; then
+# Discover NUL-separated through a temp file, then read it into an array (bash 3.2 has no
+# mapfile): paths with spaces stay whole, and find's exit status stays visible, which
+# process substitution would hide. A directory find can't enter makes the scan
+# incomplete: exit 2, never a pass that silently skipped files.
+LIST=$(mktemp "${TMPDIR:-/tmp}/inf-container-scan.XXXXXX")
+trap 'rm -f "$LIST"' EXIT
+# -prune keeps find out of the excluded trees entirely (`-not -path` only hides matches
+# and still descends), so an unreadable node_modules/ can't abort the scan.
+if ! find . \( -name .git -o -name node_modules -o -name .venv \) -prune \
+    -o \( -name 'Dockerfile' -o -name 'Dockerfile.*' -o -name '*.Dockerfile' \) -print0 \
+    > "$LIST"; then
+  echo "inf-container-scan: could not list Dockerfiles (unreadable directory?) — scan incomplete" >&2
+  exit 2
+fi
+sort -z -o "$LIST" "$LIST"
+DOCKERFILES=()
+while IFS= read -r -d '' f; do DOCKERFILES+=("$f"); done < "$LIST"
+if [[ ${#DOCKERFILES[@]} -eq 0 ]]; then
   echo "inf-container-scan: no Dockerfiles found — nothing to scan"
   exit 0
 fi
-echo "inf-container-scan: scanning:" $DOCKERFILES
+echo "inf-container-scan: scanning:" "${DOCKERFILES[@]}"
 
 FAIL=0
 WARN=0
@@ -45,7 +60,7 @@ warn() { echo "inf-container-scan: WARNING — $*" >&2; WARN=1; }
 # ---- hadolint -----------------------------------------------------------------------
 if command -v hadolint >/dev/null 2>&1; then
   RAN_LINTER=1
-  for f in $DOCKERFILES; do
+  for f in "${DOCKERFILES[@]}"; do
     if ! hadolint "$f"; then
       echo "inf-container-scan: FAIL — hadolint findings in $f" >&2
       FAIL=1
@@ -58,7 +73,7 @@ fi
 # ---- trivy config (misconfig scan; does not need a built image) ---------------------
 if command -v trivy >/dev/null 2>&1; then
   RAN_LINTER=1
-  for f in $DOCKERFILES; do
+  for f in "${DOCKERFILES[@]}"; do
     if ! trivy config --exit-code 1 --quiet "$f"; then
       echo "inf-container-scan: FAIL — trivy misconfiguration findings in $f" >&2
       FAIL=1
@@ -71,7 +86,7 @@ fi
 # ---- built-in fallback: only when no real linter ran --------------------------------
 if [[ $RAN_LINTER -eq 0 ]]; then
   echo "inf-container-scan: no scanner installed — using built-in fallback checks" >&2
-  for f in $DOCKERFILES; do
+  for f in "${DOCKERFILES[@]}"; do
     # collect stage names so `FROM <stage>` refs aren't flagged as untagged images
     STAGES=$(awk 'toupper($1)=="FROM" { for (i=1;i<NF;i++) if (toupper($i)=="AS") print $(i+1) }' "$f")
     while read -r image; do

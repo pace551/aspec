@@ -2,7 +2,7 @@
 id: INF-CONTAINERS
 title: Containers & ECS
 family: INF
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: advisory
@@ -27,7 +27,7 @@ verification:
     expect: "exit 0 — hadolint + trivy config clean when installed; built-in pin/USER checks otherwise"
     layer: G
     rules: [INF-CONTAINERS-01, INF-CONTAINERS-02, INF-CONTAINERS-03, INF-CONTAINERS-05]
-  - cmd: "sh -c 'f=$(git ls-files | grep -E \"(^|/)Dockerfile\" || true); [ -z \"$f\" ] || ! echo \"$f\" | xargs grep -Li \"^USER \" | grep -q .'"
+  - cmd: "sh -c '! git ls-files -z -- \":(glob)**/Dockerfile*\" | xargs -0 -r grep -Li \"^USER \" | grep -q .'"
     expect: "exit 0 — every tracked Dockerfile sets a USER"
     layer: G
     rules: [INF-CONTAINERS-02]
@@ -237,6 +237,7 @@ plus `awslogs` logConfiguration, `readonlyRootFilesystem`, a `healthCheck`, and
 
 ## Changelog
 
+- **1.0.4** (2026-11-05) — Verification fix: the file list reaches `xargs` NUL-separated (`git ls-files -z` → `xargs -0 -r`), so a Dockerfile whose path contains a space is checked instead of passing unchecked. No rule changes.
 - **1.0.3** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
