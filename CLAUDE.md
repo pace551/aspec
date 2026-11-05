@@ -5,9 +5,11 @@ every future task, so this repo holds itself to its own strictest rules.
 
 ## Working in this repo
 
-- **Any edit to a file in `standards/` requires**: `version` bump (semver), a `## Changelog`
-  entry, then `.venv/bin/python checks/build-index.py` (it refuses unbumped edits) and
-  `.venv/bin/python checks/lint-framework.py` clean before commit.
+- **Any edit to a file in `standards/` requires**: `version` bump (semver), `last_review`
+  set to today, a `## Changelog` entry, then `.venv/bin/python checks/build-index.py` (it
+  refuses an edit without a bump, and a bump whose `last_review` isn't later or today) and
+  `.venv/bin/python checks/lint-framework.py` clean before commit. A `last_review`-only
+  touch (the `/evolve-standards` staleness sweep) needs no bump.
 - **Never hand-edit** `index.json`, `INDEX.md`, or `checks/.index-hashes.json` — generated.
 - **Framework-shape changes** (frontmatter schema, tier model, new family, enforcement
   layers) need an ADR in `decisions/` first.
@@ -17,8 +19,10 @@ every future task, so this repo holds itself to its own strictest rules.
   are the calibration references for depth and tone.
 - **PRs are always a single squashed commit.** Fixups during review get squashed into
   the PR's one commit on the branch and force-pushed with `--force-with-lease`.
+  `checks/pr-hygiene.py` enforces this and the CHANGELOG rule below (CI `pr-hygiene` job,
+  and `scripts/pre-push.sh` from the pre-push hook).
 - **Framework changes get a `CHANGELOG.md` entry under `## Unreleased`** (hand-written
-  prose). Releases are cut by merging release-please's release PR (`.github/workflows/
+  prose); `feat`, `fix` and breaking changes must add one. Releases are cut by merging release-please's release PR (`.github/workflows/
   release.yml`); it moves those entries under the version heading and sets the LICENSE
   Change Date via `checks/release-prep.py`. Never edit `version.txt` or
   `.release-please-manifest.json` by hand.
@@ -48,6 +52,7 @@ python3.14 -m venv .venv && .venv/bin/pip install --group dev   # once: pinned t
 .venv/bin/python checks/lint-framework.py        # self-lint everything
 scripts/lint.sh                         # lint gate (pre-commit hook, CI lint): self-lint, ruff, shell syntax
 scripts/test.sh                         # test gate (pre-push hook, CI test): pytest + coverage.json
+scripts/pre-push.sh                     # PR hygiene (pre-push hook, CI pr-hygiene): one commit, CHANGELOG
 .venv/bin/python checks/coverage-ratchet.py --check   # coverage never below .coverage-baseline
 checks/secret-scan.sh --staged          # pre-commit secret gate
 GOVERNANCE_DIR=$PWD .venv/bin/python checks/run-verification.py --project .   # this repo's own /verify-compliance

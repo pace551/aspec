@@ -5,6 +5,36 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- `checks/build-index.py` refuses a standard whose `version` changed unless its
+  `last_review` moved later or is today, and a `last_review` that isn't a date or is
+  after today (with a day's slack for time zones). It also leaves the `last_review:`
+  line out of the content hash: it used to refuse the `last_review`-only touch that the
+  `/evolve-standards` staleness sweep makes, which that skill documents as exempt from a
+  version bump. `checks/.index-hashes.json` now records `last_review`; hashes in the old
+  format are still read.
+- The scaffold pre-push hook (`templates/scaffolds/_common/githooks/pre-push`) runs
+  `scripts/pre-push.sh` after the test and ratchet gates when a project has one, passing
+  on the hook's arguments and the pushed refs (DEV-BOOTSTRAP 1.0.4, patch). Projects
+  without the script see no change.
+- This repo's PR rules are now a check. `checks/pr-hygiene.py` fails a branch that has
+  more than one commit since its merge base, a subject that isn't a conventional commit
+  (git's `Revert "…"` and `Reapply "…"` around one count), or a `feat`, `fix` or breaking
+  change (`!` or a `BREAKING CHANGE:` footer) that adds no words to CHANGELOG.md's
+  `## Unreleased` section (rewrapping, reordering, deleting or adding a subheading doesn't
+  count). A revert of an unreleased change removes its entry (the entries holding lines
+  `git blame` gives to the reverted commit, compared whole, so a rewrap isn't a removal);
+  once a release has shipped the change, the revert adds an entry of its own. It runs in
+  the new
+  `pr-hygiene` job of `framework.yml` (pull requests, skipped when a bot opened the PR)
+  and, per pushed branch, from this repo's `scripts/pre-push.sh`.
+- Git exports `GIT_DIR` to hooks run from a linked worktree, and test suites that build
+  throwaway git repos then act on the real one: run that way, this repo's own tests
+  committed into the pushing repository. The scaffold pre-push hook now runs
+  `scripts/test.sh` without the repository-location variables git reports in
+  `git rev-parse --local-env-vars` (`GIT_DIR`, `GIT_WORK_TREE`, `GIT_INDEX_FILE`,
+  `GIT_COMMON_DIR`, `git -c` settings and others), and this repo's
+  `checks/conftest.py` drops `GIT_*` for its own test session.
+
 ## 0.3.1 — 2026-11-05
 
 - File lists reach `xargs` NUL-separated, so paths with spaces aren't split. `/evolve-standards`

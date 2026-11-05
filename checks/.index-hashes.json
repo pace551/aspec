@@ -1,270 +1,337 @@
 {
   "AI-ARCH": {
-    "hash": "487915c495468e0c0fccb2001e8c6413cf41acde82bbc717b4ab255866df7a3e",
+    "hash": "7dfc28736e7e1c32470ae9781eda93ed9d7afe5b8979a6a28a012eaa3531fb8b",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "AI-MODELS": {
-    "hash": "347493e0ad8677b0d8444ab814b7155613a9844f110c1f68a074e04dbd298230",
+    "hash": "55a307827f9fa092f465e2eb49676bde1994bb0d3c897517211273b5036f18e9",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "AI-SECURITY": {
-    "hash": "88c4b53f0a18ec82340a33f5aebf92db05ebc29a866edf24c7f15f6870efb226",
+    "hash": "26a2b6bd59e8dfd2209179535774ca0e1832b37e93ba58e79434b7b60eb7d3ba",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "ARC-API": {
-    "hash": "2bfef93e96399a042cd9462305414071793a0da96b64531bb9da0336e34ca703",
+    "hash": "0dc0c86fc05eb39253ad2a22924c471a7576f5d813758ba53a09f5127fe57e13",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "ARC-CONCURRENCY": {
-    "hash": "55095c827514ff8b0ddbd9077f86db6c79bc87d3461abec2afa7b07071e7cdbb",
+    "hash": "1fabf390777b0cbae758f74aa64c23347926589e624081a3ae960097782d5f14",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "ARC-CONFIG": {
-    "hash": "7d5c4928253263fd0d52389204d33f27ef21697d7e68c7fc57ed663b7452921c",
+    "hash": "8721649b9c592c61aae1f42b4e72d0fd2fbdb7ba3c6d3eafa99339a20e7d9860",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "ARC-ERRORS": {
-    "hash": "c9a2a85f8b84d185af3cc491090818513e38d6eaafe1ebc5b6e1930a2924d115",
+    "hash": "19ab92c281ef441352571f05746d5f3459bdbfa597d723ba08bff04837e8c556",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "ARC-IDEMPOTENCY": {
-    "hash": "d8746f24da78cf44779efa5379cb088b6eb6d64f1a5a26d722540a04ae63f573",
+    "hash": "6b214343ff51ae4f44f563bddd9508a070d35fa91cc4eaec5918987403da375f",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "ARC-MODULARITY": {
-    "hash": "aba4a013f7a473b6e4146ba561006d8a38bebb8378d473190339540d9fb2c92f",
+    "hash": "cd235e579fbb0968db20a1adbd7fe755a9979f4867d3733973227205773ae9ae",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "ARC-PATTERNS": {
-    "hash": "38d74eebbdc373cbeafdc4017c9241cd8a6eea1ba19680bab4ab5d8fdedc47bf",
+    "hash": "7ab8e61e2ff9145de12b08876875cb240abcd6518e87620aabf4a2510c5b0a5a",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "DATA-MODELING": {
-    "hash": "de57ce8e880994df0736d54946028e3f210af140fc201eece8d84de92a3dc5c0",
+    "hash": "cd26fc4fd1f1d5e32c10afab83d6e56ea02fab707d389fdac1ae0e37c0738c55",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "DATA-PRIVACY": {
-    "hash": "bda5c7940e1c875e983c001a8eede9a2339cbbb3395e6eb64084af2032d569c2",
+    "hash": "b4afeac07edeb5481df7ee7a0583be3e7f900d9a0004fccf719870c908f1a84b",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "DATA-RETENTION": {
-    "hash": "6888331edc2ee56b643ab280389f5ceda13a4dbfeaebe9cf5b5f92e06688afae",
+    "hash": "44fd6993814fed7bcf34138225dae844f5d7fa1f3dc2d7f050fd452a4731c651",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "DEV-BOOTSTRAP": {
-    "hash": "8aa522fbd8ce28ffa3c63ee0df9dbbc4b84d8a574a2a36abc14549952d63cb8f",
-    "version": "1.0.3"
+    "hash": "43fa8d25a3c7cde964a429a816e0f79779cc62a394489f0269a8ee716499fea6",
+    "last_review": "2026-11-05",
+    "version": "1.0.4"
   },
   "DEV-CI": {
-    "hash": "4ec3ad67acf109af56660230c2bcfea4c34328a274e14927e452d4b36dd427c5",
+    "hash": "8315c56136d205ddc77cc730bf29b17523e664c2f535be4cb2da10807fdefe90",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "DEV-DEPS": {
-    "hash": "177c8747723831d5f927945f6544eba7aabae8b92755a1826f2adcbda06642f1",
+    "hash": "8d68f6db396f4d79244e7b3bbecad15e9f9aff454f4a8110d7a661de74c12292",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "DEV-DOCS": {
-    "hash": "72b4bd5e015f02ca367463bdacb4834f280418c4fbda6417dbccf1d83e0256ad",
+    "hash": "cd0aed73d8167eb210740dd30861a90ef7136b2a0c33e238ee775f629a7e3aa3",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "DEV-GIT": {
-    "hash": "da5d31852ccf7562459dbed4323db7783dce1484f325c297cec8561c68a3f16c",
+    "hash": "f71099eab5ed68995fe0b35d9e1669e3ae107e06155001910f7a265e1eee687a",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "DEV-REVIEW": {
-    "hash": "de0e2cb750c5730c043c131cb5d8c6658c6738c447f2f7a5ef1360e3f609d3ea",
+    "hash": "b329d0a313f28a01cc25058778aef109602f4250fa67f9ef091066e3c555423c",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "INF-CONTAINERS": {
-    "hash": "4841e9fc65799a5288961deb5bfe47764adbb821ec9777c11d5f6b244329e819",
+    "hash": "2bec7d62197c2053f3ce322d9c8ad19eac677812de4e2159ae1fcce48f21d085",
+    "last_review": "2026-07-22",
     "version": "1.0.4"
   },
   "INF-EDGE": {
-    "hash": "a1826d6fd0622672b261e72cffba4fcb03eb67c7b585a952e5acab91444c9511",
+    "hash": "4540bb1530711dba408ce7b671b6ec901b9a3a7aae217f7ef6a28f54fec0b255",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "INF-ENVS": {
-    "hash": "148de30b35a4532f551006513243351c2d3dab889af03d02579fdd75c107af87",
+    "hash": "160a01f5d27bd22337c23fd799380ca0d80742c4c567f38d57c115742bdc1013",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "INF-SERVERLESS": {
-    "hash": "e5d0ec777ebd697000dff8ace922555aedc62a4d1c846a02f487cda401b47b9d",
+    "hash": "980a0388199fff000442b5ba6ef41dd7d60775703c8385edab14a2b58ead289f",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "INF-TF": {
-    "hash": "695f61e48652f5a0a01e2bfe7182614e020e949c6cd0824482eb9b290f711a55",
+    "hash": "80a7a89bd74b3f103a71fc1832d73a3019ae58424d1bde54a2cf51cd07fb80d6",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "LEG-COMMERCIAL": {
-    "hash": "755c3ce602deea9537d9eecbcb5d5d118781da200949b217211402e3c5e03262",
+    "hash": "1d710653dcd1c0ffeb9ce024eaeed7d7af10d6f7183d64fae0709ee95f4834bb",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "LEG-LICENSING": {
-    "hash": "4385d8b835ddb5dfcaacd3815979ec95e0b9f6e78fb9f120ad4aac6ad2067fe4",
+    "hash": "1278b5db67b3d58c8288a4931e75449b75d4bfd95a6d4086003cfcdf72a3454d",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "OPS-ALERTS": {
-    "hash": "f67af9ca52a099b13ec900b3cc3b033407939e8ade05ef0afc3c53eb01d4ee80",
+    "hash": "dfe08fee3968cf9c203e1929b32f95d284df4f423e41322b3bda02b43005741e",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "OPS-BACKUP": {
-    "hash": "96afb5fd3913bd4a402b8e1f6a6f6086aeb585c2346cc6f280dac43e59a34a40",
+    "hash": "264fc6473d4f1519242dd71cda61981bdaebab56d678d2203b8db410f8a92f5d",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "OPS-DEPLOY": {
-    "hash": "f9c5d2e1528452dd144771382c09f2e219651d262ae62f5c6101a6b05f7839bd",
+    "hash": "149a1a80b778bb2a16e68825e12937673871e1b68ee1f8fa73bd06b46f5e858e",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "OPS-FINOPS": {
-    "hash": "95cb1b4fa64ab640fb0fd9d3887ca2023a47e9fddeff62372587464e20673cfa",
+    "hash": "55c8d349f4624fe6d8aef3f0d83fd613527772bc61c180ea5e7f6f13db7d5485",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "OPS-INCIDENT": {
-    "hash": "47fa826084a01a784ade26bf9853cdbcc940529b4de791db659e7822ed78a74d",
+    "hash": "9eef65afb8a9e3744c72c97b854a1a912479156cf748f1e4001d3ace8f3e02f8",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "OPS-OBS": {
-    "hash": "b79add10cc4c5cc6d541d9692e4e299e136890c4e36408934bb8ac6f41a23377",
+    "hash": "581f80a45ec4cb54dba71c715fce17fc76d71b24c012cb7477f12ad0c468b223",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "OPS-PERF": {
-    "hash": "35d79a0c53fa992e0a53e1716974c3c6121222c17a3e0a7680ff79896198c1c8",
+    "hash": "83197c281b1277a98342ea630f6141f55774ef85fe089c1ffc4aff7d1d33670f",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "OPS-RELEASE": {
-    "hash": "c27829239f694519266409f88e16a1bba2931dbb73d8f3a6c99039a05c3de246",
+    "hash": "b604e64521e4730e5addfa0d25f795d8752694cb04e14a3fdea7c177bd287bc3",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "SEC-AUTHN": {
-    "hash": "4a1d3a829097a390724a01ba29560826e868f6e4def1dd692ce62fb7836426d1",
+    "hash": "0be522debf024596904805af891b7eb32384e15b3f125d2dc905edf4eeff3da3",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "SEC-AUTHZ": {
-    "hash": "731cb37262ef515a948bda7480b8c00f4b0dabab88cfde6f7607898d5546f0e8",
+    "hash": "a7ea27f11a8d952c1f70d430b56cca0afb785eed16839e7da5cf35f182bc552b",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "SEC-CRYPTO": {
-    "hash": "cfcd204b8d412c3c7b7447d036235d6018c80ccadf18bfb5ed65f83402b9e545",
+    "hash": "fa0b5d704172df51dbc98d50a5baac24de76b9d1a63a4f1d730e66315ca4ada8",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "SEC-INPUT": {
-    "hash": "1752fcb39629bf3cf2e75c832d1ab31d534d1edc937e7f3d28b252e179d6811c",
+    "hash": "5fdd1e9ad9e475250ca9283272d899fcc620bd7ccdc00aaffd9434d45b9b4de2",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "SEC-SAST": {
-    "hash": "c196577303582bad3e9cb64240629c3b05c507fb4cb337384629b47467fa9973",
+    "hash": "6f0b4b6d28d43cd600c2e75aba6d43b01790b595e7455ad1478baa6458a2cc39",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "SEC-SECRETS": {
-    "hash": "6294729d4c8f5030d45ff5b18e431376526745d0f3b1dfda57ed2b6aced7b7b7",
+    "hash": "03908ed617ecb3b29647aadb27a2b3268e9ac493d4575f0cddf2612101e48220",
+    "last_review": "2026-07-22",
     "version": "1.0.3"
   },
   "SEC-SUPPLY": {
-    "hash": "299c5695159cacf52720f76f0635a9d88f16ce2182f447f50ca972c9e9972f83",
+    "hash": "a22308530991fe6b3ff4ce476b9871ee08c7dd5b2733a19e187e8029a8eb633b",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "SEC-THREAT": {
-    "hash": "c3a5e165fc47c807ce9887da9221e8b6e4f81e33aca0b71884a9e97f12474322",
+    "hash": "02a5bc91c591129fc33e8ce10d136761daf45dd2a908e8ecdee075d968989f75",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "SEC-WEB": {
-    "hash": "a3ba744517f1b273e45dcd0c4c65addee99ade90c7fe206a3af70c43836a5521",
+    "hash": "043b00af9ba1e9e723ab82c88e3bed59b91985fe4a07a5cefa516acceacc4c97",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "STK-DDB": {
-    "hash": "cf9f37645fa75d263747bc1fdad4f33b44ce59bae071b4fd24e53d4725e88af5",
+    "hash": "8fb21e7bcf120be456109b456710ff2d69711e6736eb5292b67d1047cf3d0970",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "STK-GO": {
-    "hash": "392dadc6df249e9344f9cd1ec62b8918a7db06c5200b67a4b9e36f6246c08ae0",
+    "hash": "366c7e029a7cee60926d0fb78c89963dda8501428aaa13cef196c5ddfc0db147",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "STK-HTMX": {
-    "hash": "e81d8266b448967eadc09ac9d8d9cfbcfe6e71980e125ce1fa12e9c1f3cefd4d",
+    "hash": "154924c92176eeec121ebda48a49b5b18e71a5674e27153a7edb1284c3fbe435",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "STK-NEXT": {
-    "hash": "124845c0cd76d7bb45164c4703c9cf0e163fa1c560780eb0a314332dbba87b37",
+    "hash": "53148b42d6599bf1d850b6e71883690a43c6060bfdedb6da559da6e5e13d3048",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "STK-PG": {
-    "hash": "c2f352f755b03521e58e23354102e06262539fca109ca6202ebc81051c267e26",
+    "hash": "e558a5b4e78ca5b758ca77634f13aa04a1b1749fd449527827f8034da2e08232",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "STK-PY": {
-    "hash": "9edc60646bc2a5562c88a7f1f22b87b87cc7d60169045659152cc224778d64e8",
+    "hash": "5421c205bcb7862068def22fde1293098d1d4b6e46f3e7691f0717c6dbff22c8",
+    "last_review": "2026-07-22",
     "version": "1.0.4"
   },
   "STK-REDIS": {
-    "hash": "aabf22fba858bcdd317c0db8b0a2186579e313babab8b6367e3428afffdaeb22",
+    "hash": "ce020dd5ed48350c65afccc8c60b2dd5ffdba5bcb6771f7e23773522979e5681",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "STK-RUST": {
-    "hash": "8851635749341f99438248975bf45cd335c2d03c6d576d1756d013b11eadd158",
+    "hash": "2af371f69f216df788333eab4bd5c0c5dc69accfd4d5590a59d96971ae5ab056",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "STK-SQLITE": {
-    "hash": "474516efbe775c6ab6fb8ef92c4b8a4f88bb9997c1a34144f95d9c65c006d336",
+    "hash": "6b86e6725304646629f0f636aba4690245162a309399d9e3914875a10073027d",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "STK-SWIFT": {
-    "hash": "4c3b192d6f50003d2c0c88e2c9b8c096fe00073c32371eee54155fe61d647a79",
+    "hash": "ce4432f4b5ae7adf016d7287aff7f995ba466868430baba1c97a7414a290e27b",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "STK-TS": {
-    "hash": "ab860968c37c4d3a97ab8601abc8cf30bd3a34b2408fc66b476a90e4dba106a4",
+    "hash": "e500810889d077799ff314d500f3cfce4434c7c7685ba74e77414353c53ffaef",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "STK-VITE": {
-    "hash": "30db2d8c632c8710126f19aef68f4bcaa020542f7ef042fa3c05094350d1f235",
+    "hash": "7f50c20690009cab09c4192cfd88c8968dbbda12629c19c28f26e3a86a09adb4",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "TST-FIXTURES": {
-    "hash": "277d88fcdde0a8d556df78f97d30724648befd5825fe3fe3f48da491e96bd3e8",
+    "hash": "a2b7b71b755d1edc18c56231b9795ddd33ceaf78e15bbec6e833316d4aff7daa",
+    "last_review": "2026-07-22",
     "version": "1.0.2"
   },
   "TST-INTEG": {
-    "hash": "dd32157194b212e88eb51d94ab7da89748b52aad958222d74e83b31b4c42d00d",
+    "hash": "6bee78e5fc173b1be55bb8a8e45eb3b679dd3c127b2a9a5948eabe8705ba4db9",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "TST-POLICY": {
-    "hash": "1d9587d11c53245177cad4a253e49d3717bc38bf30f3154c942b37a5a68d0384",
+    "hash": "115b9cdb582590a6a14fb766b26c87744e17bf525163cb62513aa386e5b177d5",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "TST-RATCHET": {
-    "hash": "0c9b4b0e01c1aa9c48a2a90514e1f38d627dfcaa9c2bd72e0075134463b42dd4",
+    "hash": "a1bef5563c5065405c713eeace32dcb8ace0167ee231a6a29602728c79b4895c",
+    "last_review": "2026-07-22",
     "version": "1.0.4"
   },
   "TST-VERIFY": {
-    "hash": "09f390a94cc27a64a3125bb363251a60eda842c91f66ffff9044d0b80cb9dafe",
+    "hash": "59d58726e84b4bdbd7de6499db4c3ddd5f2bb5a5d718615ba99fb0a3d52da4d2",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "UX-A11Y": {
-    "hash": "82691e093a8f8c409858ff33289392e0f8ff7b6cdb5a7d9d03bc99465ebfe4dd",
+    "hash": "ad40583fe355afe5df7699eabf37aaf0773aef573e06d055ab302f69524eff42",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "UX-DESIGN": {
-    "hash": "aa70f05bf03e3d2f5d6655a9e16144bf6417664bab8dc30936ef06111a16a287",
+    "hash": "a1965e92a69b422d64d25b679a2ec3e9c9626d5f1dddb37e9a4d4073e968845a",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "UX-EMAIL": {
-    "hash": "5ed83232c2aa0390784aa8d29c65c0f9d0fbce8488f06582a2295c953d6063f4",
+    "hash": "c774763f79e9e6605211d388a79121ece73e77c1aef1cc54e717dcb7eea90612",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "UX-FORMS": {
-    "hash": "7187939c5f1fbd7e3eee02175002aee867ff37e92b2821ed44fed43343cb1de8",
+    "hash": "a08802085dc1c6821842de617430f10efbd1f5a9c460e6a314bec2aa55688418",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "UX-I18N": {
-    "hash": "455597343761c9ae8e9d9066ee4031a8c942c5070264942080c18d3ee485769c",
+    "hash": "28321e4da84746b984288b327f4012b3264b556ae39f1019ea41a81f022f80c0",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   },
   "UX-RESPONSIVE": {
-    "hash": "876356cdb7d9f6467ab9134e963ce893bdd18f3bd54fcc2b022eba1b412397c3",
+    "hash": "e91de8555d33291de447a0a2e3fce7e737347bff168b5dba867a31411c130416",
+    "last_review": "2026-07-22",
     "version": "1.0.1"
   },
   "UX-SEO": {
-    "hash": "5bfd8af7186a6f3c774ffdf5a0210c1a7d8b9cca39ba3c20a7d4cbf4f4108954",
+    "hash": "1c6485350b052bd5e91f5c58eb565ff0c9030fe92e95fcd2bd9eff6c6d529a94",
+    "last_review": "2026-07-22",
     "version": "1.0.0"
   }
 }
