@@ -30,15 +30,29 @@ done
 cd "$PROJECT" 2>/dev/null || { echo "inf-tf-scan: cannot cd to '$PROJECT'" >&2; exit 2; }
 
 # ---- discover *.tf directories -----------------------------------------------------
-TF_DIRS=$(find . -name '*.tf' \
-    -not -path '*/.terraform/*' -not -path './.git/*' \
-    -not -path '*/node_modules/*' -not -path '*/.venv/*' \
-    -exec dirname {} \; | sort -u)
-if [[ -z "$TF_DIRS" ]]; then
+# Discover NUL-separated through temp files, then read into an array (bash 3.2 has no
+# mapfile): directories with spaces stay whole, and find's exit status stays visible,
+# which process substitution would hide. A directory find can't enter makes the scan
+# incomplete: exit 2, never a pass that silently skipped files.
+DISC=$(mktemp -d "${TMPDIR:-/tmp}/inf-tf-scan-list.XXXXXX")
+TMP=""
+trap 'rm -rf "$DISC" ${TMP:+"$TMP"}' EXIT
+# -prune keeps find out of the excluded trees entirely (`-not -path` only hides matches
+# and still descends), so an unreadable .terraform/ can't abort the scan.
+if ! find . \( -name .terraform -o -name .git -o -name node_modules -o -name .venv \) -prune \
+    -o -name '*.tf' -print0 > "$DISC/files"; then
+  echo "inf-tf-scan: could not list *.tf files (unreadable directory?) — scan incomplete" >&2
+  exit 2
+fi
+while IFS= read -r -d '' f; do printf '%s\0' "$(dirname "$f")"; done < "$DISC/files" |
+  sort -zu > "$DISC/dirs"
+TF_DIRS=()
+while IFS= read -r -d '' d; do TF_DIRS+=("$d"); done < "$DISC/dirs"
+if [[ ${#TF_DIRS[@]} -eq 0 ]]; then
   echo "inf-tf-scan: no *.tf files found — nothing to scan"
   exit 0
 fi
-echo "inf-tf-scan: scanning:" $TF_DIRS
+echo "inf-tf-scan: scanning:" "${TF_DIRS[@]}"
 
 FAIL=0
 WARN=0
@@ -58,7 +72,7 @@ fi
 
 # ---- fmt -check + validate ----------------------------------------------------------
 if [[ -n "$TF" ]]; then
-  for d in $TF_DIRS; do
+  for d in "${TF_DIRS[@]}"; do
     if ! (cd "$d" && "$TF" fmt -check >/dev/null); then
       echo "inf-tf-scan: FAIL — $d is not '$TF fmt' formatted (run: $TF fmt $d)" >&2
       FAIL=1
@@ -68,10 +82,9 @@ if [[ -n "$TF" ]]; then
   # validate needs init; copy the tree so ../../modules refs resolve and the working
   # tree stays untouched (read-only contract).
   TMP=$(mktemp -d "${TMPDIR:-/tmp}/inf-tf-scan.XXXXXX")
-  trap 'rm -rf "$TMP"' EXIT
   tar --exclude .git --exclude .terraform --exclude node_modules --exclude .venv \
       -cf - . 2>/dev/null | (cd "$TMP" && tar -xf -)
-  for d in $TF_DIRS; do
+  for d in "${TF_DIRS[@]}"; do
     if (cd "$TMP/$d" && "$TF" init -backend=false -input=false >/dev/null 2>&1); then
       if ! (cd "$TMP/$d" && "$TF" validate -no-color); then
         echo "inf-tf-scan: FAIL — $TF validate failed in $d" >&2
@@ -85,7 +98,7 @@ fi
 
 # ---- tflint -------------------------------------------------------------------------
 if command -v tflint >/dev/null 2>&1; then
-  for d in $TF_DIRS; do
+  for d in "${TF_DIRS[@]}"; do
     if ! tflint --chdir "$d"; then
       echo "inf-tf-scan: FAIL — tflint findings in $d" >&2
       FAIL=1
@@ -97,7 +110,7 @@ fi
 
 # ---- checkov ------------------------------------------------------------------------
 if command -v checkov >/dev/null 2>&1; then
-  for d in $TF_DIRS; do
+  for d in "${TF_DIRS[@]}"; do
     if ! checkov -d "$d" --framework terraform --quiet --compact; then
       echo "inf-tf-scan: FAIL — checkov findings in $d" >&2
       FAIL=1

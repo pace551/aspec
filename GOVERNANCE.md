@@ -31,7 +31,7 @@ external_action_approvals:
   - {action: "push branches and open pull requests on github.com/pace551/aspec", granted: 2026-10-28}
   - {action: "squash-merge PRs whose Devin review has no open finding or flag and whose required checks pass (release-please PRs excluded)", granted: 2026-11-04}
 pii_inventory: n/a
-last_verified: 2026-11-04
+last_verified: 2026-11-05
 attestations:
   - {rule_id: AI-SECURITY-01, followed: false, note: "not audited: skills and hooks haven't been reviewed for untrusted-content handling; no code here calls an LLM", date: 2026-11-03}
   - {rule_id: AI-SECURITY-02, followed: false, note: "not audited: the repo ships no agent tool set of its own; Claude Code permission settings live outside it", date: 2026-11-03}
@@ -53,14 +53,14 @@ attestations:
   - {rule_id: TST-FIXTURES-03, followed: true, note: "no network libraries in tests (grep); git tests use local file:// remotes", date: 2026-11-03}
   - {rule_id: TST-FIXTURES-04, followed: false, note: "only the tests added this session (release-prep, git-gate) were checked: they build per-test data; older tests not audited", date: 2026-11-03}
   - {rule_id: TST-FIXTURES-05, followed: true, note: "no flaky test observed", date: 2026-11-03}
-  - {rule_id: TST-POLICY-01, followed: true, note: "this changeset (release App token) has no bugfix and no script logic; workflow YAML can't be unit-tested locally (actionlint run instead)", date: 2026-11-04}
+  - {rule_id: TST-POLICY-01, followed: true, note: "xargs fix began with failing tests: test_xargs_null.py (3 standards cmds passed a noncompliant spaced path, step-1 search found no spaced notes, lint missed -P0 and rejected -n 1 -0) and test_scan_spaced_paths.py (both scanners split spaced paths before their linters; then, per Devin, passed with exit 0 when find could not read a directory, and failed on an unreadable excluded dir)", date: 2026-11-05}
   - {rule_id: TST-POLICY-02, followed: true, note: "release-prep.py (#21) was written test-first", date: 2026-11-03}
   - {rule_id: TST-POLICY-03, followed: true, note: "scripts/*.sh are glue over existing gates; run directly, plus negative runs (Python 3.9 only, ruff violation)", date: 2026-11-03}
   - {rule_id: TST-POLICY-05, followed: true, note: "no coverage percentage gate anywhere in this repo's CI (grep)", date: 2026-11-03}
   - {rule_id: TST-VERIFY-01, followed: true, note: "lint (scripts/lint.sh), unit tests (scripts/test.sh), hooks on the real commit and push, then run-verification", date: 2026-11-03}
-  - {rule_id: TST-VERIFY-02, followed: false, note: "release.yml App-token change passed actionlint, but its real run needs the GitHub App, variable and secret set up and a push to main; the first release-please run after merge is the end-to-end check", date: 2026-11-04}
+  - {rule_id: TST-VERIFY-02, followed: false, note: "xargs fix: the skill's step-1 command ran on the real vault and found all 5 spaced notes; standards cmds ran via bash in temp git repos. Still open: release.yml's App token has run once but no release PR yet, so held-CI is unconfirmed", date: 2026-11-05}
   - {rule_id: TST-VERIFY-03, followed: true, note: "gate commands come from CLAUDE.md and mirror framework.yml", date: 2026-11-03}
-  - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran (actionlint, lint, test, ratchet, run-verification) and what didn't (a live release-please run)", date: 2026-11-04}
+  - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran and what didn't", date: 2026-11-05}
   - {rule_id: DEV-CI-03, followed: true, note: "no infra dirs and no web surface, so iac-scan, a11y and lighthouse don't apply", date: 2026-11-04}
   - {rule_id: DEV-CI-04, followed: true, note: "the 'Protect main' ruleset requires the gate checks on every PR; no bypassed merge in #13-#32", date: 2026-11-04}
   - {rule_id: DEV-DEPS-01, followed: false, note: "toolchain pinned exactly in pyproject.toml, but transitive dependencies aren't locked (no lockfile yet)", date: 2026-11-04}
@@ -119,7 +119,7 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
 - **Gates**: `scripts/lint.sh` (pre-commit) and `scripts/test.sh` (pre-push) are the same
   scripts CI's `lint` and `test` jobs run. CI adds `coverage-ratchet`, `sast` (bandit),
   `sca` (pip-audit), `gitleaks` and a no-op `typecheck` (DEV-CI-01's T3 job set).
-  Coverage is measured including subprocess-run scripts; the baseline is 39.56%.
+  Coverage is measured including subprocess-run scripts; `.coverage-baseline` holds the floor.
 - **Git hooks** are per clone: install with
   `GOVERNANCE_DIR=$PWD bash templates/scaffolds/_common/install-git-hooks.sh` (see
   CLAUDE.md).

@@ -2,7 +2,7 @@
 id: INF-SERVERLESS
 title: Serverless (Lambda + API Gateway)
 family: INF
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -27,7 +27,7 @@ verification:
     expect: "exit 0 — no parallel SAM/CDK/Serverless-Framework stack alongside tofu"
     layer: G
     rules: [INF-SERVERLESS-02]
-  - cmd: "sh -c 'f=$(git grep -l \"resource \\\"aws_lambda_function\\\"\" -- \"*.tf\" 2>/dev/null || true); [ -z \"$f\" ] || { ! echo \"$f\" | xargs grep -L \"memory_size\" | grep -q . && ! echo \"$f\" | xargs grep -L \"timeout\" | grep -q .; }'"
+  - cmd: "sh -c 'for k in memory_size timeout; do git grep -lz \"resource \\\"aws_lambda_function\\\"\" -- \"*.tf\" 2>/dev/null | xargs -0 -r grep -L \"$k\" | grep -q . && exit 1; done; exit 0'"
     expect: "exit 0 — every .tf file defining a Lambda sets memory_size and timeout"
     layer: G
     rules: [INF-SERVERLESS-04]
@@ -269,3 +269,4 @@ resource "aws_apigatewayv2_stage" "api" {
 
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.2** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
+- **1.0.3** (2026-11-05) — Verification fix: the file list reaches `xargs` NUL-separated (`git grep -lz` → `xargs -0 -r`), so a .tf file whose path contains a space is checked instead of passing unchecked. No rule changes.
