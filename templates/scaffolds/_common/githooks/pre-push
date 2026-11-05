@@ -1,13 +1,34 @@
 #!/usr/bin/env bash
-# pre-push — DEV-BOOTSTRAP / TST-RATCHET (layer H). Tests + read-only ratchet check.
+# pre-push — DEV-BOOTSTRAP / TST-RATCHET (layer H). Tests + read-only ratchet check, then
+# scripts/pre-push.sh if the project has one (optional project-specific push checks). It
+# gets the hook's arguments (remote name and URL) and the pushed refs on stdin.
 set -euo pipefail
 
+refs=""
+if [ ! -t 0 ]; then
+  refs=$(cat)
+fi
+
+# Git exports GIT_DIR to hooks run from a linked worktree; tests that build throwaway
+# repos would act on this one with it set. So the test gate runs without git's
+# repository-local variables (the list git itself reports, `git -c` settings included).
+# Captured first so a git failure stops the hook.
+unset_repo_vars=$(git rev-parse --local-env-vars | sed 's/^/-u /')
 if [ -x scripts/test.sh ]; then
-  scripts/test.sh
+  # shellcheck disable=SC2086 # one `-u NAME` pair per word, by design
+  env $unset_repo_vars scripts/test.sh
 else
   echo "pre-push: scripts/test.sh missing — test gate skipped (DEV-BOOTSTRAP violation)" >&2
 fi
 
 if [ -f .coverage-baseline ]; then
   python3 .governance/coverage-ratchet.py --check
+fi
+
+if [ -x scripts/pre-push.sh ]; then
+  if [ -t 0 ]; then
+    scripts/pre-push.sh "$@" # run by hand from a terminal: no refs to forward
+  else
+    printf '%s\n' "$refs" | scripts/pre-push.sh "$@"
+  fi
 fi

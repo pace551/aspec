@@ -1022,7 +1022,7 @@
       "id": "DEV-BOOTSTRAP",
       "title": "Repository Bootstrap",
       "family": "DEV",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1052,9 +1052,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/process/dev-bootstrap.md",
-      "tokens_est": 2694
+      "tokens_est": 2772
     },
     {
       "id": "DEV-CI",

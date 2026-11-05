@@ -8,7 +8,7 @@ published_package: true
 stacks: [python]
 standards:
   - {id: AI-SECURITY, version: 1.0.1}
-  - {id: DEV-BOOTSTRAP, version: 1.0.3}
+  - {id: DEV-BOOTSTRAP, version: 1.0.4}
   - {id: DEV-CI, version: 1.0.3}
   - {id: DEV-DEPS, version: 1.0.1}
   - {id: DEV-GIT, version: 1.0.3}
@@ -96,7 +96,7 @@ attestations:
   - {rule_id: STK-PY-01, followed: true, note: "pyproject.toml is the single config home; checks/ is a script collection: no script imports another first-party module (checked)", date: 2026-11-04}
   - {rule_id: STK-PY-07, followed: true, note: "the toolchain is exactly STK-PY's (ruff, bandit, pip-audit, pytest, pytest-cov) plus PyYAML", date: 2026-11-04}
   - {rule_id: STK-PY-08, followed: true, note: "CLAUDE.md, scripts/ and CI call .venv/bin paths; the skills' system-python3 runs are by other projects, not this repo's commands", date: 2026-11-04}
-  - {rule_id: TST-POLICY-04, followed: false, note: "coverage of checks/ is 39.56%; build-index.py, import-cycles.py and silent-swallow.py have no tests", date: 2026-11-04}
+  - {rule_id: TST-POLICY-04, followed: false, note: "coverage of checks/ is 56.41%; import-cycles.py and silent-swallow.py have no tests", date: 2026-11-05}
   - {rule_id: TST-RATCHET-03, followed: true, note: "baseline first set at 39.56% in this change; never lowered", date: 2026-11-04}
   - {rule_id: TST-RATCHET-04, followed: true, note: "scripts/test.sh writes coverage.json (with subprocess-run scripts measured); coverage artifacts are gitignored", date: 2026-11-04}
 ```
