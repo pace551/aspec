@@ -5,6 +5,8 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+## 0.3.0 — 2026-11-05
+
 - Framework scripts run on a supported Python. `checks/install.sh` now builds the
   governance clone's `.venv` with Python 3.11+ and the pinned `runtime` dependency group
   (PyYAML), and syncs an existing one to those pins on every run; the skills (`/govern`, `/verify-compliance`,
