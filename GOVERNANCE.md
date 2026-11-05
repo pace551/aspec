@@ -69,8 +69,8 @@ attestations:
   - {rule_id: DEV-DEPS-06, followed: false, note: "no monthly /evolve-standards fast-lane run yet", date: 2026-11-04}
   - {rule_id: DEV-GIT-05, followed: false, note: "every change since #4 went through a PR (the ruleset now requires it); the 2026-09-15 bootstrap commits went straight to main", date: 2026-11-04}
   - {rule_id: DEV-GIT-06, followed: true, note: "this period's PRs (#13-#32) each carry what changed, why, and a test plan with results", date: 2026-11-04}
-  - {rule_id: DEV-REVIEW-01, followed: false, note: "every PR gets Devin Review and self-review; the T3 /code-review rung that published-package weight implies hasn't been run", date: 2026-11-04}
-  - {rule_id: DEV-REVIEW-02, followed: false, note: "/security-review not run; changes here touch no auth or crypto, and input handling only as YAML parsing", date: 2026-11-04}
+  - {rule_id: DEV-REVIEW-01, followed: false, note: "nothing merged before 2026-11-05 got the T3 /code-review high rung: the bootstrap commits, #1-#40 (author PRs had self-review and most had Devin Review; Dependabot and release PRs only CI). Since then CLAUDE.md requires it before every push and on bot PRs. Flipping this also needs the DEV-REVIEW remediation: a retroactive review of everything merged before 2026-11-05, with follow-up fixes", date: 2026-11-05}
+  - {rule_id: DEV-REVIEW-02, followed: false, note: "/security-review not yet run. No auth or crypto here, but run-verification.py runs each standard's verification cmd in the user's project, and the scanners and hooks run there too; since 2026-11-05 CLAUDE.md requires /security-review on changes to those. Flipping this also needs a retroactive /security-review of earlier changes to those surfaces (e.g. #12, #36, #38)", date: 2026-11-05}
   - {rule_id: DEV-REVIEW-03, followed: true, note: "every Devin finding and flag on #17-#32 was fixed or answered on the PR", date: 2026-11-04}
   - {rule_id: DEV-REVIEW-04, followed: true, note: "script bugfixes (#21, #25, #29, #31) began with failing tests", date: 2026-11-04}
   - {rule_id: LEG-LICENSING-02, followed: true, note: "no copyleft dependency: license metadata of all 37 toolchain packages checked", date: 2026-11-04}
@@ -123,8 +123,9 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
   `GOVERNANCE_DIR=$PWD bash templates/scaffolds/_common/install-git-hooks.sh` (see
   CLAUDE.md).
 - **Known shortfalls**, recorded as `followed: false` above (C9): no lockfile for the
-  toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); no `/code-review`
-  or `/security-review` rung (DEV-REVIEW-01/02); three scripts untested (TST-POLICY-04);
+  toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); `/code-review` and
+  `/security-review` required only since 2026-11-05, with earlier merges not yet reviewed
+  retroactively (DEV-REVIEW-01/02); two scripts untested (TST-POLICY-04);
   input validation by hand rather than a schema library (SEC-INPUT-01).
 - **Release secrets:** `release.yml` authenticates as a GitHub App installed on this repo
   only — client ID in the `RELEASE_APP_CLIENT_ID` repository variable, private key in
