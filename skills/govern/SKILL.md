@@ -6,7 +6,8 @@ description: Use this skill at the START of any chunky development task, when cr
 # govern — governance intake
 
 Classify the task, select only the standards that apply, pin them in `GOVERNANCE.md`, and
-brief the session. Governance repo: `$GOV`.
+brief the session. Governance repo: `$GOV`. Its scripts run on `$GOV/.venv/bin/python`;
+if that's missing, run `$GOV/checks/install.sh` (it builds the venv with Python 3.11+).
 
 ## Steps
 
@@ -42,10 +43,10 @@ Two runs of the same tool:
 
 ```bash
 # a) the pin set — everything applicable at this tier, for GOVERNANCE.md
-python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
+$GOV/.venv/bin/python $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
   --brief-text "<the task description, verbatim>" --mode pins
 # b) the context brief — rule detail only where this task needs it (≤~15k tokens)
-python3 $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
+$GOV/.venv/bin/python $GOV/checks/select-standards.py --tier <T?> --stacks <k,k,k> [--published] \
   --brief-text "<the task description, verbatim>" --mode brief
 ```
 

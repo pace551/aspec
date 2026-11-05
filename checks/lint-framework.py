@@ -91,6 +91,20 @@ def hardcoded_body_path(body: str) -> bool:
     return bool(GOV_PATH_RE.search(body) or ABS_GOV_PATH_RE.search(body))
 
 
+# A framework script (the governance repo's checks/) launched by a bare python/python3,
+# which runs on whatever interpreter is first on PATH (an end-of-life 3.9 on macOS). It
+# must go through the repo's .venv: "$GOVERNANCE_DIR/.venv/bin/python" (or $GOV in skills),
+# which checks/install.sh builds with Python 3.11+. A project's vendored copy
+# (.governance/...) runs on the project's own Python and isn't matched.
+BARE_PYTHON_RE = re.compile(
+    r"(?<![/\w.])python3?(?:\.\d+)?\s+[\"']?\$\{?(?:GOVERNANCE_DIR|GOV)\}?/checks/[\w-]+\.py"
+)
+
+
+def bare_python_launch(text: str) -> bool:
+    return bool(BARE_PYTHON_RE.search(text))
+
+
 def published_errors(meta: dict, rel: str) -> list[str]:
     """ADR-0005: `published` is mandatory on the families the published-package carve-out
     covers, so none is unclassified by omission; optional (default n/a) elsewhere."""
@@ -194,6 +208,11 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
                 f"{rel}: verification[{i}] — attestation entries carry exactly "
                 f"one rule id (got {len(v.get('rules') or [])})"
             )
+        if not is_attest and bare_python_launch(str(v["cmd"])):
+            errs.append(
+                f"{rel}: verification[{i}] cmd runs a framework script with a bare "
+                f'python — use "$GOVERNANCE_DIR/.venv/bin/python"'
+            )
         if not is_attest and hardcoded_cmd_path(str(v["cmd"])):
             errs.append(
                 f"{rel}: verification[{i}] cmd hardcodes a home/absolute "
@@ -224,14 +243,17 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
 
     if hardcoded_body_path(body):
         errs.append(f"{rel}: body hardcodes a path into the governance repo — use $GOVERNANCE_DIR")
+    if bare_python_launch(body):
+        errs.append(
+            f"{rel}: body runs a framework script with a bare python — use "
+            '"$GOVERNANCE_DIR/.venv/bin/python"'
+        )
 
     # Tier-line grammar + enforcement backing: every rule block carries exactly one
     # `**Tiers**: … — **Layer**: …` line; rules required at any tier need H/G
     # verification coverage or an explicit `**Layer**: A (attestation)` marker.
     blocks = RULE_HEADING_RE.split(body)  # [pre, id1, block1, id2, block2, ...]
-    # re.split with one group always pairs ids with blocks; strict= would need Python
-    # 3.10, and the skills run this under the system python3, which can be older.
-    for rid, block in zip(blocks[1::2], blocks[2::2]):  # noqa: B905
+    for rid, block in zip(blocks[1::2], blocks[2::2], strict=True):
         m_tier = TIER_LINE_RE.search(block)
         if not m_tier:
             errs.append(f"{rel}: rule {rid} missing tier line (`**Tiers**: … — **Layer**: …`)")
@@ -288,6 +310,13 @@ def main() -> int:
     lint_targets = [p for p in files if not only or p.resolve() in only]
     for path in lint_targets:
         errors.extend(lint_file(path, all_ids))
+    if not only:
+        for skill in sorted((ROOT / "skills").rglob("SKILL.md")):
+            if bare_python_launch(skill.read_text(encoding="utf-8")):
+                errors.append(
+                    f"{skill.relative_to(ROOT)}: runs a framework script with a bare python "
+                    "— use $GOV/.venv/bin/python"
+                )
 
     if only:
         # Partial mode: requires-resolution against not-yet-written IDs is expected

@@ -225,7 +225,7 @@
       "id": "ARC-ERRORS",
       "title": "Error Handling & Resilience",
       "family": "ARC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -255,7 +255,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-errors.md",
-      "tokens_est": 2563
+      "tokens_est": 2642
     },
     {
       "id": "ARC-IDEMPOTENCY",
@@ -297,7 +297,7 @@
       "id": "ARC-MODULARITY",
       "title": "Modularity & Boundaries",
       "family": "ARC",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -327,7 +327,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/architecture/arc-modularity.md",
-      "tokens_est": 2314
+      "tokens_est": 2400
     },
     {
       "id": "ARC-PATTERNS",
@@ -1580,7 +1580,7 @@
       "id": "STK-GO",
       "title": "Go Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1611,7 +1611,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-go.md",
-      "tokens_est": 2782
+      "tokens_est": 2855
     },
     {
       "id": "STK-HTMX",
@@ -1732,7 +1732,7 @@
       "id": "STK-PY",
       "title": "Python Stack",
       "family": "STK",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1763,7 +1763,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-py.md",
-      "tokens_est": 3190
+      "tokens_est": 3263
     },
     {
       "id": "STK-REDIS",
@@ -1806,7 +1806,7 @@
       "id": "STK-RUST",
       "title": "Rust Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1837,7 +1837,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-rust.md",
-      "tokens_est": 3004
+      "tokens_est": 3077
     },
     {
       "id": "STK-SQLITE",
@@ -1915,7 +1915,7 @@
       "id": "STK-TS",
       "title": "TypeScript/Node Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1948,7 +1948,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/stacks/stk-ts.md",
-      "tokens_est": 3180
+      "tokens_est": 3253
     },
     {
       "id": "STK-VITE",
@@ -2095,7 +2095,7 @@
       "id": "TST-RATCHET",
       "title": "Coverage Ratchet",
       "family": "TST",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2122,7 +2122,7 @@
       ],
       "last_review": "2026-07-22",
       "path": "standards/testing/tst-ratchet.md",
-      "tokens_est": 2325
+      "tokens_est": 2418
     },
     {
       "id": "TST-VERIFY",

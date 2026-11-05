@@ -555,7 +555,7 @@ waivers:
   <h3>Prerequisites</h3>
   <ul class="plain">
     <li><strong>Claude Code</strong> — the framework is designed for Claude Code's skill and hook system</li>
-    <li><strong>Python 3.11+</strong> with <code>PyYAML</code> — powers the index, linter, selector, verifier, and coverage ratchet (<code>pip install pyyaml</code> if not already available)</li>
+    <li><strong>Python 3.11+</strong> on your <code>PATH</code> (e.g. <code>brew install python@3.14</code>) — <code>install.sh</code> builds a <code>.venv</code> in your clone from it, with the pinned PyYAML, and the skills run the index, linter, selector, verifier, and coverage ratchet there; no manual <code>pip install</code></li>
     <li><strong>gitleaks</strong> (recommended) — secret scanning at commit and CI time; the framework degrades to a built-in pattern scan without it, but gitleaks has broader coverage (<code>brew install gitleaks</code> on macOS)</li>
   </ul>
   <p>Per-stack tooling (ruff, bandit, eslint, gosec, etc.) is installed per-project by <code>/bootstrap-repo</code> — you don't need all of them upfront.</p>
@@ -564,7 +564,8 @@ waivers:
 <pre><code># 1. Clone the repo (anywhere you like)
 git clone https://github.com/pace551/aspec.git ~/aspec
 
-# 2. Install the five skills into Claude Code
+# 2. Build the clone's .venv (Python 3.11+, pinned PyYAML)
+#    and install the five skills into Claude Code
 cd ~/aspec
 bash checks/install.sh
 #    → on first run, prompts for your Obsidian vault path
@@ -579,7 +580,7 @@ bash checks/install.sh --global-claude
 #    secret scan + session banner; makes a timestamped settings backup)
 bash checks/install.sh --hooks</code></pre>
   <p>Each step is idempotent — re-run <code>install.sh</code> after pulling updates to refresh
-  installed skills and hooks. Paths are stored in <code>~/.claude/aspec.json</code> and won't
+  installed skills and hooks and to sync the <code>.venv</code> to the pinned versions. Paths are stored in <code>~/.claude/aspec.json</code> and won't
   be re-prompted on subsequent runs. The canonical skill sources in the repo use
   placeholders (<code>$GOV</code>, <code>$VAULT</code>) that get resolved to your actual
   paths at install time.</p>
@@ -588,8 +589,8 @@ bash checks/install.sh --hooks</code></pre>
   <div class="table-wrap"><table>
     <tr><th>Step</th><th>What it installs</th><th>Where</th></tr>
     <tr><td><code>install.sh</code></td>
-        <td>Five skills (<code>/govern</code>, <code>/verify-compliance</code>, <code>/bootstrap-repo</code>, <code>/harvest-learnings</code>, <code>/evolve-standards</code>) with paths resolved from your clone location and vault path, saved to <code>~/.claude/aspec.json</code></td>
-        <td><code>~/.claude/skills/</code></td></tr>
+        <td>A <code>.venv</code> (Python 3.11+, pinned PyYAML) that the skills and standards run ASPEC's scripts on, and five skills (<code>/govern</code>, <code>/verify-compliance</code>, <code>/bootstrap-repo</code>, <code>/harvest-learnings</code>, <code>/evolve-standards</code>) with paths resolved from your clone location and vault path, saved to <code>~/.claude/aspec.json</code></td>
+        <td><code>&lt;clone&gt;/.venv</code>, <code>~/.claude/skills/</code></td></tr>
     <tr><td><code>--global-claude</code></td>
         <td>A small <code>CLAUDE.md</code> that tells Claude Code to run <code>/govern</code> before chunky tasks and <code>/verify-compliance</code> before declaring done — the always-on pointer that makes the framework apply everywhere</td>
         <td><code>~/.claude/CLAUDE.md</code></td></tr>
@@ -600,19 +601,22 @@ bash checks/install.sh --hooks</code></pre>
 
   <h3>Verify the installation</h3>
 <pre><code># The framework should lint itself clean
-python3 checks/lint-framework.py
+.venv/bin/python checks/lint-framework.py
 # → lint-framework: clean (67 standards)
 
 # The selector should find standards
-python3 checks/select-standards.py --tier T1 --stacks python \
+.venv/bin/python checks/select-standards.py --tier T1 --stacks python \
   --brief-text "cli tool" --mode brief | head -5
 
 # Start a new Claude Code session — you should see the five
 # governance skills in your available slash commands</code></pre>
 
   <h3>Uninstalling</h3>
-  <p>The installer only writes to <code>~/.claude/</code> — it never modifies your projects. To remove:</p>
-<pre><code># Remove skills
+  <p>The installer writes to <code>~/.claude/</code> and creates <code>.venv</code> in your clone — it never modifies your projects. To remove:</p>
+<pre><code># Remove the clone's venv (or the whole clone)
+rm -rf ~/aspec/.venv
+
+# Remove skills
 rm -rf ~/.claude/skills/{govern,bootstrap-repo,verify-compliance,harvest-learnings,evolve-standards}
 
 # Remove global CLAUDE.md (or edit it to remove the governance block)
@@ -636,15 +640,15 @@ cp ~/.claude/settings.json.bak.YYYYMMDDHHMMSS ~/.claude/settings.json</code></pr
 
   <h3>Try it in two minutes</h3>
 <pre><code># see what a T3 web product would be governed by
-python3 checks/select-standards.py --tier T3 \
+.venv/bin/python checks/select-standards.py --tier T3 \
   --stacks typescript,nextjs,web --brief-text "public guestbook" --mode brief
 
 # watch the gate fail correctly, citing rule IDs
 bash examples/noncompliant-fixture/setup.sh /tmp/badproj --install
-python3 checks/run-verification.py --project /tmp/badproj
+.venv/bin/python checks/run-verification.py --project /tmp/badproj
 
 # hold the framework to its own schema
-python3 checks/lint-framework.py</code></pre>
+.venv/bin/python checks/lint-framework.py</code></pre>
 </section>
 
 <p class="footnote">Deep dive:

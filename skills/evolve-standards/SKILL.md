@@ -58,7 +58,7 @@ not the changelog); rotten → fold into step 2's proposals.
 ### 5. Regenerate, lint, close the loop
 
 ```bash
-python3 $GOV/checks/build-index.py && python3 $GOV/checks/lint-framework.py
+$GOV/.venv/bin/python $GOV/checks/build-index.py && $GOV/.venv/bin/python $GOV/checks/lint-framework.py
 ```
 
 Both must be clean. Mark promoted vault notes `status: promoted` (rejected →

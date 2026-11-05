@@ -2,7 +2,7 @@
 id: STK-PY
 title: Python Stack
 family: STK
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: required
@@ -42,7 +42,7 @@ verification:
     expect: "exit 0 — tests green (exit 5 'no tests collected' tolerated for fresh scaffolds; TST-POLICY governs test existence)"
     layer: G
     rules: [STK-PY-02]
-  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null 2>&1; python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
+  - cmd: "sh -c '.venv/bin/pytest -q --cov --cov-report=json >/dev/null 2>&1; \"$GOVERNANCE_DIR/.venv/bin/python\" \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
     expect: "coverage ≥ committed .coverage-baseline (read-only check)"
     layer: G
     rules: [STK-PY-02]
@@ -254,6 +254,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 
 ## Changelog
 
+- **1.0.4** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.3** (2026-11-04) — STK-PY-01's `src/` layout applies to packages; a script collection (standalone scripts run by path, none importing another first-party module) keeps its scripts in one directory with tests beside them. STK-PY-04's check scans `src/`, or otherwise the repo with `-c pyproject.toml` so a script collection's `[tool.bandit]` exclusions apply (`checks/sec-sast.sh` likewise). Adds no requirement: `src/` projects behave as before.
 - **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Format-review fixes: per-entry tier scoping, single-rule

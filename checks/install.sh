@@ -60,6 +60,48 @@ with open(path, "w") as f:
 print(f"wrote {path}")
 PYEOF
 
+# --- governance venv: the interpreter skills and standards run checks/*.py on ---
+# A Python 3.11+ with the pinned runtime group (pyproject.toml), so framework scripts never
+# land on whatever python3 is first on PATH (macOS ships an end-of-life 3.9).
+VENV_PY="$GOV/.venv/bin/python"
+venv_ok() {
+  [ -x "$VENV_PY" ] && "$VENV_PY" -c 'import sys, yaml; sys.exit(sys.version_info < (3, 11))' 2>/dev/null
+}
+# Bring the venv to the pinned runtime group; a no-op (no network) when already satisfied.
+sync_runtime() {
+  "$VENV_PY" -m pip install -q 'pip>=25.1' && # --group needs pip 25.1+
+    (cd "$GOV" && "$VENV_PY" -m pip install -q --group runtime)
+}
+if venv_ok; then
+  # A kept venv is synced too, so it can't drift from the pins (e.g. an older PyYAML).
+  # It already works, so a failed sync (offline) warns rather than failing the install.
+  if sync_runtime; then
+    echo "governance venv: ok, synced to the runtime group ($("$VENV_PY" -V))"
+  else
+    echo "install.sh: warning: couldn't sync $GOV/.venv to the pinned runtime group;" \
+      "keeping the existing venv" >&2
+    echo "governance venv: ok, NOT synced ($("$VENV_PY" -V))"
+  fi
+else
+  PY=""
+  for candidate in python3.14 python3.13 python3.12 python3.11 python3; do
+    if command -v "$candidate" >/dev/null &&
+       "$candidate" -c 'import sys; sys.exit(sys.version_info < (3, 11))' 2>/dev/null; then
+      PY=$candidate
+      break
+    fi
+  done
+  if [ -z "$PY" ]; then
+    echo "install.sh: ASPEC needs Python 3.11+ for $GOV/.venv; none found on PATH." >&2
+    echo "  Install one (e.g. brew install python@3.14) and re-run checks/install.sh." >&2
+    exit 2
+  fi
+  "$PY" -m venv "$GOV/.venv"
+  sync_runtime
+  venv_ok || { echo "install.sh: $GOV/.venv was created but can't import PyYAML" >&2; exit 2; }
+  echo "governance venv: created ($("$VENV_PY" -V), runtime group)"
+fi
+
 # --- skills (templated with resolved paths) ---
 mkdir -p "$SKILLS_DST"
 INBOX="$VAULT_PATH/Inbox"

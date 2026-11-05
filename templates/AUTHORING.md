@@ -11,7 +11,7 @@ calibration bar for depth, tone, and length — match them.
    SEC→`security` TST→`testing` ARC→`architecture` STK→`stacks` INF→`infra`
    OPS→`operations` DEV→`process` UX→`ux` DATA→`data` AI→`ai` LEG→`legal`.
 2. **Self-check before finishing**:
-   `python3 checks/lint-framework.py standards/<dir>/<file>.md` clean for every file you
+   `.venv/bin/python checks/lint-framework.py standards/<dir>/<file>.md` clean for every file you
    wrote. Do **not** run `build-index.py` (shared state; the merge step runs it).
 3. **Verification commands must be real.** Every `cmd` either (a) runs as-is from a
    project root with the machine contract "exit 0 = pass", (b) invokes a script you also

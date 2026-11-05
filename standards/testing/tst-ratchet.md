@@ -2,7 +2,7 @@
 id: TST-RATCHET
 title: Coverage Ratchet
 family: TST
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: advisory
@@ -22,7 +22,7 @@ triggers:
   - coverage.json
 requires: []
 verification:
-  - cmd: "sh -c 'python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 3 ]'"
+  - cmd: "sh -c '\"$GOVERNANCE_DIR/.venv/bin/python\" \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check; rc=$?; [ $rc -eq 0 ] || [ $rc -eq 3 ]'"
     expect: "exit 0 — coverage ≥ baseline − tolerance (exit 3 'no coverage data yet' tolerated on fresh scaffolds; the stack gate produces the data)"
     layer: G
     rules: [TST-RATCHET-01, TST-RATCHET-02]
@@ -136,16 +136,16 @@ Lifecycle of the baseline in a Python T2 project:
 ```
 # First run — initialize and commit (development mode, no --check)
 $ .venv/bin/pytest -q --cov --cov-report=json >/dev/null
-$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
+$ "$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
 coverage-ratchet: baseline initialized at 84.10%
 $ git add .coverage-baseline && git commit -m "chore: initialize coverage baseline (84.10%)"
 
 # Later — a feature lands with tests; the ratchet ratchets
-$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
+$ "$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/coverage-ratchet.py"
 coverage-ratchet: raised baseline 84.10% → 86.55%        # commit this with the feature
 
 # Verification — read-only, tree untouched
-$ python3 "$GOVERNANCE_DIR/checks/coverage-ratchet.py" --check
+$ "$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/coverage-ratchet.py" --check
 coverage-ratchet: OK (86.55% ≥ 86.55%)
 
 # Regression — new code, no tests
@@ -177,6 +177,7 @@ test job so `coverage.json` already exists.
 
 ## Changelog
 
+- **1.0.4** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-10-27) — "No coverage data" is now exit 3 instead of 2, because Python also
   exits 2 when it can't open the script; a missing ratchet script used to pass this check.

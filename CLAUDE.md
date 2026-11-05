@@ -61,6 +61,8 @@ the gitignored `.githooks/` and `.governance/`.
 This repo's own tier, pins, and approvals live in `GOVERNANCE.md`: T1, published package
 (ADR-0005), Python script collection (STK-PY-01).
 
-The skills run `checks/` scripts with the system `python3` (3.9 on macOS), so they stay
-3.9-compatible at runtime. `gitleaks` optional (scripts fall back to pattern scan);
-install with `brew install gitleaks` for full coverage.
+Skills and standards run `checks/` scripts on `$GOVERNANCE_DIR/.venv/bin/python`, which
+`checks/install.sh` builds with Python 3.11+; `lint-framework` rejects a bare `python3`
+launch. The exception is `coverage-ratchet.py`, which is vendored into projects and run by
+their own `python3`, so it stays 3.9-compatible (tested). `gitleaks` optional (scripts fall
+back to pattern scan); install with `brew install gitleaks` for full coverage.

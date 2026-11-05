@@ -6,14 +6,15 @@ description: The "done" gate. Use this skill BEFORE declaring any governed task 
 # verify-compliance — the done gate
 
 Work is not done until this passes (Constitution C2). Deterministic scripts verify; you
-comply and remediate. Governance repo: `$GOV`.
+comply and remediate. Governance repo: `$GOV`. Its scripts run on `$GOV/.venv/bin/python`;
+if that's missing, run `$GOV/checks/install.sh` (it builds the venv with Python 3.11+).
 
 ## Steps
 
 ### 1. Run the executor
 
 ```bash
-python3 $GOV/checks/run-verification.py --project <repo-root>
+$GOV/.venv/bin/python $GOV/checks/run-verification.py --project <repo-root>
 ```
 
 It reads `GOVERNANCE.md` (no manifest → tell the user to run `/govern` first, stop),
@@ -44,7 +45,7 @@ Constitution C9). Write them into `GOVERNANCE.md`'s `attestations:` list
 
 ### 5. Stamp and summarize
 
-On full pass: `python3 $GOV/checks/run-verification.py --project <root> --stamp` (writes
+On full pass: `$GOV/.venv/bin/python $GOV/checks/run-verification.py --project <root> --stamp` (writes
 `last_verified`). Final summary states: checks passed/waived counts, attestations
 recorded (any `followed: false` called out), and any WARN about patch-level pin drift
 (suggest re-running `/govern` to re-pin). A pin FAIL — minor/major drift or a pin newer
