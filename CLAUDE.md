@@ -21,11 +21,28 @@ every future task, so this repo holds itself to its own strictest rules.
   the PR's one commit on the branch and force-pushed with `--force-with-lease`.
   `checks/pr-hygiene.py` enforces this and the CHANGELOG rule below (CI `pr-hygiene` job,
   and `scripts/pre-push.sh` from the pre-push hook).
+- **Review before every push.** ASPEC is a published package, so DEV-REVIEW applies at
+  T3 weight: `/code-review high` on every PR (DEV-REVIEW-01).
+  - Before the first push of a PR branch, run `/code-review high` on the branch. After a
+    fixup, review only what changed since the last push (`git range-diff` against the
+    pushed branch if it was also rebased), not the whole branch again: re-running a full
+    review until it comes back clean is an anti-pattern.
+  - Fix or decline every finding with a reason (DEV-REVIEW-03), and list each finding and
+    its outcome in the PR description so the record lives on the PR.
+  - Run `/security-review` as well when the change touches input parsing or anything that
+    runs on a user's machine or in their project (DEV-REVIEW-02): any `checks/` script
+    (including `install.sh`), `hooks/`, `templates/` (scaffolds, git hooks, CI
+    workflows), or a `verification` `cmd:` in `standards/`.
+  - Push only after that. Devin Review comes after the push, as a second reviewer rather
+    than the first.
+  - PRs opened by bots (Dependabot, release-please) get `/code-review high <PR#>` before
+    they are handed to the maintainer to merge. Record the outcomes in a PR comment: the
+    bots rewrite their PR descriptions.
 - **Framework changes get a `CHANGELOG.md` entry under `## Unreleased`** (hand-written
-  prose); `feat`, `fix` and breaking changes must add one. Releases are cut by merging release-please's release PR (`.github/workflows/
-  release.yml`); it moves those entries under the version heading and sets the LICENSE
-  Change Date via `checks/release-prep.py`. Never edit `version.txt` or
-  `.release-please-manifest.json` by hand.
+  prose); `feat`, `fix` and breaking changes must add one. Releases are cut by merging
+  release-please's release PR (`.github/workflows/release.yml`); it moves those entries
+  under the version heading and sets the LICENSE Change Date via `checks/release-prep.py`.
+  Never edit `version.txt` or `.release-please-manifest.json` by hand.
 - Skills in `skills/` are canonical; `checks/install.sh` copies them to `~/.claude/skills/`.
   Edit here, then reinstall — never edit the installed copies.
 
