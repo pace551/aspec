@@ -29,6 +29,9 @@ STK_PY_04 = next(
     if v["rules"] == ["STK-PY-04"]
 )
 
+# a repo-wide scan keeps virtualenvs and node_modules out (bandit matches substrings)
+# -x replaces bandit's default excludes, so they are repeated first
+EXCLUDE = "-x .svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,/.venv/,/venv/,/node_modules/"
 STUB = '#!/bin/sh\necho "$@" >> "$BANDIT_ARGS"\n'
 PROJECT = '[project]\nname = "x"\nversion = "0.1.0"\n'
 
@@ -60,6 +63,16 @@ def bandit_args(layout: str, cmd: list[str]) -> str:
         return record.read_text().strip() if record.exists() else ""
 
 
+class BanditDefaultsTests(unittest.TestCase):
+    def test_exclude_repeats_bandits_own_defaults(self):
+        # -x replaces bandit's defaults, so the copy here must track the pinned bandit
+        from bandit.core import constants
+
+        self.assertTrue(EXCLUDE.startswith(f"-x {constants.EXCLUDE[0]}"))
+        listed = EXCLUDE.split(" ", 1)[1].split(",")
+        self.assertEqual(listed[: len(constants.EXCLUDE)], list(constants.EXCLUDE))
+
+
 class StkPy04Tests(unittest.TestCase):
     def run_cmd(self, layout: str) -> str:
         return bandit_args(layout, ["bash", "-c", STK_PY_04])
@@ -68,10 +81,10 @@ class StkPy04Tests(unittest.TestCase):
         self.assertEqual(self.run_cmd("package"), "-r src -q")
 
     def test_script_collection_scans_repo_with_its_config(self):
-        self.assertEqual(self.run_cmd("scripts"), "-c pyproject.toml -r . -q")
+        self.assertEqual(self.run_cmd("scripts"), f"-c pyproject.toml -r . -q {EXCLUDE}")
 
     def test_no_src_passes_pyproject_even_without_bandit_table(self):
-        self.assertEqual(self.run_cmd("flat"), "-c pyproject.toml -r . -q")
+        self.assertEqual(self.run_cmd("flat"), f"-c pyproject.toml -r . -q {EXCLUDE}")
 
 
 class SecSastTests(unittest.TestCase):
@@ -82,13 +95,13 @@ class SecSastTests(unittest.TestCase):
         self.assertEqual(self.run_script("package"), "-r src -q")
 
     def test_script_collection_scans_repo_with_its_config(self):
-        self.assertEqual(self.run_script("scripts"), "-c pyproject.toml -r . -q")
+        self.assertEqual(self.run_script("scripts"), f"-c pyproject.toml -r . -q {EXCLUDE}")
 
     def test_no_src_passes_pyproject_even_without_bandit_table(self):
-        self.assertEqual(self.run_script("flat"), "-c pyproject.toml -r . -q")
+        self.assertEqual(self.run_script("flat"), f"-c pyproject.toml -r . -q {EXCLUDE}")
 
     def test_setup_py_project_scans_repo_without_config(self):
-        self.assertEqual(self.run_script("setup.py"), "-r . -q")
+        self.assertEqual(self.run_script("setup.py"), f"-r . -q {EXCLUDE}")
 
 
 if __name__ == "__main__":

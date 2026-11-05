@@ -2,7 +2,7 @@
 id: OPS-OBS
 title: Observability
 family: OPS
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -24,7 +24,7 @@ triggers:
   - debug output
 requires: []
 verification:
-  - cmd: "sh -c '! git ls-files | grep -qE \"\\.log$\"'"
+  - cmd: 'sh -c ''! git ls-files -- "*.log" | grep -q .'''
     expect: "exit 0 — no tracked *.log files (git is not a log sink)"
     layer: G
     rules: [OPS-OBS-06]
@@ -56,7 +56,7 @@ verification:
     layer: A
     rules: [OPS-OBS-06]
     tiers: [T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Observability (OPS-OBS)
@@ -138,7 +138,7 @@ T1 launchd jobs write to `~/Library/Logs/{tool}/` with a dated filename.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `! git ls-files \| grep -qE "\.log$"` | no tracked log files | OPS-OBS-06 |
+| 1 | `! git ls-files -- "*.log" \| grep -q .` | no tracked log files | OPS-OBS-06 |
 | 2-7 | attestation checklist (one per rule; T3+ entries tier-scoped) | explicit yes recorded | OPS-OBS-01…06 |
 
 **Remediation:** tracked `.log` → `git rm --cached`, add `*.log` to `.gitignore` · secret
@@ -205,4 +205,5 @@ resource "aws_cloudwatch_log_group" "app" {
 
 ## Changelog
 
+- **1.0.1** (2026-11-05) — Verification #1 matches by `git ls-files` pathspec. `git ls-files | grep …$` saw paths under a non-ASCII directory quoted (`"…\303\274…"`), so a tracked `.log` there passed. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.

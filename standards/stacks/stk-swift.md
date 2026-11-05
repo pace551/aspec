@@ -2,7 +2,7 @@
 id: STK-SWIFT
 title: Apple SwiftUI Stack
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -31,11 +31,11 @@ verification:
     expect: "exit 0 — no CocoaPods/Carthage manifests; dependencies via SPM only"
     layer: G
     rules: [STK-SWIFT-04]
-  - cmd: "sh -c '! git grep --untracked -In \"ObservableObject\" -- \"*.swift\" 2>/dev/null'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ObservableObject --untracked -- ''*.swift'''
     expect: "exit 0 — no ObservableObject conformances on current targets (waive per-file for legacy deployment targets)"
     layer: G
     rules: [STK-SWIFT-02]
-  - cmd: "sh -c '! git grep --untracked -InE \"UserDefaults.*([sS]ecret|[tT]oken|[pP]assword|[aA]pi[_]?[kK]ey|[cC]redential)\" -- \"*.swift\" 2>/dev/null'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''UserDefaults.*([sS]ecret|[tT]oken|[pP]assword|[aA]pi[_]?[kK]ey|[cC]redential)'' --untracked -- ''*.swift'''
     expect: "exit 0 — no secret-shaped values going through UserDefaults"
     layer: G
     rules: [STK-SWIFT-07]
@@ -55,7 +55,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-SWIFT-08]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Apple SwiftUI Stack (STK-SWIFT)
@@ -166,8 +166,8 @@ VoiceOver reading "button" three times in a row is the failure this rule retires
 |---|---|---|---|
 | 1 | `bash "$GOVERNANCE_DIR/checks/stk-swift-verify.sh"` | exit 0 — tests green (or documented degrade → attestation) | STK-SWIFT-06 |
 | 2 | `[ ! -f Podfile ] && [ ! -f Cartfile ]` | exit 0 — SPM only | STK-SWIFT-04 |
-| 3 | `! git grep … "ObservableObject"` in *.swift | exit 0 — Observation framework in use | STK-SWIFT-02 |
-| 4 | `! git grep … UserDefaults secret-pattern` | exit 0 — no secrets in UserDefaults | STK-SWIFT-07 |
+| 3 | `grep-gate.py forbid -e ObservableObject` in *.swift | exit 0 — Observation framework in use | STK-SWIFT-02 |
+| 4 | `grep-gate.py forbid … UserDefaults secret-pattern` | exit 0 — no secrets in UserDefaults | STK-SWIFT-07 |
 | 5-8 | attestation checklist (one per rule) | explicit yes | STK-SWIFT-01, -03, -05, -08 |
 
 **Remediation:** verify script warns "no test frameworks"/"toolchain absent" → run on
@@ -233,5 +233,6 @@ public final class CounterModel {
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Verifications #3 and #4 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

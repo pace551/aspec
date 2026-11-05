@@ -2,12 +2,14 @@
 """import-cycles.py — first-party import graph must be acyclic (ARC-MODULARITY-01, layer G).
 
 Parses every Python module under src/ (fallback: top-level packages containing an
-__init__.py), resolves absolute and relative first-party imports — ignoring
-`if TYPE_CHECKING:` blocks, which cannot cause runtime cycles — and reports strongly
-connected components of size > 1 (plus self-imports).
+__init__.py) that git tracks or sees untracked and not ignored (outside git: a walk),
+resolves absolute and relative first-party imports — ignoring `if TYPE_CHECKING:`
+blocks, which cannot cause runtime cycles — and reports strongly connected components of
+size > 1 (plus self-imports).
 
 Exit 0 = acyclic, or no Python package present (fresh scaffold / non-Python project);
-1 = at least one import cycle; 2 = error. Read-only.
+1 = at least one import cycle; 2 = error, or a file or directory it couldn't read (scan
+incomplete). Read-only.
 
 Usage: python3 import-cycles.py [--project DIR] [--src DIR]
 """
@@ -16,24 +18,83 @@ from __future__ import annotations
 
 import argparse
 import ast
+import os
+import subprocess  # nosec B404 - argv-only git call
 import sys
 from pathlib import Path
 
 EXCLUDED = {".git", ".venv", "venv", "node_modules", "dist", "build", "__pycache__"}
 
 
+def git_py_files(root: Path, pathspec: str = ".") -> list[Path] | None:
+    """The *.py files git sees under pathspec (tracked, plus untracked ones not ignored),
+    or None outside a git work tree. git never enters an ignored directory, so a cache
+    or volume can't break the scan; anything else git can't read raises OSError (a module
+    missing from the graph can hide a cycle)."""
+    try:
+        proc = subprocess.run(  # nosec B603 B607 - fixed argv, no shell
+            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
+             f":(glob){pathspec}/**/*.py"],
+            cwd=root, capture_output=True, check=False,
+        )  # fmt: skip
+    except FileNotFoundError:
+        return None  # no git at all
+    err = proc.stderr.decode(errors="replace").strip()
+    if proc.returncode != 0:
+        if "not a git repository" in err:
+            return None
+        raise OSError(f"git ls-files failed: {err}")
+    if err:  # git only warns about an untracked directory it can't open
+        raise OSError(f"git ls-files: {err}")
+    return sorted(root / os.fsdecode(f) for f in proc.stdout.split(b"\0") if f)
+
+
+def walk_py(base: Path) -> list[Path]:
+    """Every *.py under base, for a project outside git. Raises OSError for a directory
+    it can't read (Path.rglob skips those silently)."""
+
+    def fail(err: OSError) -> None:
+        raise err
+
+    found: list[Path] = []
+    # no pruning below base: a first-party subpackage may well be named build or dist
+    for dirpath, _dirnames, filenames in os.walk(base, onerror=fail):
+        found.extend(Path(dirpath, f) for f in filenames if f.endswith(".py"))
+    return sorted(found)
+
+
+def py_files(root: Path, base: Path) -> list[Path]:
+    """*.py under base, from git where it can (base's own repo when it lies outside root)."""
+    base, root = base.resolve(), root.resolve()
+    if base.is_relative_to(root):
+        found = git_py_files(root, os.path.relpath(base, root))
+    else:  # an absolute --src elsewhere: a git pathspec can't leave the repo
+        found = git_py_files(base, ".")
+    return walk_py(base) if found is None else found
+
+
 def collect_files(root: Path, src_override: Path | None) -> list[tuple[Path, Path]]:
     """(base, file) pairs; a file's module name is its path relative to base."""
     if src_override is not None:
         base = src_override if src_override.is_absolute() else root / src_override
-        return [(base, f) for f in sorted(base.rglob("*.py"))] if base.is_dir() else []
+        # resolved, as py_files' paths are: a symlinked root mustn't break relative_to
+        return [(base.resolve(), f) for f in py_files(root, base)] if base.is_dir() else []
     src = root / "src"
     if src.is_dir():
-        return [(src, f) for f in sorted(src.rglob("*.py"))]
+        return [(src.resolve(), f) for f in py_files(root, src)]
+    found = git_py_files(root)
+    if found is not None:  # top-level packages: directories with an __init__.py
+        tops = {f.relative_to(root).parts[0] for f in found if len(f.relative_to(root).parts) > 1}
+        packages = {t for t in tops if t not in EXCLUDED and root / t / "__init__.py" in found}
+        return [(root, f) for f in found if f.relative_to(root).parts[0] in packages]
     pairs: list[tuple[Path, Path]] = []
     for d in sorted(root.iterdir()):
-        if d.is_dir() and d.name not in EXCLUDED and (d / "__init__.py").exists():
-            pairs.extend((root, f) for f in sorted(d.rglob("*.py")))
+        if not d.is_dir() or d.name in EXCLUDED:
+            continue
+        if not os.access(d, os.R_OK | os.X_OK):
+            raise PermissionError(f"cannot read directory: {d}")
+        if (d / "__init__.py").exists():
+            pairs.extend((root, f) for f in walk_py(d))
     return pairs
 
 
@@ -164,12 +225,16 @@ def main() -> int:
         print(f"import-cycles: not a directory: {root}", file=sys.stderr)
         return 2
 
-    pairs = collect_files(root, args.src)
+    try:
+        pairs = collect_files(root, args.src)
+        graph = build_graph(pairs)
+    except OSError as exc:
+        print(f"import-cycles: {exc} — scan incomplete", file=sys.stderr)
+        return 2
     if not pairs:
         print("import-cycles: no Python package found (src/ or top-level) — nothing to check")
         return 0
 
-    graph = build_graph(pairs)
     cycles = [sorted(c) for c in tarjan(graph) if len(c) > 1 or (c and c[0] in graph[c[0]])]
     if cycles:
         print(f"import-cycles: {len(cycles)} import cycle(s) found:")

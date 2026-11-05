@@ -19,30 +19,50 @@ from __future__ import annotations
 
 import argparse
 import ast
+import os
 import re
+import stat
 import subprocess  # nosec B404 - argv-only subprocess use, audited below
 import sys
 from pathlib import Path
 
 CATCHALL = {"Exception", "BaseException"}
 JS_EXTS = {".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"}
-EXCLUDED = {".git", ".venv", "venv", "node_modules", "dist", "build", "__pycache__"}
+ALWAYS_EXCLUDED = {".git", ".venv", "venv", "node_modules", "__pycache__"}
+TOP_EXCLUDED = {"dist", "build"}
 EMPTY_CATCH = re.compile(r"catch\s*(?:\([^)]*\))?\s*\{\s*\}")
 MARKER = "swallow-ok:"
 
 
 def project_files(root: Path) -> list[Path]:
+    """Tracked files; outside a git work tree, a walk with standard excludes. Raises
+    OSError when git fails inside a repo, or the walk meets a directory it can't read
+    (Path.rglob would skip it): either way the scan would be incomplete."""
     try:
-        out = subprocess.run(  # nosec B603 B607 - fixed argv (git ls-files), no shell
-            ["git", "ls-files", "-z"], cwd=root, capture_output=True, text=True, check=True
-        ).stdout
-        return [root / p for p in out.split("\0") if p]
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return [
-            p
-            for p in sorted(root.rglob("*"))
-            if p.is_file() and not (set(p.relative_to(root).parts[:-1]) & EXCLUDED)
-        ]
+        proc = subprocess.run(  # nosec B603 B607 - fixed argv (git ls-files), no shell
+            ["git", "ls-files", "-z"], cwd=root, capture_output=True, check=False
+        )
+    except FileNotFoundError:
+        proc = None  # no git at all
+    if proc is not None:
+        if proc.returncode == 0:  # paths are bytes: any name decodes (surrogateescape)
+            return [root / os.fsdecode(p) for p in proc.stdout.split(b"\0") if p]
+        err = proc.stderr.decode(errors="replace").strip()
+        if "not a git repository" not in err:
+            raise OSError(f"git ls-files failed: {err}")
+
+    def fail(err: OSError) -> None:
+        raise err
+
+    files: list[Path] = []
+    for dirpath, dirnames, filenames in os.walk(root, onerror=fail):
+        # build/dist are output only at the top; deeper they may be first-party packages
+        top = Path(dirpath) == root
+        dirnames[:] = sorted(
+            d for d in dirnames if d not in ALWAYS_EXCLUDED and not (top and d in TOP_EXCLUDED)
+        )
+        files.extend(Path(dirpath, f) for f in sorted(filenames))
+    return files
 
 
 def marked(lines: list[str], lineno: int) -> bool:
@@ -114,17 +134,33 @@ def main() -> int:
         return 2
 
     findings: list[str] = []
+    unreadable: list[str] = []
     scanned = 0
-    for path in project_files(root):
-        if not path.is_file():
+    try:
+        paths = project_files(root)
+    except OSError as exc:
+        print(f"silent-swallow: {exc} — scan incomplete", file=sys.stderr)
+        return 2
+    for path in paths:
+        scan = scan_python if path.suffix == ".py" else scan_js if path.suffix in JS_EXTS else None
+        if scan is None:
             continue
-        if path.suffix == ".py":
-            scan_python(path, findings)
-            scanned += 1
-        elif path.suffix in JS_EXTS:
-            scan_js(path, findings)
-            scanned += 1
+        # Path.is_file() is False for a file it can't stat, which skipped it silently
+        try:
+            if not stat.S_ISREG(path.stat().st_mode):
+                continue
+            scan(path, findings)
+        except FileNotFoundError:
+            continue  # tracked but deleted in the work tree
+        except OSError as exc:
+            unreadable.append(f"{path}: {exc.strerror or exc}")
+            continue
+        scanned += 1
 
+    if unreadable:
+        print("silent-swallow: could not read — scan incomplete:", file=sys.stderr)
+        for u in unreadable:
+            print(f"  ✗ {u}", file=sys.stderr)
     if findings:
         print(f"silent-swallow: {len(findings)} silent exception swallow(s):")
         for f in findings:
@@ -134,6 +170,8 @@ def main() -> int:
             "a deliberate swallow needs `# swallow-ok: <reason>` on the except line"
         )
         return 1
+    if unreadable:
+        return 2
     print(f"silent-swallow: clean ({scanned} files scanned)")
     return 0
 

@@ -2,7 +2,7 @@
 id: INF-CONTAINERS
 title: Containers & ECS
 family: INF
-version: 1.0.4
+version: 1.0.5
 status: active
 tiers:
   T1: advisory
@@ -27,7 +27,7 @@ verification:
     expect: "exit 0 — hadolint + trivy config clean when installed; built-in pin/USER checks otherwise"
     layer: G
     rules: [INF-CONTAINERS-01, INF-CONTAINERS-02, INF-CONTAINERS-03, INF-CONTAINERS-05]
-  - cmd: "sh -c '! git ls-files -z -- \":(glob)**/Dockerfile*\" | xargs -0 -r grep -Li \"^USER \" | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" require -i -e ''^USER\s'' -- '':(glob)**/Dockerfile*'''
     expect: "exit 0 — every tracked Dockerfile sets a USER"
     layer: G
     rules: [INF-CONTAINERS-02]
@@ -64,7 +64,7 @@ verification:
     layer: A
     rules: [INF-CONTAINERS-10]
     tiers: [T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Containers & ECS (INF-CONTAINERS)
@@ -237,6 +237,7 @@ plus `awslogs` logConfiguration, `readonlyRootFilesystem`, a `healthCheck`, and
 
 ## Changelog
 
+- **1.0.5** (2026-11-05) — Verification #2 (every Dockerfile sets `USER`) now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.4** (2026-11-05) — Verification fix: the file list reaches `xargs` NUL-separated (`git ls-files -z` → `xargs -0 -r`), so a Dockerfile whose path contains a space is checked instead of passing unchecked. No rule changes.
 - **1.0.3** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).

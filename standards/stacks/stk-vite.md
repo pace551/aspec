@@ -2,7 +2,7 @@
 id: STK-VITE
 title: Vite + React SPA Stack
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -30,7 +30,7 @@ verification:
     expect: "exit 0 — vitest + Testing Library green with coverage emitted (--passWithNoTests tolerates a fresh scaffold)"
     layer: G
     rules: [STK-VITE-08]
-  - cmd: "sh -c '! git grep --untracked -InE \"VITE_[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY|ACCESS_KEY|CREDENTIAL)\" 2>/dev/null'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''VITE_[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY|ACCESS_KEY|CREDENTIAL)'' --untracked'
     expect: "exit 0 — no secret-shaped name behind the VITE_ prefix anywhere in the tree"
     layer: G
     rules: [STK-VITE-07]
@@ -58,7 +58,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-VITE-06]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Vite + React SPA Stack (STK-VITE)
@@ -162,7 +162,7 @@ snapshots couples tests to refactors instead of behavior.
 |---|---|---|---|
 | 1 | `scripts/lint.sh` | exit 0 — prettier + eslint + `tsc --noEmit` | STK-VITE-08 |
 | 2 | `scripts/test.sh` | exit 0 — vitest green, coverage emitted | STK-VITE-08 |
-| 3 | `! git grep … VITE_*(SECRET\|TOKEN\|…)` | exit 0 — no secret-shaped public var | STK-VITE-07 |
+| 3 | `grep-gate.py forbid … VITE_*(SECRET\|TOKEN\|…)` | exit 0 — no secret-shaped public var | STK-VITE-07 |
 | 4-9 | attestation checklist (one per rule) | explicit yes | STK-VITE-01…06 |
 
 **Remediation:** VITE_ grep hit → move the call behind the backing API; rotate the
@@ -219,6 +219,7 @@ return <ul>{data.map((t) => <li key={t.id}>{t.title}</li>)}</ul>;
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Verification #3 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

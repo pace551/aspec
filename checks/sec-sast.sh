@@ -20,7 +20,7 @@
 #
 # Usage: sec-sast.sh [--project DIR] [--tier T1|T2|T3|T4]
 # Exit 0 = pass (or documented lenient skip), 1 = findings or missing required scanner
-# at a strict tier, 2 = usage/environment error. Read-only: scans, never fixes.
+# at a strict tier, 2 = usage/environment error or an incomplete scan. Read-only: scans, never fixes.
 set -euo pipefail
 
 PROJECT="."
@@ -65,13 +65,25 @@ if [[ -f pyproject.toml || -f setup.py ]]; then
   [[ -z "$BANDIT" ]] && command -v bandit >/dev/null 2>&1 && BANDIT="bandit"
   if [[ -n "$BANDIT" ]]; then
     # package: src/ · otherwise the repo, with pyproject.toml's [tool.bandit] exclusions
-    # (a script collection, STK-PY-01); bandit ignores a pyproject.toml without that table
+    # (a script collection, STK-PY-01); bandit ignores a pyproject.toml without that table.
+    # -x keeps virtualenvs and node_modules out of a repo-wide scan (bandit matches these
+    # as path substrings); it replaces bandit's default excludes, so those come first.
+    TARGET=.
+    [[ -d src ]] && TARGET=src
+    # bandit's walk skips a directory it can't read without a word, and exits 0: list the
+    # tree first, and stop as incomplete when that fails (inf-container-scan.sh contract).
+    if ! find "$TARGET" \( -name .git -o -name .venv -o -name venv -o -name node_modules \) \
+        -prune -o -type d -print > /dev/null; then
+      echo "sec-sast: could not list $TARGET (unreadable directory?) — scan incomplete" >&2
+      exit 2
+    fi
+    EXCLUDE=".svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,/.venv/,/venv/,/node_modules/"
     if [[ -d src ]]; then
       run "$BANDIT" -r src -q
     elif [[ -f pyproject.toml ]]; then
-      run "$BANDIT" -c pyproject.toml -r . -q
+      run "$BANDIT" -c pyproject.toml -r . -q -x "$EXCLUDE"
     else
-      run "$BANDIT" -r . -q
+      run "$BANDIT" -r . -q -x "$EXCLUDE"
     fi
   else
     missing "bandit" "add bandit to the project's [dev] extras (STK-PY) or: pipx install bandit"

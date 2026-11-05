@@ -2,7 +2,7 @@
 id: STK-DDB
 title: DynamoDB
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -25,11 +25,11 @@ verification:
     expect: "exit 0 — the access-pattern table exists in the repo (docs/access-patterns.md)"
     layer: G
     rules: [STK-DDB-01]
-  - cmd: "sh -c '! grep -rniIE \"billing_mode[^a-z]+provisioned|provisionedthroughput\" --exclude-dir=.venv --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.terraform . 2>/dev/null | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -i -e ''billing_mode[^a-z]+provisioned|provisionedthroughput'' --untracked -- . '':(exclude,glob)**/.terraform/**'' '':(exclude,glob)**/node_modules/**'' '':(exclude,glob)**/.venv/**'''
     expect: "exit 0 — no provisioned-capacity billing declared in IaC/code"
     layer: G
     rules: [STK-DDB-02]
-  - cmd: "sh -c '! grep -rnIE \"[.]scan[(]|ScanCommand\" src app lib 2>/dev/null | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''[.]scan[(]|ScanCommand'' --untracked --under src --under app --under lib'
     expect: "exit 0 — no table scans in production code paths (admin/offline scripts live outside src/)"
     layer: G
     rules: [STK-DDB-03]
@@ -51,7 +51,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-DDB-07]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # DynamoDB (STK-DDB)
@@ -150,8 +150,8 @@ same bug in disguise — model them as separate items under the same `PK`.
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
 | 1 | `[ -f docs/access-patterns.md ] \|\| [ -f access-patterns.md ]` | the access-pattern table exists | STK-DDB-01 |
-| 2 | negative grep for `billing_mode…provisioned` / `provisionedthroughput` | no provisioned capacity declared | STK-DDB-02 |
-| 3 | `! grep -rnIE "[.]scan[(]\|ScanCommand" src app lib` (T3+) | no scans in production paths | STK-DDB-03 |
+| 2 | `grep-gate.py forbid` for `billing_mode…provisioned` / `provisionedthroughput` | no provisioned capacity declared | STK-DDB-02 |
+| 3 | `grep-gate.py forbid -e '[.]scan[(]\|ScanCommand'` under `src` `app` `lib` (T3+) | no scans in production paths | STK-DDB-03 |
 | 4–7 | attestation checklist (one per rule; -06 at T2+) | explicit yes recorded | STK-DDB-04, -05, -06, -07 |
 
 **Remediation:** missing access-patterns doc → copy the skeleton from
@@ -205,6 +205,7 @@ fragment sit beside it.
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Verifications #2 and #3 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

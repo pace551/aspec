@@ -2,7 +2,7 @@
 id: INF-ENVS
 title: Environments & Promotion
 family: INF
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -24,11 +24,11 @@ triggers:
   - dev environment
 requires: []
 verification:
-  - cmd: "sh -c '[ ! -d .github/workflows ] || ! grep -rqE \"aws-secret-access-key|AWS_SECRET_ACCESS_KEY\" .github/workflows'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''aws-secret-access-key|AWS_SECRET_ACCESS_KEY'' --untracked --under .github/workflows'
     expect: "exit 0 — no workflow references long-lived AWS keys"
     layer: G
     rules: [INF-ENVS-03]
-  - cmd: "sh -c '[ ! -d .github/workflows ] || ! grep -rl --null \"configure-aws-credentials\" .github/workflows | xargs -0 -r grep -L \"role-to-assume\" | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" require -e role-to-assume --if configure-aws-credentials --untracked --under .github/workflows'
     expect: "exit 0 — every configure-aws-credentials step assumes an OIDC role"
     layer: G
     rules: [INF-ENVS-03]
@@ -60,7 +60,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [INF-ENVS-07]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Environments & Promotion (INF-ENVS)
@@ -261,6 +261,7 @@ jobs:
 
 ## Changelog
 
+- **1.0.3** (2026-11-05) — Both workflow checks now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
 - **1.0.2** (2026-11-05) — Verification fix: the file list reaches `xargs` NUL-separated (`grep -rl --null` → `xargs -0 -r`), so a workflow whose path contains a space is checked instead of passing unchecked. No rule changes.

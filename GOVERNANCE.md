@@ -21,7 +21,7 @@ standards:
   - {id: SEC-SAST, version: 1.0.3}
   - {id: SEC-SECRETS, version: 1.0.3}
   - {id: SEC-SUPPLY, version: 1.0.2}
-  - {id: STK-PY, version: 1.0.4}
+  - {id: STK-PY, version: 1.0.5}
   - {id: TST-FIXTURES, version: 1.0.2}
   - {id: TST-POLICY, version: 1.0.1}
   - {id: TST-RATCHET, version: 1.0.4}
@@ -86,17 +86,17 @@ attestations:
   - {rule_id: SEC-INPUT-06, followed: true, note: "no URL fetching", date: 2026-11-04}
   - {rule_id: SEC-INPUT-07, followed: true, note: "no HTML rendering", date: 2026-11-04}
   - {rule_id: SEC-SAST-02, followed: true, note: "sast job in framework.yml runs checks/sec-sast.sh (bandit)", date: 2026-11-04}
-  - {rule_id: SEC-SAST-03, followed: true, note: "8 inline '# nosec' (B404/B603/B607 on argv-only subprocess calls) and 1 '# noqa: B905', each with its reason", date: 2026-11-04}
+  - {rule_id: SEC-SAST-03, followed: true, note: "every inline '# nosec' is B404/B603/B607 on an argv-only subprocess call and names its reason on the same line (grep); 1 '# noqa: B905' likewise", date: 2026-11-05}
   - {rule_id: SEC-SAST-04, followed: true, note: "semgrep considered and skipped: bandit covers the only stack here (Python); revisit if checks/ gains another language", date: 2026-11-04}
   - {rule_id: SEC-SECRETS-06, followed: true, note: "release App installed on this repo only, with Contents/Pull requests/Issues write; each run mints a 1-hour installation token that is revoked at job end; GITHUB_TOKEN narrowed to contents: write", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-02, followed: false, note: "no lockfile: the toolchain's top-level pins are exact but its transitive dependencies aren't locked", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-03, followed: true, note: "every action in .github/workflows is pinned to a commit SHA with a version comment, including create-github-app-token (grep: no tag refs)", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-04, followed: false, note: "exact top-level pins as for an application, but without the lockfile that STK-PY-06 pairs with them", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-05, followed: true, note: "no curl-pipe-to-shell; the toolchain comes from PyPI, each package one STK-PY names", date: 2026-11-04}
-  - {rule_id: STK-PY-01, followed: true, note: "pyproject.toml is the single config home; checks/ is a script collection: no script imports another first-party module (checked)", date: 2026-11-04}
+  - {rule_id: STK-PY-01, followed: true, note: "pyproject.toml is the single config home; checks/ is a script collection: no script imports another first-party module (checked); tests import the test helper checks/hostile_tree.py, which no script uses", date: 2026-11-05}
   - {rule_id: STK-PY-07, followed: true, note: "the toolchain is exactly STK-PY's (ruff, bandit, pip-audit, pytest, pytest-cov) plus PyYAML", date: 2026-11-04}
   - {rule_id: STK-PY-08, followed: true, note: "CLAUDE.md, scripts/ and CI call .venv/bin paths; the skills' system-python3 runs are by other projects, not this repo's commands", date: 2026-11-04}
-  - {rule_id: TST-POLICY-04, followed: false, note: "coverage of checks/ is 56.41%; import-cycles.py and silent-swallow.py have no tests", date: 2026-11-05}
+  - {rule_id: TST-POLICY-04, followed: false, note: "coverage of checks/ is 75.96%; every checks/ script now has tests (build-index.py: test_build_index.py; import-cycles.py and silent-swallow.py: test_walkers.py and test_check_contract.py); depth at T3 weight (integration and end-to-end runs) not yet assessed", date: 2026-11-05}
   - {rule_id: TST-RATCHET-03, followed: true, note: "baseline first set at 39.56% in this change; never lowered", date: 2026-11-04}
   - {rule_id: TST-RATCHET-04, followed: true, note: "scripts/test.sh writes coverage.json (with subprocess-run scripts measured); coverage artifacts are gitignored", date: 2026-11-04}
 ```
