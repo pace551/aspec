@@ -19,9 +19,11 @@ VERIFY = Path(__file__).with_name("run-verification.py")
 
 BACKGROUNDED = "sh -c 'sleep 30 & echo $! > child.pid; wait'"
 # Escapes the check's process group (new session) while keeping stdout/stderr open.
-DETACHED = ("python3 -c 'import subprocess; "
-            "p = subprocess.Popen([\"sleep\", \"30\"], start_new_session=True); "
-            "open(\"child.pid\", \"w\").write(str(p.pid))'; sleep 30")
+DETACHED = (
+    "python3 -c 'import subprocess; "
+    'p = subprocess.Popen(["sleep", "30"], start_new_session=True); '
+    'open("child.pid", "w").write(str(p.pid))\'; sleep 30'
+)
 
 
 def standard(first_cmd: str) -> str:
@@ -64,17 +66,27 @@ class TimeoutTests(unittest.TestCase):
         self.addCleanup(self.proj.cleanup)
         (Path(self.gov.name) / "standards" / "testing").mkdir(parents=True)
         Path(self.proj.name, "GOVERNANCE.md").write_text(
-            "```yaml\ntier: T1\nstandards:\n  - {id: TST-SLOW, version: 1.0.0}\n"
-            "waivers: []\n```\n")
+            "```yaml\ntier: T1\nstandards:\n  - {id: TST-SLOW, version: 1.0.0}\nwaivers: []\n```\n"
+        )
         self.pidfile = Path(self.proj.name, "child.pid")
 
     def use(self, first_cmd: str) -> None:
         (Path(self.gov.name) / "standards" / "testing" / "tst-slow.md").write_text(
-            standard(first_cmd))
+            standard(first_cmd)
+        )
 
     def argv(self, timeout: int) -> list[str]:
-        return [sys.executable, str(VERIFY), "--project", self.proj.name,
-                "--governance-dir", self.gov.name, "--json", "--timeout", str(timeout)]
+        return [
+            sys.executable,
+            str(VERIFY),
+            "--project",
+            self.proj.name,
+            "--governance-dir",
+            self.gov.name,
+            "--json",
+            "--timeout",
+            str(timeout),
+        ]
 
     def child_pid(self) -> int:
         pid = int(self.pidfile.read_text())
@@ -83,8 +95,9 @@ class TimeoutTests(unittest.TestCase):
 
     def run_verifier(self, timeout: int = 2) -> tuple[subprocess.CompletedProcess, float]:
         start = time.monotonic()
-        proc = subprocess.run(self.argv(timeout), capture_output=True, text=True,
-                              check=False, timeout=60)
+        proc = subprocess.run(
+            self.argv(timeout), capture_output=True, text=True, check=False, timeout=60
+        )
         return proc, time.monotonic() - start
 
     def assert_timeout_report(self, proc: subprocess.CompletedProcess) -> None:
@@ -110,8 +123,9 @@ class TimeoutTests(unittest.TestCase):
 
     def test_interrupt_kills_running_check(self):
         self.use(BACKGROUNDED)
-        verifier = subprocess.Popen(self.argv(600), stdout=subprocess.DEVNULL,
-                                    stderr=subprocess.DEVNULL)
+        verifier = subprocess.Popen(
+            self.argv(600), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
         self.addCleanup(lambda: verifier.poll() is None and verifier.kill())
         deadline = time.monotonic() + 10
         while not self.pidfile.exists() or not self.pidfile.read_text().strip():

@@ -5,6 +5,11 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- The framework's own Python is a declared STK-PY script collection: `pyproject.toml`
+  pins its toolchain (`[dependency-groups] dev`) and holds the house ruff config
+  (STK-PY-03). `checks/` is formatted with `ruff format`, and the lint gate (hook and
+  CI) checks formatting too. Markdown is excluded, so standards' code samples are
+  untouched.
 - Python script collections (STK-PY 1.0.3, SEC-SAST 1.0.3): STK-PY-01's `src/` layout now
   applies to packages. A script collection (standalone scripts run by path, none
   importing another first-party module) keeps its scripts in one directory with tests

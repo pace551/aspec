@@ -37,8 +37,9 @@ Intro text.
 """
 
 
-def make_repo(tmp: Path, version: str = "0.2.0", changelog: str = CHANGELOG,
-              license_text: str = LICENSE) -> Path:
+def make_repo(
+    tmp: Path, version: str = "0.2.0", changelog: str = CHANGELOG, license_text: str = LICENSE
+) -> Path:
     (tmp / "LICENSE").write_text(license_text)
     (tmp / "CHANGELOG.md").write_text(changelog)
     (tmp / ".release-please-manifest.json").write_text(json.dumps({".": version}))
@@ -46,8 +47,12 @@ def make_repo(tmp: Path, version: str = "0.2.0", changelog: str = CHANGELOG,
 
 
 def run(tmp: Path, *args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(PREP), "--root", str(tmp), *args],
-                          capture_output=True, text=True, check=False)
+    return subprocess.run(
+        [sys.executable, str(PREP), "--root", str(tmp), *args],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
 
 class PrepareTests(unittest.TestCase):
@@ -70,8 +75,11 @@ class PrepareTests(unittest.TestCase):
             tmp = make_repo(Path(t))
             run(tmp, "prepare", "--date", "2026-11-03")
             text = (tmp / "CHANGELOG.md").read_text()
-            self.assertIn("## Unreleased\n\n## 0.2.0 — 2026-11-03\n\n- Entry one.\n- Entry two.\n"
-                          "\n## 0.1.0 — 2026-07-22\n", text)
+            self.assertIn(
+                "## Unreleased\n\n## 0.2.0 — 2026-11-03\n\n- Entry one.\n- Entry two.\n"
+                "\n## 0.1.0 — 2026-07-22\n",
+                text,
+            )
 
     def test_rerun_is_idempotent_and_refreshes_date(self):
         with tempfile.TemporaryDirectory() as t:

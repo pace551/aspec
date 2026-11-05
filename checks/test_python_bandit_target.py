@@ -20,10 +20,14 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 SEC_SAST = ROOT / "checks" / "sec-sast.sh"
-_fm = re.match(r"\A---\n(.*?)\n---\n",
-               (ROOT / "standards" / "stacks" / "stk-py.md").read_text(), re.DOTALL)
-STK_PY_04 = next(str(v["cmd"]) for v in yaml.safe_load(_fm.group(1))["verification"]
-                 if v["rules"] == ["STK-PY-04"])
+_fm = re.match(
+    r"\A---\n(.*?)\n---\n", (ROOT / "standards" / "stacks" / "stk-py.md").read_text(), re.DOTALL
+)
+STK_PY_04 = next(
+    str(v["cmd"])
+    for v in yaml.safe_load(_fm.group(1))["verification"]
+    if v["rules"] == ["STK-PY-04"]
+)
 
 STUB = '#!/bin/sh\necho "$@" >> "$BANDIT_ARGS"\n'
 PROJECT = '[project]\nname = "x"\nversion = "0.1.0"\n'
@@ -46,9 +50,13 @@ def bandit_args(layout: str, cmd: list[str]) -> str:
         stub.write_text(STUB)
         stub.chmod(0o755)
         record = p / "args.txt"
-        subprocess.run(cmd, cwd=p, capture_output=True, check=False,
-                       env={**os.environ, "BANDIT_ARGS": str(record),
-                            "GOVERNANCE_DIR": str(ROOT)})
+        subprocess.run(
+            cmd,
+            cwd=p,
+            capture_output=True,
+            check=False,
+            env={**os.environ, "BANDIT_ARGS": str(record), "GOVERNANCE_DIR": str(ROOT)},
+        )
         return record.read_text().strip() if record.exists() else ""
 
 

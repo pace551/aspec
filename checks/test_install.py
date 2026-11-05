@@ -15,9 +15,14 @@ INSTALL = ROOT / "checks" / "install.sh"
 
 
 def install(home: Path, *flags: str) -> subprocess.CompletedProcess:
-    return subprocess.run(["bash", str(INSTALL), *flags], input="none\n",
-                          env={**os.environ, "HOME": str(home)},
-                          capture_output=True, text=True, check=False)
+    return subprocess.run(
+        ["bash", str(INSTALL), *flags],
+        input="none\n",
+        env={**os.environ, "HOME": str(home)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
 
 class InstallTests(unittest.TestCase):

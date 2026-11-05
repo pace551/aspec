@@ -22,8 +22,8 @@ jobs:
         run: python3 checks/lint-framework.py
       - name: Check-script unit tests
         run: python3 -m unittest discover -s checks -p "test_*.py" -v
-      - name: Ruff over check scripts
-        run: ruff check checks/
+      - name: Ruff over check scripts (house config in pyproject.toml, STK-PY-03)
+        run: ruff check checks/ && ruff format --check checks/
       - name: Shell syntax
         run: bash -n checks/*.sh hooks/*.sh templates/scaffolds/_common/install-git-hooks.sh templates/scaffolds/_common/githooks/*
   gitleaks:

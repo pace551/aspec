@@ -18,7 +18,10 @@ KEYS = json.loads((ROOT / "checks" / "stack-keys.json").read_text())
 def select(stacks: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(SELECT), "--tier", "T3", "--stacks", stacks],
-        capture_output=True, text=True, check=False)
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
 
 def selected_ids(proc: subprocess.CompletedProcess) -> set[str]:
@@ -53,14 +56,12 @@ class StackKeyTests(unittest.TestCase):
 class StackKeySourceTests(unittest.TestCase):
     def test_every_standard_stack_is_canonical(self):
         index = json.loads((ROOT / "index.json").read_text())
-        used = {s for e in index["standards"] if e["stacks"] != "all"
-                for s in e["stacks"]}
+        used = {s for e in index["standards"] if e["stacks"] != "all" for s in e["stacks"]}
         self.assertLessEqual(used, set(KEYS))
 
     def test_authoring_doc_lists_canonical_keys(self):
         text = (ROOT / "templates" / "AUTHORING.md").read_text()
-        item = re.search(r"8\. \*\*Stack keys vocabulary\*\*(.*?)\n9\. ", text,
-                         re.DOTALL)
+        item = re.search(r"8\. \*\*Stack keys vocabulary\*\*(.*?)\n9\. ", text, re.DOTALL)
         self.assertIsNotNone(item)
         documented = set(re.findall(r"`([a-z][a-z-]*)`", item.group(1))) - {"all"}
         self.assertEqual(documented, set(KEYS))

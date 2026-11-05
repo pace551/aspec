@@ -1,0 +1,42 @@
+# ASPEC framework tooling: a script collection (STK-PY-01), not an installable package.
+# checks/*.py are standalone scripts run by path and import no first-party module, so
+# there's no src/ layout and nothing to build; this file pins the toolchain and holds
+# its config. Set up: python3 -m venv .venv && .venv/bin/pip install --group dev
+[project]
+name = "aspec"
+version = "0.2.0"  # informational; releases are versioned by release-please (version.txt)
+description = "ASPEC governance framework: standards, skills, checks and templates"
+requires-python = ">=3.11"
+dependencies = []
+
+# Exact pins: the framework's own tooling is run, not depended on (STK-PY-06).
+[dependency-groups]
+dev = [
+  "pyyaml==6.0.3",
+  "ruff==0.17.1",
+  "bandit==1.9.4",
+  "pip-audit==2.10.1",
+  "pytest==9.2.0",
+  "pytest-cov==7.1.0",
+]
+
+# House ruff config, verbatim per STK-PY-03. examples/ carry their own pyproject.toml
+# and governance; templates/ hold scaffolds with {{placeholders}}, not runnable code;
+# *.md: code samples in standards and docs are prose, not this project's code.
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".governance", "examples", "templates", "*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["checks"]
+
+[tool.coverage.run]
+source = ["checks"]
+omit = ["checks/test_*.py"]
+
+[tool.bandit]
+exclude_dirs = [".venv", ".governance", "examples", "templates", "checks/test_*.py"]

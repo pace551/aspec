@@ -78,9 +78,15 @@ class TriggerRegexTests(unittest.TestCase):
 def triggered(tier: str, brief: str) -> dict[str, str]:
     proc = subprocess.run(
         [sys.executable, str(SELECT), "--tier", tier, "--brief-text", brief],
-        capture_output=True, text=True, check=True)
-    return {s["id"]: s["matched_on"] for s in json.loads(proc.stdout)["selected"]
-            if s["matched_on"].startswith("triggers")}
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return {
+        s["id"]: s["matched_on"]
+        for s in json.loads(proc.stdout)["selected"]
+        if s["matched_on"].startswith("triggers")
+    }
 
 
 class SelectionTests(unittest.TestCase):

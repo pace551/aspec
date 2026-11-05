@@ -7,9 +7,11 @@ source scripts/python.sh
 
 "$PY" checks/lint-framework.py
 if [ "$(ruff --version 2>/dev/null)" = "ruff 0.17.1" ]; then
-  ruff check checks/
+  RUFF=(ruff)
 else
-  uvx ruff@0.17.1 check checks/   # the version framework CI pins
+  RUFF=(uvx ruff@0.17.1)   # the version framework CI pins
 fi
+"${RUFF[@]}" check checks/          # house config in pyproject.toml (STK-PY-03)
+"${RUFF[@]}" format --check checks/
 bash -n checks/*.sh hooks/*.sh templates/scaffolds/_common/install-git-hooks.sh \
   templates/scaffolds/_common/githooks/* scripts/*.sh

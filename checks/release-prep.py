@@ -91,9 +91,11 @@ def prepare(root: Path, day: dt.date) -> None:
     match = version_heading(version)
     existing = [s for s in sections if match.match(s[0])]
     if existing and pending:
-        die(f"CHANGELOG.md already has a {version} section and Unreleased has entries; "
+        die(
+            f"CHANGELOG.md already has a {version} section and Unreleased has entries; "
             "refusing to fold them into it (run on the release PR branch, where "
-            "release-please has bumped the version)")
+            "release-please has bumped the version)"
+        )
     if existing:  # rerun on an already-prepared branch: refresh the date only
         existing[0][0] = f"## {version} — {day.isoformat()}"
     else:
@@ -120,8 +122,7 @@ def main() -> None:
     parser.add_argument("--root", type=Path, default=Path("."))
     commands = parser.add_subparsers(dest="command", required=True)
     prep = commands.add_parser("prepare")
-    prep.add_argument("--date", type=dt.date.fromisoformat,
-                      default=dt.datetime.now(dt.UTC).date())
+    prep.add_argument("--date", type=dt.date.fromisoformat, default=dt.datetime.now(dt.UTC).date())
     note = commands.add_parser("notes")
     note.add_argument("version")
     args = parser.parse_args()
