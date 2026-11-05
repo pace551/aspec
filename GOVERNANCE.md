@@ -15,6 +15,7 @@ standards:
   - {id: DEV-REVIEW, version: 1.0.1}
   - {id: LEG-LICENSING, version: 1.0.3}
   - {id: OPS-FINOPS, version: 1.0.0}
+  - {id: OPS-RELEASE, version: 1.0.0}
   - {id: SEC-CRYPTO, version: 1.0.2}
   - {id: SEC-INPUT, version: 1.0.2}
   - {id: SEC-SAST, version: 1.0.3}
@@ -43,7 +44,8 @@ attestations:
   - {rule_id: OPS-FINOPS-02, followed: true, note: "no LLM API use in this repo, so no spend to cap", date: 2026-11-03}
   - {rule_id: OPS-FINOPS-04, followed: true, note: "no billing projects; GitHub Actions on a public repo is free", date: 2026-11-03}
   - {rule_id: OPS-FINOPS-05, followed: true, note: "no infrastructure", date: 2026-11-03}
-  - {rule_id: SEC-SECRETS-03, followed: true, note: "no secrets used; CI uses only the built-in GITHUB_TOKEN", date: 2026-11-03}
+  - {rule_id: OPS-RELEASE-01, followed: true, note: "semver via release-please from conventional commits; unchanged by this PR, which only swaps the token it runs with", date: 2026-11-04}
+  - {rule_id: SEC-SECRETS-03, followed: true, note: "one CI secret: the release GitHub App private key, held in GitHub Actions encrypted secrets (RELEASE_APP_PRIVATE_KEY) and never in a tracked file; no local credentials", date: 2026-11-04}
   - {rule_id: SEC-SECRETS-04, followed: true, note: "none observed this session; secret-scan and full-history gitleaks clean", date: 2026-11-03}
   - {rule_id: SEC-SECRETS-05, followed: true, note: "no secret known to have been exposed", date: 2026-11-03}
   - {rule_id: TST-FIXTURES-01, followed: true, note: "test data is synthetic; the noncompliant-fixture's secrets are deliberate fakes (.gitleaksignore)", date: 2026-11-03}
@@ -51,20 +53,20 @@ attestations:
   - {rule_id: TST-FIXTURES-03, followed: true, note: "no network libraries in tests (grep); git tests use local file:// remotes", date: 2026-11-03}
   - {rule_id: TST-FIXTURES-04, followed: false, note: "only the tests added this session (release-prep, git-gate) were checked: they build per-test data; older tests not audited", date: 2026-11-03}
   - {rule_id: TST-FIXTURES-05, followed: true, note: "no flaky test observed", date: 2026-11-03}
-  - {rule_id: TST-POLICY-01, followed: true, note: "this changeset has no bugfix; this session's script bugfixes (#21 guard, #25 checks) began with failing tests; workflow-YAML fixes (#22) can't be unit-tested locally", date: 2026-11-03}
+  - {rule_id: TST-POLICY-01, followed: true, note: "this changeset (release App token) has no bugfix and no script logic; workflow YAML can't be unit-tested locally (actionlint run instead)", date: 2026-11-04}
   - {rule_id: TST-POLICY-02, followed: true, note: "release-prep.py (#21) was written test-first", date: 2026-11-03}
   - {rule_id: TST-POLICY-03, followed: true, note: "scripts/*.sh are glue over existing gates; run directly, plus negative runs (Python 3.9 only, ruff violation)", date: 2026-11-03}
   - {rule_id: TST-POLICY-05, followed: true, note: "no coverage percentage gate anywhere in this repo's CI (grep)", date: 2026-11-03}
   - {rule_id: TST-VERIFY-01, followed: true, note: "lint (scripts/lint.sh), unit tests (scripts/test.sh), hooks on the real commit and push, then run-verification", date: 2026-11-03}
-  - {rule_id: TST-VERIFY-02, followed: true, note: "scripts run directly and through the installed git hooks on this PR's own commit and push", date: 2026-11-03}
+  - {rule_id: TST-VERIFY-02, followed: false, note: "release.yml App-token change passed actionlint, but its real run needs the GitHub App, variable and secret set up and a push to main; the first release-please run after merge is the end-to-end check", date: 2026-11-04}
   - {rule_id: TST-VERIFY-03, followed: true, note: "gate commands come from CLAUDE.md and mirror framework.yml", date: 2026-11-03}
-  - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran and what didn't", date: 2026-11-03}
+  - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran (actionlint, lint, test, ratchet, run-verification) and what didn't (a live release-please run)", date: 2026-11-04}
   - {rule_id: DEV-CI-03, followed: true, note: "no infra dirs and no web surface, so iac-scan, a11y and lighthouse don't apply", date: 2026-11-04}
   - {rule_id: DEV-CI-04, followed: true, note: "the 'Protect main' ruleset requires the gate checks on every PR; no bypassed merge in #13-#32", date: 2026-11-04}
   - {rule_id: DEV-DEPS-01, followed: false, note: "toolchain pinned exactly in pyproject.toml, but transitive dependencies aren't locked (no lockfile yet)", date: 2026-11-04}
   - {rule_id: DEV-DEPS-03, followed: true, note: "majors read before merging (#13: vitest 4, zod 4); action majors (checkout v7, setup-python v7, gitleaks-action v3) deferred to Dependabot PRs", date: 2026-11-04}
-  - {rule_id: DEV-DEPS-04, followed: true, note: "new deps are STK-PY's prescribed toolchain; all 37 installed packages permissively licensed (metadata check)", date: 2026-11-04}
-  - {rule_id: DEV-DEPS-05, followed: true, note: "versions from PyPI and GitHub releases; Dependabot PEP 735 support confirmed in dependabot-core's source", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-04, followed: true, note: "new CI dep actions/create-github-app-token: GitHub-maintained (actions org), MIT, active (pushed 2026-11-01); the documented way to mint App tokens in Actions", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-05, followed: true, note: "create-github-app-token v3.3.0 and its SHA from GitHub releases; inputs (client-id over deprecated app-id) from its action.yml; GITHUB_TOKEN approval behaviour from GitHub docs", date: 2026-11-04}
   - {rule_id: DEV-DEPS-06, followed: false, note: "no monthly /evolve-standards fast-lane run yet", date: 2026-11-04}
   - {rule_id: DEV-GIT-05, followed: false, note: "every change since #4 went through a PR (the ruleset now requires it); the 2026-09-15 bootstrap commits went straight to main", date: 2026-11-04}
   - {rule_id: DEV-GIT-06, followed: true, note: "this period's PRs (#13-#32) each carry what changed, why, and a test plan with results", date: 2026-11-04}
@@ -87,9 +89,9 @@ attestations:
   - {rule_id: SEC-SAST-02, followed: true, note: "sast job in framework.yml runs checks/sec-sast.sh (bandit)", date: 2026-11-04}
   - {rule_id: SEC-SAST-03, followed: true, note: "8 inline '# nosec' (B404/B603/B607 on argv-only subprocess calls) and 1 '# noqa: B905', each with its reason", date: 2026-11-04}
   - {rule_id: SEC-SAST-04, followed: true, note: "semgrep considered and skipped: bandit covers the only stack here (Python); revisit if checks/ gains another language", date: 2026-11-04}
-  - {rule_id: SEC-SECRETS-06, followed: true, note: "CI uses only the built-in GITHUB_TOKEN, least privilege per job; no static keys", date: 2026-11-04}
+  - {rule_id: SEC-SECRETS-06, followed: true, note: "release App installed on this repo only, with Contents/Pull requests/Issues write; each run mints a 1-hour installation token that is revoked at job end; GITHUB_TOKEN narrowed to contents: write", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-02, followed: false, note: "no lockfile: the toolchain's top-level pins are exact but its transitive dependencies aren't locked", date: 2026-11-04}
-  - {rule_id: SEC-SUPPLY-03, followed: true, note: "every action in .github/workflows is pinned to a commit SHA with a version comment (grep: no tag refs)", date: 2026-11-04}
+  - {rule_id: SEC-SUPPLY-03, followed: true, note: "every action in .github/workflows is pinned to a commit SHA with a version comment, including create-github-app-token (grep: no tag refs)", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-04, followed: false, note: "exact top-level pins as for an application, but without the lockfile that STK-PY-06 pairs with them", date: 2026-11-04}
   - {rule_id: SEC-SUPPLY-05, followed: true, note: "no curl-pipe-to-shell; the toolchain comes from PyPI, each package one STK-PY names", date: 2026-11-04}
   - {rule_id: STK-PY-01, followed: true, note: "pyproject.toml is the single config home; checks/ is a script collection: no script imports another first-party module (checked)", date: 2026-11-04}
@@ -124,7 +126,12 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
 - **Known shortfalls**, recorded as `followed: false` above (C9): no lockfile for the
   toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); no `/code-review`
   or `/security-review` rung (DEV-REVIEW-01/02); three scripts untested (TST-POLICY-04);
-  input validation by hand rather than a schema library (SEC-INPUT-01).
+  input validation by hand rather than a schema library (SEC-INPUT-01); the release
+  App-token switch not yet exercised by a live run (TST-VERIFY-02).
+- **Release secrets:** `release.yml` authenticates as a GitHub App installed on this repo
+  only — client ID in the `RELEASE_APP_CLIENT_ID` repository variable, private key in
+  the `RELEASE_APP_PRIVATE_KEY` Actions secret. Rotate the key in the App's settings and
+  replace the secret; nothing is stored locally.
 - **Approvals (C7):** pushing branches and opening PRs (2026-10-28), and squash-merging
   PRs whose Devin review is clean and required checks pass (2026-11-04). Release-please
   release PRs are merged by the maintainer, which is when releases happen.
