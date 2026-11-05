@@ -6,8 +6,8 @@ every future task, so this repo holds itself to its own strictest rules.
 ## Working in this repo
 
 - **Any edit to a file in `standards/` requires**: `version` bump (semver), a `## Changelog`
-  entry, then `python3 checks/build-index.py` (it refuses unbumped edits) and
-  `python3 checks/lint-framework.py` clean before commit.
+  entry, then `.venv/bin/python checks/build-index.py` (it refuses unbumped edits) and
+  `.venv/bin/python checks/lint-framework.py` clean before commit.
 - **Never hand-edit** `index.json`, `INDEX.md`, or `checks/.index-hashes.json` — generated.
 - **Framework-shape changes** (frontmatter schema, tier model, new family, enforcement
   layers) need an ADR in `decisions/` first.
@@ -42,22 +42,25 @@ examples/       per-stack worked examples + noncompliant-fixture (negative test)
 ## Commands
 
 ```bash
-python3 checks/build-index.py           # regenerate catalog
-python3 checks/build-index.py --check   # freshness check only
-python3 checks/lint-framework.py        # self-lint everything
-python3 -m unittest discover -s checks -p "test_*.py"   # check-script unit tests
-uvx ruff@0.17.1 check checks/           # same ruff version CI pins (framework.yml)
+python3.14 -m venv .venv && .venv/bin/pip install --group dev   # once: pinned toolchain (pyproject.toml)
+.venv/bin/python checks/build-index.py           # regenerate catalog
+.venv/bin/python checks/build-index.py --check   # freshness check only
+.venv/bin/python checks/lint-framework.py        # self-lint everything
+scripts/lint.sh                         # lint gate (pre-commit hook, CI lint): self-lint, ruff, shell syntax
+scripts/test.sh                         # test gate (pre-push hook, CI test): pytest + coverage.json
+.venv/bin/python checks/coverage-ratchet.py --check   # coverage never below .coverage-baseline
 checks/secret-scan.sh --staged          # pre-commit secret gate
-scripts/lint.sh                         # lint gate (pre-commit hook): lint, ruff, shell syntax
-scripts/test.sh                         # test gate (pre-push hook): the unit tests
-GOVERNANCE_DIR=$PWD python3 checks/run-verification.py --project .   # this repo's own /verify-compliance
+GOVERNANCE_DIR=$PWD .venv/bin/python checks/run-verification.py --project .   # this repo's own /verify-compliance
 ```
 
-Once per clone, install the git hooks (DEV-BOOTSTRAP-06):
+Tools run from `.venv/bin` by path, never by activation (STK-PY-08). Once per clone,
+install the git hooks (DEV-BOOTSTRAP-06):
 `GOVERNANCE_DIR=$PWD bash templates/scaffolds/_common/install-git-hooks.sh`. It creates
 the gitignored `.githooks/` and `.governance/`.
 
-This repo's own tier, pins, and approvals live in `GOVERNANCE.md` (T1).
+This repo's own tier, pins, and approvals live in `GOVERNANCE.md`: T1, published package
+(ADR-0005), Python script collection (STK-PY-01).
 
-Python 3.14, PyYAML available system-wide. `gitleaks` optional (scripts fall back to
-pattern scan); install with `brew install gitleaks` for full coverage.
+The skills run `checks/` scripts with the system `python3` (3.9 on macOS), so they stay
+3.9-compatible at runtime. `gitleaks` optional (scripts fall back to pattern scan);
+install with `brew install gitleaks` for full coverage.

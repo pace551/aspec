@@ -37,11 +37,20 @@ carry their own per-file changelogs.
   and the guide document the flag. Covered by `checks/test_published_package.py`.
 - `/bootstrap-repo` at T3+ now adds `renovate.json` (DEV-DEPS-02); a fresh T3 scaffold
   used to fail that check.
-- The framework repo now governs itself: a root `GOVERNANCE.md` (T1, eight pinned
-  standards, the maintainer's push/PR approval, attestations; `/verify-compliance`
-  passes), and `scripts/lint.sh` / `scripts/test.sh`, the hook gates, running the same
-  steps as the framework CI's self-lint job. Git hooks install per clone (see
-  CLAUDE.md); `.githooks/` and `.governance/` are gitignored here.
+- The framework repo now governs itself, as a T1 published package (ADR-0005) whose
+  Python is a STK-PY script collection. Its root `GOVERNANCE.md` pins 18 standards (the
+  T1 set, the opted-in supply-chain standards at T3 weight, and STK-PY), records the
+  maintainer's approvals (push/PR; merging PRs whose Devin review is clean and required
+  checks pass), and holds 66 attestations, 13 marked not followed with their reasons;
+  `/verify-compliance` passes all 29 checks. To get there: tools run from a `.venv`
+  built from `pyproject.toml`'s pinned dev group; `scripts/lint.sh` and
+  `scripts/test.sh` are the hook gates and the CI `lint`/`test` jobs; framework CI is
+  DEV-CI's T3 job set (`lint`, `typecheck` no-op, `test`, `coverage-ratchet`, `sast`
+  bandit, `sca` pip-audit, `gitleaks`) with actions pinned to commit SHAs; Dependabot
+  sends grouped weekly updates for actions and the pip toolchain; coverage, including
+  scripts run as subprocesses, has a committed baseline of 39.56%; argv-only subprocess
+  calls carry reasoned `# nosec`. Git hooks install per clone (see CLAUDE.md);
+  `.githooks/` and `.governance/` are gitignored here.
 - Verification fixes for git gates (DEV-BOOTSTRAP 1.0.2, DEV-CI 1.0.2, DEV-GIT 1.0.2).
   The hook checks (DEV-BOOTSTRAP-06, DEV-CI-02) looked only in `.git/hooks/`, so every
   repo whose hooks came from `install-git-hooks.sh` (`core.hooksPath` = `.githooks`)

@@ -25,7 +25,7 @@ import json
 import os
 import re
 import signal
-import subprocess
+import subprocess  # nosec B404 - argv-only subprocess use, audited below
 import sys
 import tempfile
 from datetime import date, datetime
@@ -93,7 +93,7 @@ def run_check(cmd: str, cwd: Path, env: dict, timeout: int) -> tuple[bool, str]:
     interrupted, so backgrounded builds/scanners don't outlive it. Output goes to temp
     files, not pipes, so a descendant that escapes the group can't stall the report."""
     with tempfile.TemporaryFile() as out, tempfile.TemporaryFile() as err:
-        proc = subprocess.Popen(
+        proc = subprocess.Popen(  # nosec B603 B607 - runs standards' own verification cmds by design
             ["bash", "-c", cmd], cwd=cwd, env=env, stdout=out, stderr=err, start_new_session=True
         )
         timed_out = False

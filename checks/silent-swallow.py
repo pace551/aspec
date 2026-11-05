@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import ast
 import re
-import subprocess
+import subprocess  # nosec B404 - argv-only subprocess use, audited below
 import sys
 from pathlib import Path
 
@@ -33,7 +33,7 @@ MARKER = "swallow-ok:"
 
 def project_files(root: Path) -> list[Path]:
     try:
-        out = subprocess.run(
+        out = subprocess.run(  # nosec B603 B607 - fixed argv (git ls-files), no shell
             ["git", "ls-files", "-z"], cwd=root, capture_output=True, text=True, check=True
         ).stdout
         return [root / p for p in out.split("\0") if p]

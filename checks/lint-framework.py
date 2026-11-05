@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
+import subprocess  # nosec B404 - argv-only subprocess use, audited below
 import sys
 from pathlib import Path
 
@@ -298,7 +298,7 @@ def main() -> int:
         errors = hard
     else:
         # Index freshness (delegated to build-index --check)
-        check = subprocess.run(
+        check = subprocess.run(  # nosec B603 - this repo's own build-index.py, no shell
             [sys.executable, str(ROOT / "checks" / "build-index.py"), "--check"],
             capture_output=True,
             text=True,

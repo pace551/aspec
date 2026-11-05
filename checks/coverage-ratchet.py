@@ -39,9 +39,9 @@ def read_coverage(root: Path) -> float | None:
         return float(json.loads(cs.read_text())["total"]["lines"]["pct"])
     go = root / "coverage.out"
     if go.exists():
-        import subprocess
+        import subprocess  # nosec B404 - argv-only subprocess use, audited below
 
-        out = subprocess.run(
+        out = subprocess.run(  # nosec B603 B607 - fixed argv (go tool cover), no shell
             ["go", "tool", "cover", f"-func={go}"],
             capture_output=True,
             text=True,

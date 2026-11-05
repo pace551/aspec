@@ -36,7 +36,9 @@ testpaths = ["checks"]
 
 [tool.coverage.run]
 source = ["checks"]
-omit = ["checks/test_*.py"]
+omit = ["*/test_*.py"]
+# most tests run the scripts as subprocesses; measure those too
+patch = ["subprocess"]
 
 [tool.bandit]
-exclude_dirs = [".venv", ".governance", "examples", "templates", "checks/test_*.py"]
+exclude_dirs = [".venv", ".governance", "examples", "templates", "*/test_*.py"]

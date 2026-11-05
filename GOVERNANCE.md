@@ -2,23 +2,35 @@
 
 ```yaml
 tier: T1
-classified: 2026-11-03
+classified: 2026-11-04
 tier_override: null
-stacks: []
+published_package: true
+stacks: [python]
 standards:
   - {id: AI-SECURITY, version: 1.0.1}
-  - {id: DEV-BOOTSTRAP, version: 1.0.2}
-  - {id: DEV-GIT, version: 1.0.2}
+  - {id: DEV-BOOTSTRAP, version: 1.0.3}
+  - {id: DEV-CI, version: 1.0.3}
+  - {id: DEV-DEPS, version: 1.0.1}
+  - {id: DEV-GIT, version: 1.0.3}
+  - {id: DEV-REVIEW, version: 1.0.1}
+  - {id: LEG-LICENSING, version: 1.0.3}
   - {id: OPS-FINOPS, version: 1.0.0}
-  - {id: SEC-SECRETS, version: 1.0.2}
-  - {id: TST-FIXTURES, version: 1.0.1}
-  - {id: TST-POLICY, version: 1.0.0}
-  - {id: TST-VERIFY, version: 1.0.0}
+  - {id: SEC-CRYPTO, version: 1.0.2}
+  - {id: SEC-INPUT, version: 1.0.2}
+  - {id: SEC-SAST, version: 1.0.3}
+  - {id: SEC-SECRETS, version: 1.0.3}
+  - {id: SEC-SUPPLY, version: 1.0.2}
+  - {id: STK-PY, version: 1.0.3}
+  - {id: TST-FIXTURES, version: 1.0.2}
+  - {id: TST-POLICY, version: 1.0.1}
+  - {id: TST-RATCHET, version: 1.0.3}
+  - {id: TST-VERIFY, version: 1.0.1}
 waivers: []
 external_action_approvals:
   - {action: "push branches and open pull requests on github.com/pace551/aspec", granted: 2026-10-28}
+  - {action: "squash-merge PRs whose Devin review has no open finding or flag and whose required checks pass (release-please PRs excluded)", granted: 2026-11-04}
 pii_inventory: n/a
-last_verified: 2026-11-03
+last_verified: 2026-11-04
 attestations:
   - {rule_id: AI-SECURITY-01, followed: false, note: "not audited: skills and hooks haven't been reviewed for untrusted-content handling; no code here calls an LLM", date: 2026-11-03}
   - {rule_id: AI-SECURITY-02, followed: false, note: "not audited: the repo ships no agent tool set of its own; Claude Code permission settings live outside it", date: 2026-11-03}
@@ -47,6 +59,45 @@ attestations:
   - {rule_id: TST-VERIFY-02, followed: true, note: "scripts run directly and through the installed git hooks on this PR's own commit and push", date: 2026-11-03}
   - {rule_id: TST-VERIFY-03, followed: true, note: "gate commands come from CLAUDE.md and mirror framework.yml", date: 2026-11-03}
   - {rule_id: TST-VERIFY-04, followed: true, note: "the PR description lists what ran and what didn't", date: 2026-11-03}
+  - {rule_id: DEV-CI-03, followed: true, note: "no infra dirs and no web surface, so iac-scan, a11y and lighthouse don't apply", date: 2026-11-04}
+  - {rule_id: DEV-CI-04, followed: true, note: "the 'Protect main' ruleset requires the gate checks on every PR; no bypassed merge in #13-#32", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-01, followed: false, note: "toolchain pinned exactly in pyproject.toml, but transitive dependencies aren't locked (no lockfile yet)", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-03, followed: true, note: "majors read before merging (#13: vitest 4, zod 4); action majors (checkout v7, setup-python v7, gitleaks-action v3) deferred to Dependabot PRs", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-04, followed: true, note: "new deps are STK-PY's prescribed toolchain; all 37 installed packages permissively licensed (metadata check)", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-05, followed: true, note: "versions from PyPI and GitHub releases; Dependabot PEP 735 support confirmed in dependabot-core's source", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-06, followed: false, note: "no monthly /evolve-standards fast-lane run yet", date: 2026-11-04}
+  - {rule_id: DEV-GIT-05, followed: false, note: "every change since #4 went through a PR (the ruleset now requires it); the 2026-09-15 bootstrap commits went straight to main", date: 2026-11-04}
+  - {rule_id: DEV-GIT-06, followed: true, note: "this period's PRs (#13-#32) each carry what changed, why, and a test plan with results", date: 2026-11-04}
+  - {rule_id: DEV-REVIEW-01, followed: false, note: "every PR gets Devin Review and self-review; the T3 /code-review rung that published-package weight implies hasn't been run", date: 2026-11-04}
+  - {rule_id: DEV-REVIEW-02, followed: false, note: "/security-review not run; changes here touch no auth or crypto, and input handling only as YAML parsing", date: 2026-11-04}
+  - {rule_id: DEV-REVIEW-03, followed: true, note: "every Devin finding and flag on #17-#32 was fixed or answered on the PR", date: 2026-11-04}
+  - {rule_id: DEV-REVIEW-04, followed: true, note: "script bugfixes (#21, #25, #29, #31) began with failing tests", date: 2026-11-04}
+  - {rule_id: LEG-LICENSING-02, followed: true, note: "no copyleft dependency: license metadata of all 37 toolchain packages checked", date: 2026-11-04}
+  - {rule_id: LEG-LICENSING-03, followed: true, note: "BSL 1.1 LICENSE at the root", date: 2026-11-04}
+  - {rule_id: LEG-LICENSING-04, followed: true, note: "no bundled fonts, icons or images", date: 2026-11-04}
+  - {rule_id: SEC-CRYPTO-01, followed: true, note: "no cryptography in checks/, hooks/ or scripts/", date: 2026-11-04}
+  - {rule_id: SEC-CRYPTO-03, followed: true, note: "no network traffic of its own; installs and API calls use HTTPS", date: 2026-11-04}
+  - {rule_id: SEC-CRYPTO-04, followed: true, note: "no cryptographic choices made", date: 2026-11-04}
+  - {rule_id: SEC-CRYPTO-05, followed: true, note: "no key material", date: 2026-11-04}
+  - {rule_id: SEC-INPUT-01, followed: false, note: "inputs (GOVERNANCE.md, frontmatter) go through yaml.safe_load with hand-written validation in lint-framework and run-verification, not a schema library", date: 2026-11-04}
+  - {rule_id: SEC-INPUT-04, followed: true, note: "no untrusted external input; paths come from the local user's CLI arguments", date: 2026-11-04}
+  - {rule_id: SEC-INPUT-05, followed: true, note: "no file uploads", date: 2026-11-04}
+  - {rule_id: SEC-INPUT-06, followed: true, note: "no URL fetching", date: 2026-11-04}
+  - {rule_id: SEC-INPUT-07, followed: true, note: "no HTML rendering", date: 2026-11-04}
+  - {rule_id: SEC-SAST-02, followed: true, note: "sast job in framework.yml runs checks/sec-sast.sh (bandit)", date: 2026-11-04}
+  - {rule_id: SEC-SAST-03, followed: true, note: "8 inline '# nosec' (B404/B603/B607 on argv-only subprocess calls) and 1 '# noqa: B905', each with its reason", date: 2026-11-04}
+  - {rule_id: SEC-SAST-04, followed: true, note: "semgrep considered and skipped: bandit covers the only stack here (Python); revisit if checks/ gains another language", date: 2026-11-04}
+  - {rule_id: SEC-SECRETS-06, followed: true, note: "CI uses only the built-in GITHUB_TOKEN, least privilege per job; no static keys", date: 2026-11-04}
+  - {rule_id: SEC-SUPPLY-02, followed: false, note: "no lockfile: the toolchain's top-level pins are exact but its transitive dependencies aren't locked", date: 2026-11-04}
+  - {rule_id: SEC-SUPPLY-03, followed: true, note: "every action in .github/workflows is pinned to a commit SHA with a version comment (grep: no tag refs)", date: 2026-11-04}
+  - {rule_id: SEC-SUPPLY-04, followed: false, note: "exact top-level pins as for an application, but without the lockfile that STK-PY-06 pairs with them", date: 2026-11-04}
+  - {rule_id: SEC-SUPPLY-05, followed: true, note: "no curl-pipe-to-shell; the toolchain comes from PyPI, each package one STK-PY names", date: 2026-11-04}
+  - {rule_id: STK-PY-01, followed: true, note: "pyproject.toml is the single config home; checks/ is a script collection: no script imports another first-party module (checked)", date: 2026-11-04}
+  - {rule_id: STK-PY-07, followed: true, note: "the toolchain is exactly STK-PY's (ruff, bandit, pip-audit, pytest, pytest-cov) plus PyYAML", date: 2026-11-04}
+  - {rule_id: STK-PY-08, followed: true, note: "CLAUDE.md, scripts/ and CI call .venv/bin paths; the skills' system-python3 runs are by other projects, not this repo's commands", date: 2026-11-04}
+  - {rule_id: TST-POLICY-04, followed: false, note: "coverage of checks/ is 39.56%; build-index.py, import-cycles.py and silent-swallow.py have no tests", date: 2026-11-04}
+  - {rule_id: TST-RATCHET-03, followed: true, note: "baseline first set at 39.56% in this change; never lowered", date: 2026-11-04}
+  - {rule_id: TST-RATCHET-04, followed: true, note: "scripts/test.sh writes coverage.json (with subprocess-run scripts measured); coverage artifacts are gitignored", date: 2026-11-04}
 ```
 
 ## Notes
@@ -56,23 +107,24 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
 - **Tier T1** by the rubric: no payment or PII (line 1), no deployed service or running
   system others use (line 2), and the output is a framework rather than an analysis
   (line 3).
-- **Known gap: the published-package carve-out is not verified.** This repo is a
-  published package, so tiers.md says its supply-chain families (SEC, TST, DEV, LEG
-  licensing) carry T3 weight. The tooling can't express that yet: pinning those standards
-  under `tier: T1` would make run-verification skip their T3-scoped checks, and `tier: T3`
-  would wrongly pull in service-only standards. So the pins above are the plain T1 set,
-  and `last_verified` covers only them. Partial coverage outside verification: framework
-  CI (self-lint, full-history gitleaks, pinned ruff), SHA-pinned actions in the write-token
-  release workflow, least-privilege `GITHUB_TOKEN` permissions, and Dependabot. Closing
-  the gap needs carve-out support in select-standards and run-verification (an ADR first,
-  since it changes the tier model).
-- **No stacks:** the root has no stack manifest. `checks/` scripts are covered by
-  `scripts/lint.sh` (pre-commit) and `scripts/test.sh` (pre-push), which run the same steps
-  as the framework CI's self-lint job. `examples/` carry their own GOVERNANCE.md files.
+- **Published package** (`published_package: true`, ADR-0005): others install ASPEC, so
+  the standards that opt in (SEC, TST, DEV, LEG licensing) are selected and verified at
+  T3 weight. This replaces the earlier "known gap" note: `last_verified` now covers them.
+- **Stack: python, as a script collection** (STK-PY-01): `checks/*.py` are standalone
+  scripts run by path, none importing another first-party module, so there is no `src/`
+  layout. `pyproject.toml` pins the toolchain (`[dependency-groups] dev`) and holds its
+  config; tools run from `.venv/bin` (STK-PY-08).
+- **Gates**: `scripts/lint.sh` (pre-commit) and `scripts/test.sh` (pre-push) are the same
+  scripts CI's `lint` and `test` jobs run. CI adds `coverage-ratchet`, `sast` (bandit),
+  `sca` (pip-audit), `gitleaks` and a no-op `typecheck` (DEV-CI-01's T3 job set).
+  Coverage is measured including subprocess-run scripts; the baseline is 39.56%.
 - **Git hooks** are per clone: install with
   `GOVERNANCE_DIR=$PWD bash templates/scaffolds/_common/install-git-hooks.sh` (see
-  CLAUDE.md). There's no `.coverage-baseline`, so pre-push skips the ratchet; coverage
-  isn't tracked for `checks/`.
-- **Approvals (C7):** pushing branches and opening PRs was approved by the maintainer on
-  2026-10-28. Merging stays with the maintainer; releases happen when the maintainer merges
-  the release-please PR.
+  CLAUDE.md).
+- **Known shortfalls**, recorded as `followed: false` above (C9): no lockfile for the
+  toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); no `/code-review`
+  or `/security-review` rung (DEV-REVIEW-01/02); three scripts untested (TST-POLICY-04);
+  input validation by hand rather than a schema library (SEC-INPUT-01).
+- **Approvals (C7):** pushing branches and opening PRs (2026-10-28), and squash-merging
+  PRs whose Devin review is clean and required checks pass (2026-11-04). Release-please
+  release PRs are merged by the maintainer, which is when releases happen.
