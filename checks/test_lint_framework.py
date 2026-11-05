@@ -84,5 +84,95 @@ class CorpusTests(unittest.TestCase):
                 self.assertFalse(lint.hardcoded_body_path(text[m.end() :]), f"{path.name} body")
 
 
+class ReferenceIntegrityTests(unittest.TestCase):
+    """Docs, skills and standards must not name framework files or ADRs that don't exist,
+    nor tell a user to pip-install a package the toolchain doesn't pin."""
+
+    ROOT = Path(__file__).resolve().parent.parent
+
+    def test_dangling_framework_paths_are_flagged(self):
+        for text in (
+            "run `checks/no-such-script.sh` first",
+            "copy $GOV/templates/ci/cobol.yml",
+            'bash "$GOVERNANCE_DIR/checks/gone.py"',
+            "see skills/no-such-skill/SKILL.md.",
+            "decided in ADR-0099",
+            'bash "$GOVERNANCE_DIR"/checks/gone.sh',
+            "copy checks/test_gone*.py",
+        ):
+            with self.subTest(text=text):
+                self.assertTrue(lint.dangling_refs(text, self.ROOT), text)
+
+    def test_existing_and_placeholder_paths_pass(self):
+        for text in (
+            "run `checks/secret-scan.sh`, then checks/build-index.py.",
+            "copy $GOV/templates/ci/python.yml to .github/workflows/ci.yml",
+            "templates/scaffolds/{stack}/ and templates/ci/<stack>.yml",
+            "skills/govern/SKILL.md and ADR-0005",
+            "a project's own scripts/deploy.sh or docs/threat-model.md",
+            "https://github.com/pace551/aspec/blob/main/checks/x.py",
+            "run checks/test_*.py and checks/verify-{name}.sh",
+            "run checks/test_?????_*.py or checks/test_[a-z]*.py",
+            "Did you run checks/install.sh? Then checks/secret-scan.sh?",
+            "a one-character glob: checks/install.s?",
+            "[raw](https://x.invalid/checks/a.sh) and [link](../checks/install.sh?raw=1)",
+            "render templates/email/receipt.html or skills/ in the project",
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(lint.dangling_refs(text, self.ROOT), [], text)
+
+    def test_relative_links_resolve_from_their_file(self):
+        doc = self.ROOT / "docs" / "GUIDE.md"
+        self.assertEqual(lint.dangling_refs("[x](../checks/secret-scan.sh)", self.ROOT, doc), [])
+        self.assertEqual(
+            lint.dangling_refs("[x](../checks/gone.sh)", self.ROOT, doc), ["checks/gone.sh"]
+        )
+        self.assertEqual(
+            lint.dangling_refs("[x](../checks/deleted*.py)", self.ROOT, doc), ["checks/deleted*.py"]
+        )
+        self.assertEqual(lint.dangling_refs("[x](../checks/test_*.py)", self.ROOT, doc), [])
+
+    def test_adrs_are_checked_outside_standards_only(self):
+        std = self.ROOT / "standards" / "process" / "dev-adr.md"
+        skill = self.ROOT / "skills" / "govern" / "SKILL.md"
+        self.assertEqual(lint.dangling_refs("record it as ADR-0099", self.ROOT, std), [])
+        self.assertEqual(lint.dangling_refs("see ADR-0099", self.ROOT, skill), ["ADR-0099"])
+
+    def test_pip_installs_must_name_pinned_packages(self):
+        pinned = {"pyyaml", "ruff"}
+        clean = [
+            "`pip install -q pyyaml ruff`",
+            "```\npython3 -m pip install --group dev\n```",
+            "no manual <code>pip install</code>",
+            "`pip3 install PyYAML==6.0.3`",
+            '<pre>pip install "ruff" \\\n  (pyyaml)</pre>',
+            "`pip install --upgrade pip`",
+            "`pip install pyyaml && echo ready`",
+            "`pip install ruff; ruff check .`",
+            "pip install ruff and then run it",  # prose isn't a command: only code is read
+        ]
+        for text in clean:
+            with self.subTest(text=text):
+                self.assertEqual(lint.unpinned_pip_installs(text, pinned), [])
+        self.assertEqual(
+            lint.unpinned_pip_installs("`pip install pyyaml flake8`", pinned), ["flake8"]
+        )
+        marker = "`pip install \"ruff; python_version >= '3.11'\" flake8`"
+        self.assertEqual(lint.unpinned_pip_installs(marker, pinned), ["flake8"])
+        marked = "`pip install \"flake8; python_version >= '3.11'\"`"
+        self.assertEqual(lint.unpinned_pip_installs(marked, pinned), ["flake8"])
+
+    def test_pyproject_packages_are_read(self):
+        pinned = lint.pyproject_packages(self.ROOT)
+        self.assertIn("pyyaml", pinned)
+        self.assertIn("ruff", pinned)
+
+    def test_the_framework_has_no_dangling_references(self):
+        for path in lint.reference_files(self.ROOT):
+            with self.subTest(path=str(path.relative_to(self.ROOT))):
+                text = path.read_text(encoding="utf-8", errors="replace")
+                self.assertEqual(lint.dangling_refs(text, self.ROOT, path), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -125,7 +125,7 @@ This manifest governs the ASPEC framework repo itself, not a project that uses i
 - **Known shortfalls**, recorded as `followed: false` above (C9): no lockfile for the
   toolchain's transitive dependencies (DEV-DEPS-01, SEC-SUPPLY-02/04); `/code-review` and
   `/security-review` required only since 2026-11-05, with earlier merges not yet reviewed
-  retroactively (DEV-REVIEW-01/02); two scripts untested (TST-POLICY-04);
+  retroactively (DEV-REVIEW-01/02); test depth at T3 weight not yet assessed (TST-POLICY-04);
   input validation by hand rather than a schema library (SEC-INPUT-01).
 - **Release secrets:** `release.yml` authenticates as a GitHub App installed on this repo
   only — client ID in the `RELEASE_APP_CLIENT_ID` repository variable, private key in
