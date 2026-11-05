@@ -26,9 +26,17 @@ ROOT = Path(__file__).resolve().parent.parent
 STANDARDS = ROOT / "standards"
 
 FAMILY_DIRS = {
-    "SEC": "security", "TST": "testing", "ARC": "architecture", "STK": "stacks",
-    "INF": "infra", "OPS": "operations", "DEV": "process", "UX": "ux",
-    "DATA": "data", "AI": "ai", "LEG": "legal",
+    "SEC": "security",
+    "TST": "testing",
+    "ARC": "architecture",
+    "STK": "stacks",
+    "INF": "infra",
+    "OPS": "operations",
+    "DEV": "process",
+    "UX": "ux",
+    "DATA": "data",
+    "AI": "ai",
+    "LEG": "legal",
 }
 FAMILIES = set(FAMILY_DIRS)
 STACK_KEYS = set(json.loads((ROOT / "checks" / "stack-keys.json").read_text()))
@@ -44,18 +52,34 @@ RULE_HEADING_RE = re.compile(r"^### ([A-Z]+-[A-Z0-9]+-\d{2}) — ", re.MULTILINE
 HOME_PATH_RE = re.compile(r"(~|\$HOME|\$\{HOME\}|/Users/[^/\s]+|/home/[^/\s]+)/")
 GOV_PATH_RE = re.compile(
     r"(?:~|\$HOME|\$\{HOME\}|/Users/[^/\s]+|/home/[^/\s]+)"
-    r"/\S*?/(?:checks|hooks|templates)/")
+    r"/\S*?/(?:checks|hooks|templates)/"
+)
 ABS_GOV_PATH_RE = re.compile(
     r"(?<![\w}$.~:/-])/(?:[^\s\"'`/]+/)*"
-    r"(?:(?:checks|hooks)/[\w.-]+\.(?:sh|py)\b|templates/(?:scaffolds|ci)/)")
+    r"(?:(?:checks|hooks)/[\w.-]+\.(?:sh|py)\b|templates/(?:scaffolds|ci)/)"
+)
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
 REQUIRED_KEYS = [
-    "id", "title", "family", "version", "status", "tiers", "stacks",
-    "triggers", "requires", "verification", "last_review",
+    "id",
+    "title",
+    "family",
+    "version",
+    "status",
+    "tiers",
+    "stacks",
+    "triggers",
+    "requires",
+    "verification",
+    "last_review",
 ]
 REQUIRED_SECTIONS = [
-    "## Abstract", "## Normative Rules", "## Verification", "## Worked Example",
-    "## Anti-Patterns", "## References", "## Changelog",
+    "## Abstract",
+    "## Normative Rules",
+    "## Verification",
+    "## Worked Example",
+    "## Anti-Patterns",
+    "## References",
+    "## Changelog",
 ]
 
 
@@ -73,8 +97,12 @@ def published_errors(meta: dict, rel: str) -> list[str]:
     value = meta.get("published")
     if value is None:
         if meta.get("family") in PUBLISHED_FAMILIES:
-            return [(f"{rel}: frontmatter missing `published` (required for "
-                     f"{', '.join(sorted(PUBLISHED_FAMILIES))} standards, ADR-0005)")]
+            return [
+                (
+                    f"{rel}: frontmatter missing `published` (required for "
+                    f"{', '.join(sorted(PUBLISHED_FAMILIES))} standards, ADR-0005)"
+                )
+            ]
         return []
     if value not in TIER_VALUES:
         return [f"{rel}: published must be one of {sorted(TIER_VALUES)}"]
@@ -92,7 +120,7 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     except yaml.YAMLError as exc:
         return [f"{rel}: frontmatter YAML error: {exc}"]
     errs: list[str] = []
-    body = text[m.end():]
+    body = text[m.end() :]
 
     for key in REQUIRED_KEYS:
         if key not in meta:
@@ -126,8 +154,9 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     elif isinstance(stacks, list):
         for s in stacks:
             if s not in STACK_KEYS:
-                errs.append(f"{rel}: unknown stack key `{s}` (allowed: "
-                            f"{', '.join(sorted(STACK_KEYS))})")
+                errs.append(
+                    f"{rel}: unknown stack key `{s}` (allowed: {', '.join(sorted(STACK_KEYS))})"
+                )
     triggers = meta.get("triggers")
     if not (isinstance(triggers, list) and triggers):
         errs.append(f"{rel}: triggers must be a non-empty list")
@@ -143,8 +172,10 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
     # Verification block
     verification = meta.get("verification") or []
     if not verification:
-        errs.append(f"{rel}: verification must be non-empty (use a layer:A attestation "
-                    f"entry for advisory-only standards)")
+        errs.append(
+            f"{rel}: verification must be non-empty (use a layer:A attestation "
+            f"entry for advisory-only standards)"
+        )
     verified_rules: set[str] = set()
     for i, v in enumerate(verification):
         if not isinstance(v, dict) or not all(k in v for k in ("cmd", "expect", "layer")):
@@ -154,18 +185,23 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
             errs.append(f"{rel}: verification[{i}] layer `{v['layer']}` not in H/G/A")
         is_attest = str(v["cmd"]).startswith("attest: ")
         if is_attest != (v["layer"] == "A"):
-            errs.append(f"{rel}: verification[{i}] — `attest: ` cmd prefix and "
-                        f"`layer: A` must appear together (got layer {v['layer']})")
+            errs.append(
+                f"{rel}: verification[{i}] — `attest: ` cmd prefix and "
+                f"`layer: A` must appear together (got layer {v['layer']})"
+            )
         if is_attest and len(v.get("rules") or []) != 1:
-            errs.append(f"{rel}: verification[{i}] — attestation entries carry exactly "
-                        f"one rule id (got {len(v.get('rules') or [])})")
+            errs.append(
+                f"{rel}: verification[{i}] — attestation entries carry exactly "
+                f"one rule id (got {len(v.get('rules') or [])})"
+            )
         if not is_attest and hardcoded_cmd_path(str(v["cmd"])):
-            errs.append(f'{rel}: verification[{i}] cmd hardcodes a home/absolute '
-                        f'path — reference framework scripts as '
-                        f'"$GOVERNANCE_DIR/checks/…"')
+            errs.append(
+                f"{rel}: verification[{i}] cmd hardcodes a home/absolute "
+                f"path — reference framework scripts as "
+                f'"$GOVERNANCE_DIR/checks/…"'
+            )
         vtiers = v.get("tiers")
-        if vtiers is not None and (not isinstance(vtiers, list)
-                                   or not set(vtiers) <= TIER_NAMES):
+        if vtiers is not None and (not isinstance(vtiers, list) or not set(vtiers) <= TIER_NAMES):
             errs.append(f"{rel}: verification[{i}] tiers must be a subset of T1–T4")
         verified_rules.update(v.get("rules") or [])
 
@@ -187,31 +223,40 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
             errs.append(f"{rel}: verification references unknown rule `{vr}`")
 
     if hardcoded_body_path(body):
-        errs.append(f"{rel}: body hardcodes a path into the governance repo — "
-                    f"use $GOVERNANCE_DIR")
+        errs.append(f"{rel}: body hardcodes a path into the governance repo — use $GOVERNANCE_DIR")
 
     # Tier-line grammar + enforcement backing: every rule block carries exactly one
     # `**Tiers**: … — **Layer**: …` line; rules required at any tier need H/G
     # verification coverage or an explicit `**Layer**: A (attestation)` marker.
     blocks = RULE_HEADING_RE.split(body)  # [pre, id1, block1, id2, block2, ...]
-    for rid, block in zip(blocks[1::2], blocks[2::2]):
+    # re.split with one group always pairs ids with blocks; strict= would need Python
+    # 3.10, and the skills run this under the system python3, which can be older.
+    for rid, block in zip(blocks[1::2], blocks[2::2]):  # noqa: B905
         m_tier = TIER_LINE_RE.search(block)
         if not m_tier:
-            errs.append(f"{rel}: rule {rid} missing tier line "
-                        f"(`**Tiers**: … — **Layer**: …`)")
+            errs.append(f"{rel}: rule {rid} missing tier line (`**Tiers**: … — **Layer**: …`)")
             continue
         tier_spec, layer_spec = m_tier.group(1), m_tier.group(2)
         if layer_spec[0] not in "HGA":
             errs.append(f"{rel}: rule {rid} layer spec must start with H, G, or A")
-        if not re.fullmatch(r"(all|[T1-4·–/,& ]+)\s*(required|advisory|n/a)"
-                            r"(\s*·\s*[T1-4·–/,& ]+\s*(required|advisory|n/a))*",
-                            tier_spec):
-            errs.append(f"{rel}: rule {rid} tier spec `{tier_spec}` doesn't match the "
-                        f"grammar (e.g. `all required`, `T1 advisory · T2–T4 required`)")
-        if "required" in tier_spec and rid not in verified_rules \
-                and not (layer_spec.startswith("A") and "attestation" in layer_spec):
-            errs.append(f"{rel}: required rule {rid} has no H/G verification and no "
-                        f"explicit `**Layer**: A (attestation)` marker")
+        if not re.fullmatch(
+            r"(all|[T1-4·–/,& ]+)\s*(required|advisory|n/a)"
+            r"(\s*·\s*[T1-4·–/,& ]+\s*(required|advisory|n/a))*",
+            tier_spec,
+        ):
+            errs.append(
+                f"{rel}: rule {rid} tier spec `{tier_spec}` doesn't match the "
+                f"grammar (e.g. `all required`, `T1 advisory · T2–T4 required`)"
+            )
+        if (
+            "required" in tier_spec
+            and rid not in verified_rules
+            and not (layer_spec.startswith("A") and "attestation" in layer_spec)
+        ):
+            errs.append(
+                f"{rel}: required rule {rid} has no H/G verification and no "
+                f"explicit `**Layer**: A (attestation)` marker"
+            )
 
     # Sections & prose discipline
     for sec in REQUIRED_SECTIONS:
@@ -219,8 +264,7 @@ def lint_file(path: Path, all_ids: set[str]) -> list[str]:
             errs.append(f"{rel}: missing section `{sec}`")
     abstract = re.search(r"## Abstract\n+(.*?)\n## ", body, re.DOTALL)
     if abstract and len(abstract.group(1).split()) > 120:
-        errs.append(f"{rel}: abstract over 120 words "
-                    f"({len(abstract.group(1).split())})")
+        errs.append(f"{rel}: abstract over 120 words ({len(abstract.group(1).split())})")
     version = str(meta.get("version", ""))
     changelog = body.split("## Changelog", 1)[-1]
     if version and f"**{version}**" not in changelog:
@@ -256,7 +300,9 @@ def main() -> int:
         # Index freshness (delegated to build-index --check)
         check = subprocess.run(
             [sys.executable, str(ROOT / "checks" / "build-index.py"), "--check"],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if check.returncode != 0:
             errors.append(check.stdout.strip() or "index.json stale")

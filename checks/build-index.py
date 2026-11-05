@@ -26,9 +26,17 @@ INDEX_JSON = ROOT / "index.json"
 INDEX_MD = ROOT / "INDEX.md"
 
 FAMILY_NAMES = {
-    "SEC": "Security", "TST": "Testing", "ARC": "Architecture", "STK": "Stacks",
-    "INF": "Infrastructure", "OPS": "Operations", "DEV": "Process", "UX": "UI/UX",
-    "DATA": "Data governance", "AI": "LLM concerns", "LEG": "Legal/commercial",
+    "SEC": "Security",
+    "TST": "Testing",
+    "ARC": "Architecture",
+    "STK": "Stacks",
+    "INF": "Infrastructure",
+    "OPS": "Operations",
+    "DEV": "Process",
+    "UX": "UI/UX",
+    "DATA": "Data governance",
+    "AI": "LLM concerns",
+    "LEG": "Legal/commercial",
 }
 
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)
@@ -72,24 +80,26 @@ def main() -> int:
                 f"{version} — bump `version` and add a Changelog entry (C10)"
             )
         new_hashes[sid] = {"version": version, "hash": digest}
-        entries.append({
-            "id": sid,
-            "title": meta.get("title", ""),
-            "family": meta.get("family", ""),
-            "version": version,
-            "status": meta.get("status", ""),
-            "tiers": meta.get("tiers", {}),
-            "published": meta.get("published", "n/a"),
-            "stacks": meta.get("stacks", "all"),
-            "triggers": meta.get("triggers", []),
-            "requires": meta.get("requires", []),
-            "verification_layers": sorted({
-                v.get("layer", "?") for v in (meta.get("verification") or [])
-            }),
-            "last_review": str(meta.get("last_review", "")),
-            "path": str(path.relative_to(ROOT)),
-            "tokens_est": len(text) // 4,
-        })
+        entries.append(
+            {
+                "id": sid,
+                "title": meta.get("title", ""),
+                "family": meta.get("family", ""),
+                "version": version,
+                "status": meta.get("status", ""),
+                "tiers": meta.get("tiers", {}),
+                "published": meta.get("published", "n/a"),
+                "stacks": meta.get("stacks", "all"),
+                "triggers": meta.get("triggers", []),
+                "requires": meta.get("requires", []),
+                "verification_layers": sorted(
+                    {v.get("layer", "?") for v in (meta.get("verification") or [])}
+                ),
+                "last_review": str(meta.get("last_review", "")),
+                "path": str(path.relative_to(ROOT)),
+                "tokens_est": len(text) // 4,
+            }
+        )
 
     dupes = {e["id"] for e in entries if sum(x["id"] == e["id"] for x in entries) > 1}
     for d in sorted(dupes):

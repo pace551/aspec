@@ -40,8 +40,14 @@ def read_coverage(root: Path) -> float | None:
     go = root / "coverage.out"
     if go.exists():
         import subprocess
-        out = subprocess.run(["go", "tool", "cover", f"-func={go}"],
-                             capture_output=True, text=True, cwd=root, check=False).stdout
+
+        out = subprocess.run(
+            ["go", "tool", "cover", f"-func={go}"],
+            capture_output=True,
+            text=True,
+            cwd=root,
+            check=False,
+        ).stdout
         m = re.search(r"total:.*?([\d.]+)%", out)
         if m:
             return float(m.group(1))
@@ -62,10 +68,13 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project", default=".", type=Path)
     ap.add_argument("--value", type=float, default=None)
-    ap.add_argument("--tolerance", type=float, default=0.1,
-                    help="allowed dip in percentage points (float noise)")
-    ap.add_argument("--check", action="store_true",
-                    help="read-only: never write/init the baseline")
+    ap.add_argument(
+        "--tolerance",
+        type=float,
+        default=0.1,
+        help="allowed dip in percentage points (float noise)",
+    )
+    ap.add_argument("--check", action="store_true", help="read-only: never write/init the baseline")
     args = ap.parse_args()
     root = args.project.resolve()
     baseline_file = root / ".coverage-baseline"
@@ -77,8 +86,10 @@ def main() -> int:
 
     if not baseline_file.exists():
         if args.check:
-            print(f"coverage-ratchet: OK (no baseline yet; current {current:.2f}% — "
-                  f"run without --check to initialize)")
+            print(
+                f"coverage-ratchet: OK (no baseline yet; current {current:.2f}% — "
+                f"run without --check to initialize)"
+            )
             return 0
         baseline_file.write_text(f"{current:.2f}\n")
         print(f"coverage-ratchet: baseline initialized at {current:.2f}%")
@@ -86,8 +97,10 @@ def main() -> int:
 
     baseline = float(baseline_file.read_text().strip())
     if current + args.tolerance < baseline:
-        print(f"coverage-ratchet: FAIL — coverage {current:.2f}% is below baseline "
-              f"{baseline:.2f}%. Add tests or (with a waiver) reset the baseline.")
+        print(
+            f"coverage-ratchet: FAIL — coverage {current:.2f}% is below baseline "
+            f"{baseline:.2f}%. Add tests or (with a waiver) reset the baseline."
+        )
         return 1
     if current > baseline and not args.check:
         baseline_file.write_text(f"{current:.2f}\n")

@@ -81,8 +81,7 @@ def effective_tier(e: dict, tier: str, published: bool) -> str:
 def load_rules(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8")
     return [
-        {"rule": m[0], "statement": m[1].strip(), "tiers": m[2].strip(),
-         "layer": m[3].strip()}
+        {"rule": m[0], "statement": m[1].strip(), "tiers": m[2].strip(), "layer": m[3].strip()}
         for m in RULE_RE.findall(text)
     ]
 
@@ -93,12 +92,16 @@ def main() -> int:
     ap.add_argument("--stacks", default="", help="comma-separated stack keys")
     ap.add_argument("--brief-text", default="", help="task description for trigger matching")
     ap.add_argument("--rules", action="store_true", help="include parsed rules per standard")
-    ap.add_argument("--published", action="store_true",
-                    help="published package: apply standards' `published` key (ADR-0005)")
+    ap.add_argument(
+        "--published",
+        action="store_true",
+        help="published package: apply standards' `published` key (ADR-0005)",
+    )
     ap.add_argument("--mode", choices=["pins", "brief"], default="pins")
-    ap.add_argument("--governance-dir",
-                    default=os.environ.get("GOVERNANCE_DIR")
-                    or str(Path(__file__).resolve().parent.parent))
+    ap.add_argument(
+        "--governance-dir",
+        default=os.environ.get("GOVERNANCE_DIR") or str(Path(__file__).resolve().parent.parent),
+    )
     args = ap.parse_args()
 
     gov = Path(args.governance_dir).expanduser().resolve()
@@ -108,8 +111,9 @@ def main() -> int:
     stacks = {s.strip() for s in args.stacks.split(",") if s.strip()}
     allowed = set(json.loads((gov / "checks" / "stack-keys.json").read_text()))
     if unknown := sorted(stacks - allowed):
-        ap.error(f"unknown stack key(s): {', '.join(unknown)} "
-                 f"(allowed: {', '.join(sorted(allowed))})")
+        ap.error(
+            f"unknown stack key(s): {', '.join(unknown)} (allowed: {', '.join(sorted(allowed))})"
+        )
     brief = " ".join(args.brief_text.lower().split())
 
     by_id = {e["id"]: e for e in index["standards"]}
@@ -136,8 +140,11 @@ def main() -> int:
             else:
                 matched_on = "published package"
             selected[e["id"]] = {
-                "id": e["id"], "version": e["version"], "path": e["path"],
-                "title": e["title"], "applicability": applicability,
+                "id": e["id"],
+                "version": e["version"],
+                "path": e["path"],
+                "title": e["title"],
+                "applicability": applicability,
                 "matched_on": matched_on,
                 "effective_tier": effective_tier(e, args.tier, args.published),
                 "tokens_est": e.get("tokens_est", 0),
@@ -154,7 +161,9 @@ def main() -> int:
                     if e["status"] != "active":
                         continue
                     selected[req] = {
-                        "id": req, "version": e["version"], "path": e["path"],
+                        "id": req,
+                        "version": e["version"],
+                        "path": e["path"],
                         "title": e["title"],
                         "applicability": e["tiers"].get(args.tier, "advisory"),
                         "matched_on": f"required-by {sid}",
@@ -182,9 +191,14 @@ def main() -> int:
                 entry["rules"] = load_rules(gov / entry["path"])
                 detailed.append(entry)
             else:
-                listed.append({"id": sid, "title": entry["title"],
-                               "applicability": entry["applicability"],
-                               "effective_tier": entry["effective_tier"]})
+                listed.append(
+                    {
+                        "id": sid,
+                        "title": entry["title"],
+                        "applicability": entry["applicability"],
+                        "effective_tier": entry["effective_tier"],
+                    }
+                )
         out = {
             "tier": args.tier,
             "stacks": sorted(stacks),
@@ -192,8 +206,8 @@ def main() -> int:
             "detailed": detailed,
             "listed": listed,
             "note": "ALL standards above are pinned+enforced; `listed` ones load on "
-                    "demand while working in their area (/verify-compliance runs them "
-                    "regardless).",
+            "demand while working in their area (/verify-compliance runs them "
+            "regardless).",
         }
         payload = json.dumps(out, indent=2)
         out["context_tokens"] = len(payload) // 4

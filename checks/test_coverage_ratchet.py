@@ -16,16 +16,26 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 RATCHET = ROOT / "checks" / "coverage-ratchet.py"
-_fm = re.match(r"\A---\n(.*?)\n---\n",
-               (ROOT / "standards" / "testing" / "tst-ratchet.md").read_text(), re.DOTALL)
-RATCHET_CMD = next(str(v["cmd"]) for v in yaml.safe_load(_fm.group(1))["verification"]
-                   if "coverage-ratchet.py" in str(v["cmd"]))
+_fm = re.match(
+    r"\A---\n(.*?)\n---\n",
+    (ROOT / "standards" / "testing" / "tst-ratchet.md").read_text(),
+    re.DOTALL,
+)
+RATCHET_CMD = next(
+    str(v["cmd"])
+    for v in yaml.safe_load(_fm.group(1))["verification"]
+    if "coverage-ratchet.py" in str(v["cmd"])
+)
 
 
 def run_cmd(project: Path, gov: Path) -> int:
-    return subprocess.run(["bash", "-c", RATCHET_CMD], cwd=project,
-                          env={**os.environ, "GOVERNANCE_DIR": str(gov)},
-                          capture_output=True, check=False).returncode
+    return subprocess.run(
+        ["bash", "-c", RATCHET_CMD],
+        cwd=project,
+        env={**os.environ, "GOVERNANCE_DIR": str(gov)},
+        capture_output=True,
+        check=False,
+    ).returncode
 
 
 def write_coverage(project: Path, pct: float) -> None:
@@ -35,8 +45,13 @@ def write_coverage(project: Path, pct: float) -> None:
 class RatchetExitCodeTests(unittest.TestCase):
     def test_no_data_exits_3(self):
         with tempfile.TemporaryDirectory() as tmp:
-            proc = subprocess.run([sys.executable, str(RATCHET), "--check"], cwd=tmp,
-                                  capture_output=True, text=True, check=False)
+            proc = subprocess.run(
+                [sys.executable, str(RATCHET), "--check"],
+                cwd=tmp,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
         self.assertEqual(proc.returncode, 3, proc.stdout)
 
 

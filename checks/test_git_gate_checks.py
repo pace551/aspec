@@ -28,14 +28,21 @@ def verification_cmd(standard: str, rule: str) -> str:
     return next(str(v["cmd"]) for v in front["verification"] if rule in v["rules"])
 
 
-HOOK_CMDS = {rule: verification_cmd(std, rule)
-             for std, rule in [("dev-bootstrap", "DEV-BOOTSTRAP-06"), ("dev-ci", "DEV-CI-02")]}
+HOOK_CMDS = {
+    rule: verification_cmd(std, rule)
+    for std, rule in [("dev-bootstrap", "DEV-BOOTSTRAP-06"), ("dev-ci", "DEV-CI-02")]
+}
 LINEAR_CMD = verification_cmd("dev-git", "DEV-GIT-03")
 
 
 def run(cmd: str, cwd: Path) -> int:
-    return subprocess.run(["bash", "-c", cmd], cwd=cwd, capture_output=True,
-                          env={**os.environ, "GOVERNANCE_DIR": str(ROOT)}, check=False).returncode
+    return subprocess.run(
+        ["bash", "-c", cmd],
+        cwd=cwd,
+        capture_output=True,
+        env={**os.environ, "GOVERNANCE_DIR": str(ROOT)},
+        check=False,
+    ).returncode
 
 
 def git(repo: Path, *args: str) -> None:
@@ -58,8 +65,13 @@ class HookCheckTests(unittest.TestCase):
         self._tmp.cleanup()
 
     def test_official_installer_passes(self):
-        subprocess.run(["bash", str(INSTALLER)], cwd=self.repo, capture_output=True,
-                       env={**os.environ, "GOVERNANCE_DIR": str(ROOT)}, check=True)
+        subprocess.run(
+            ["bash", str(INSTALLER)],
+            cwd=self.repo,
+            capture_output=True,
+            env={**os.environ, "GOVERNANCE_DIR": str(ROOT)},
+            check=True,
+        )
         for rule, cmd in HOOK_CMDS.items():
             self.assertEqual(run(cmd, self.repo), 0, rule)
 

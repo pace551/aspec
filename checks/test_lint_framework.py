@@ -10,7 +10,8 @@ from pathlib import Path
 import yaml
 
 spec = importlib.util.spec_from_file_location(
-    "lint_framework", Path(__file__).with_name("lint-framework.py"))
+    "lint_framework", Path(__file__).with_name("lint-framework.py")
+)
 lint = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lint)
 
@@ -79,12 +80,8 @@ class CorpusTests(unittest.TestCase):
                 meta = yaml.safe_load(m.group(1))
                 for v in meta.get("verification") or []:
                     cmd = str(v["cmd"])
-                    self.assertFalse(
-                        lint.hardcoded_cmd_path(cmd),
-                        f"{path.name} cmd: {cmd}")
-                self.assertFalse(
-                    lint.hardcoded_body_path(text[m.end():]),
-                    f"{path.name} body")
+                    self.assertFalse(lint.hardcoded_cmd_path(cmd), f"{path.name} cmd: {cmd}")
+                self.assertFalse(lint.hardcoded_body_path(text[m.end() :]), f"{path.name} body")
 
 
 if __name__ == "__main__":

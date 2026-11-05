@@ -170,15 +170,15 @@ def main() -> int:
         return 0
 
     graph = build_graph(pairs)
-    cycles = [
-        sorted(c) for c in tarjan(graph) if len(c) > 1 or (c and c[0] in graph[c[0]])
-    ]
+    cycles = [sorted(c) for c in tarjan(graph) if len(c) > 1 or (c and c[0] in graph[c[0]])]
     if cycles:
         print(f"import-cycles: {len(cycles)} import cycle(s) found:")
         for c in cycles:
             print(f"  ✗ {' → '.join(c)} → {c[0]}")
-        print("fix: invert the dependency (move the shared piece down, or inject it); "
-              "don't hide the cycle behind function-local imports")
+        print(
+            "fix: invert the dependency (move the shared piece down, or inject it); "
+            "don't hide the cycle behind function-local imports"
+        )
         return 1
     print(f"import-cycles: clean ({len(graph)} modules, acyclic)")
     return 0

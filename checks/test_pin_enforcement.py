@@ -35,10 +35,14 @@ def verify(pinned: str) -> dict:
         (Path(gov) / "standards" / "testing" / "tst-fake.md").write_text(STANDARD)
         Path(proj, "GOVERNANCE.md").write_text(
             "```yaml\ntier: T1\nstandards:\n"
-            f"  - {{id: TST-FAKE, version: {pinned}}}\nwaivers: []\n```\n")
+            f"  - {{id: TST-FAKE, version: {pinned}}}\nwaivers: []\n```\n"
+        )
         proc = subprocess.run(
-            [sys.executable, str(VERIFY), "--project", proj, "--governance-dir", gov,
-             "--json"], capture_output=True, text=True, check=False)
+            [sys.executable, str(VERIFY), "--project", proj, "--governance-dir", gov, "--json"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
     report = json.loads(proc.stdout)
     report["exit"] = proc.returncode
     report["ran_check"] = any(r["kind"] == "check" for r in report["results"])
@@ -85,19 +89,16 @@ class VerifierPinTests(unittest.TestCase):
 
     def test_minor_drift_fails_without_running_checks(self):
         r = verify("1.1.0")
-        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]),
-                         (1, "FAIL", False))
+        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]), (1, "FAIL", False))
         self.assertIn("re-run /govern", r["pin"]["detail"])
 
     def test_major_drift_fails(self):
         r = verify("0.9.0")
-        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]),
-                         (1, "FAIL", False))
+        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]), (1, "FAIL", False))
 
     def test_pin_newer_than_repo_fails(self):
         r = verify("1.2.4")
-        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]),
-                         (1, "FAIL", False))
+        self.assertEqual((r["exit"], r["pin"]["status"], r["ran_check"]), (1, "FAIL", False))
         self.assertIn("update the governance repo", r["pin"]["detail"])
 
 
