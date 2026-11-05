@@ -1,4 +1,8 @@
-# Self-CI for the governance framework: the framework passes its own gates.
+# Self-CI for the governance framework: the framework passes its own gates. ASPEC is a
+# published package (GOVERNANCE.md), so this is DEV-CI's T3 job set. Every job runs the
+# toolchain pinned in pyproject.toml from a .venv (STK-PY-08); lint and test call the same
+# scripts as the git hooks, so CI and hooks agree on what passing means.
+# Actions are pinned to commit SHAs (SEC-SUPPLY); Dependabot proposes updates.
 name: framework
 on:
   push:
@@ -9,32 +13,87 @@ on:
 permissions:
   contents: read
 
+env:
+  SETUP_VENV: >-
+    python -m venv .venv &&
+    .venv/bin/pip install -q pip==26.2.1 &&
+    .venv/bin/pip install -q --group dev
+
 jobs:
-  self-lint:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
-      - run: pip install pyyaml ruff==0.17.1
-      - name: Framework self-lint (schema, rules, index freshness)
-        run: python3 checks/lint-framework.py
-      - name: Check-script unit tests
-        run: python3 -m unittest discover -s checks -p "test_*.py" -v
-      - name: Ruff over check scripts (house config in pyproject.toml, STK-PY-03)
-        run: ruff check checks/ && ruff format --check checks/
-      - name: Shell syntax
-        run: bash -n checks/*.sh hooks/*.sh templates/scaffolds/_common/install-git-hooks.sh templates/scaffolds/_common/githooks/*
+      - run: ${{ env.SETUP_VENV }}
+      - name: Self-lint, ruff (lint + format), shell syntax
+        run: scripts/lint.sh
+
+  # No standalone typechecker for STK-PY; the job keeps DEV-CI-01's name (no-op variant).
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Typecheck (no-op)
+        run: echo "no separate typechecker — STK-PY names no standalone typechecker"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - run: ${{ env.SETUP_VENV }}
+      - name: Unit tests with coverage
+        run: scripts/test.sh
+
+  coverage-ratchet:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - run: ${{ env.SETUP_VENV }}
+      - name: Rebuild coverage
+        run: scripts/test.sh
+      - name: Ratchet check (TST-RATCHET; CI only checks, never writes)
+        run: .venv/bin/python checks/coverage-ratchet.py --check
+
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - run: ${{ env.SETUP_VENV }}
+      - name: Static analysis (bandit over checks/, STK-PY-04)
+        run: bash checks/sec-sast.sh --tier T3
+
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - run: ${{ env.SETUP_VENV }}
+      - name: Dependency vulnerability audit (pip-audit, SEC-SUPPLY-01)
+        run: bash checks/sec-sca.sh --tier T3
+
   gitleaks:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write # gitleaks-action comments on PR lines with leaks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

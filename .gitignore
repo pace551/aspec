@@ -37,3 +37,8 @@ node_modules/
 # scratch
 *.log
 .scratch/
+
+# framework coverage output (scripts/test.sh)
+.coverage
+.coverage.*
+coverage.json

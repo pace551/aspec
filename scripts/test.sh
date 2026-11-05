@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# test.sh — the framework's test gate, run by the pre-push hook. Same as the unit-test
-# step of the self-lint job in .github/workflows/framework.yml.
+# test.sh — the framework's test gate, run by the pre-push hook and the CI test job.
+# pytest runs the unittest-style tests in checks/ (STK-PY-02) and writes coverage.json for
+# the ratchet (TST-RATCHET); subprocess-run scripts are measured too (pyproject.toml).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-source scripts/python.sh
+source scripts/venv.sh
 
-"$PY" -m unittest discover -s checks -p "test_*.py"
+.venv/bin/pytest -q --cov --cov-report=json --cov-report=term
