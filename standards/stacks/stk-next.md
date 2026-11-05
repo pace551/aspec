@@ -2,7 +2,7 @@
 id: STK-NEXT
 title: Next.js Stack
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -35,11 +35,11 @@ verification:
     layer: G
     rules: [STK-NEXT-08]
     tiers: [T3, T4]
-  - cmd: "sh -c '! git grep --untracked -InE \"NEXT_PUBLIC_[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY|ACCESS_KEY|CREDENTIAL)\" 2>/dev/null'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''NEXT_PUBLIC_[A-Z0-9_]*(SECRET|TOKEN|PASSWORD|PRIVATE|API_KEY|ACCESS_KEY|CREDENTIAL)'' --untracked'
     expect: "exit 0 — no secret-shaped name behind the NEXT_PUBLIC_ prefix anywhere in the tree"
     layer: G
     rules: [STK-NEXT-04]
-  - cmd: "sh -c '! git grep --untracked -InE \"<img[ >]\" -- \"*.tsx\" \"*.jsx\" 2>/dev/null'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''<img[ >]'' --untracked -- ''*.tsx'' ''*.jsx'''
     expect: "exit 0 — no raw <img> in components; use next/image"
     layer: G
     rules: [STK-NEXT-06]
@@ -64,7 +64,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations (n/a when deploying to Vercel)"
     layer: A
     rules: [STK-NEXT-09]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Next.js Stack (STK-NEXT)
@@ -178,8 +178,8 @@ mandatory practice the moment the app is self-hosted (ECS/Fly/etc.).
 | 1 | `scripts/lint.sh` | exit 0 — prettier + eslint + `tsc --noEmit` | STK-NEXT-07 |
 | 2 | `scripts/test.sh` | exit 0 — vitest green, coverage emitted | STK-NEXT-08 |
 | 3 | `npx playwright test --reporter=line` (T3+) | exit 0 — smoke spec green | STK-NEXT-08 |
-| 4 | `! git grep … NEXT_PUBLIC_*(SECRET\|TOKEN\|…)` | exit 0 — no secret-shaped public var | STK-NEXT-04 |
-| 5 | `! git grep … "<img[ >]"` in tsx/jsx (T3+) | exit 0 — no raw `<img>` | STK-NEXT-06 |
+| 4 | `grep-gate.py forbid … NEXT_PUBLIC_*(SECRET\|TOKEN\|…)` | exit 0 — no secret-shaped public var | STK-NEXT-04 |
+| 5 | `grep-gate.py forbid … "<img[ >]"` in tsx/jsx (T3+) | exit 0 — no raw `<img>` | STK-NEXT-06 |
 | 6-10 | attestation checklist (one per rule) | explicit yes | STK-NEXT-01, -02, -03, -05, -09 |
 
 **Remediation:** `tsc` errors after a dependency bump → fix types, never loosen
@@ -243,6 +243,7 @@ export async function signGuestbook(_prev: unknown, formData: FormData) {
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Verifications #4 and #5 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

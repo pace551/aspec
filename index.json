@@ -472,7 +472,7 @@
       "id": "INF-CONTAINERS",
       "title": "Containers & ECS",
       "family": "INF",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -501,15 +501,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/infra/inf-containers.md",
-      "tokens_est": 3143
+      "tokens_est": 3257
     },
     {
       "id": "INF-EDGE",
       "title": "Networking & Edge",
       "family": "INF",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -543,15 +543,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/infra/inf-edge.md",
-      "tokens_est": 2802
+      "tokens_est": 2943
     },
     {
       "id": "INF-ENVS",
       "title": "Environments & Promotion",
       "family": "INF",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -581,15 +581,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/infra/inf-envs.md",
-      "tokens_est": 3039
+      "tokens_est": 3156
     },
     {
       "id": "INF-SERVERLESS",
       "title": "Serverless (Lambda + API Gateway)",
       "family": "INF",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -620,15 +620,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/infra/inf-serverless.md",
-      "tokens_est": 3414
+      "tokens_est": 3523
     },
     {
       "id": "INF-TF",
       "title": "Terraform/OpenTofu on AWS",
       "family": "INF",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -660,9 +660,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/infra/inf-tf.md",
-      "tokens_est": 3086
+      "tokens_est": 3168
     },
     {
       "id": "LEG-COMMERCIAL",
@@ -917,7 +917,7 @@
       "id": "OPS-OBS",
       "title": "Observability",
       "family": "OPS",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -945,9 +945,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/operations/ops-obs.md",
-      "tokens_est": 2271
+      "tokens_est": 2327
     },
     {
       "id": "OPS-PERF",
@@ -1545,7 +1545,7 @@
       "id": "STK-DDB",
       "title": "DynamoDB",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1572,9 +1572,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-ddb.md",
-      "tokens_est": 2670
+      "tokens_est": 2815
     },
     {
       "id": "STK-GO",
@@ -1656,7 +1656,7 @@
       "id": "STK-NEXT",
       "title": "Next.js Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1686,15 +1686,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-next.md",
-      "tokens_est": 2962
+      "tokens_est": 3091
     },
     {
       "id": "STK-PG",
       "title": "PostgreSQL",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1724,15 +1724,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-pg.md",
-      "tokens_est": 2635
+      "tokens_est": 2753
     },
     {
       "id": "STK-PY",
       "title": "Python Stack",
       "family": "STK",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1761,15 +1761,15 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-py.md",
-      "tokens_est": 3263
+      "tokens_est": 3457
     },
     {
       "id": "STK-REDIS",
       "title": "Redis/Valkey",
       "family": "STK",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1798,9 +1798,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-redis.md",
-      "tokens_est": 2896
+      "tokens_est": 3013
     },
     {
       "id": "STK-RUST",
@@ -1878,7 +1878,7 @@
       "id": "STK-SWIFT",
       "title": "Apple SwiftUI Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1907,9 +1907,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-swift.md",
-      "tokens_est": 2830
+      "tokens_est": 2959
     },
     {
       "id": "STK-TS",
@@ -1954,7 +1954,7 @@
       "id": "STK-VITE",
       "title": "Vite + React SPA Stack",
       "family": "STK",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "status": "active",
       "tiers": {
         "T1": "required",
@@ -1984,9 +1984,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-05",
       "path": "standards/stacks/stk-vite.md",
-      "tokens_est": 2665
+      "tokens_est": 2779
     },
     {
       "id": "TST-FIXTURES",

@@ -34,6 +34,40 @@ carry their own per-file changelogs.
   `git rev-parse --local-env-vars` (`GIT_DIR`, `GIT_WORK_TREE`, `GIT_INDEX_FILE`,
   `GIT_COMMON_DIR`, `git -c` settings and others), and this repo's
   `checks/conftest.py` drops `GIT_*` for its own test session.
+- Every check ASPEC ships now has a contract test (`checks/test_check_contract.py`):
+  each non-attestation verification cmd in `standards/` either has a known-bad project it
+  must fail, or sits on an allowlist with a reason (it runs the project's own toolchain,
+  needs the network, or is covered by another test). Checks that search the tree also
+  run against hostile trees (`checks/hostile_tree.py`): the bad file under a path with
+  spaces and non-ASCII, the bad file's directory unreadable (must fail, never pass
+  silently), and unreadable gitignored `node_modules/` and `.venv/` plus a symlink loop
+  (must still pass). It found:
+  - 20 verification cmds in 12 standards that passed when a file couldn't be read: grep's
+    error went to `/dev/null` or past `! … | grep -q .`, and `git grep` exits 1 ("no
+    match") after "failed to stat". They now run the new `checks/grep-gate.py`
+    (`forbid` / `require` a pattern in the files `git ls-files` selects; submodules,
+    nested repos, symlinks and binaries skipped), which exits 2 for a file it can't
+    read. INF-CONTAINERS 1.0.5, INF-EDGE 1.0.2, INF-ENVS 1.0.3,
+    INF-SERVERLESS 1.0.4, STK-DDB 1.0.2, STK-NEXT 1.0.2, STK-PG 1.0.1, STK-REDIS 1.0.1,
+    STK-SWIFT 1.0.2, STK-VITE 1.0.2 (patch bumps, no rule changes).
+  - `git ls-files | grep …$` sees a path under a non-ASCII directory quoted, so a
+    tracked `.tfstate` or `.log` there passed and a committed `.terraform.lock.hcl` there
+    failed. INF-TF 1.0.3 and OPS-OBS 1.0.1 match by pathspec instead.
+  - `checks/secret-scan.sh`'s fallback scan sent grep's errors to `/dev/null`, so a
+    tracked file it couldn't read passed unscanned; it now exits 2 (scan incomplete),
+    running grep under `LC_ALL=C` so the error text it checks is the same everywhere.
+  - `checks/sec-sast.sh` ran bandit over `.venv/` and `node_modules/` in a repo-wide
+    scan (failing on third-party code), and bandit skips an unreadable directory with
+    exit 0. It now passes `-x` with bandit's default excludes plus
+    `/.venv/,/venv/,/node_modules/` (`-x` replaces the defaults), and stops with exit 2
+    when `find` can't list the tree. STK-PY 1.0.5 adds the same `-x` to STK-PY-04's cmd.
+  - `checks/silent-swallow.py` skipped a tracked file it couldn't stat
+    (`Path.is_file()` is False then), and `checks/import-cycles.py` walked with
+    `Path.rglob`, which skips an unreadable directory. Both now take their files from
+    `git ls-files` (import-cycles adds untracked, unignored files), so ignored caches and
+    volumes are never entered, and exit 2 for anything else they can't read. Outside a
+    git work tree they walk instead, with the same rule; a git failure inside one is an
+    incomplete scan, not a reason to walk.
 
 ## 0.3.1 — 2026-11-05
 

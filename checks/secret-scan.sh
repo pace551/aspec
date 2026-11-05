@@ -6,7 +6,7 @@
 # Usage:
 #   secret-scan.sh            scan the working tree
 #   secret-scan.sh --staged   scan staged changes only (pre-commit)
-# Exit 0 clean, 1 findings, 2 usage/environment error.
+# Exit 0 clean, 1 findings, 2 usage/environment error or an incomplete scan.
 set -euo pipefail
 
 MODE="tree"
@@ -22,6 +22,9 @@ if command -v gitleaks >/dev/null 2>&1; then
 fi
 
 # ---- Fallback pattern scan (install gitleaks for full coverage: brew install gitleaks) ----
+# LC_ALL=C for every grep below: their error text is matched, and no locale's encoding
+# rules may turn a text line into a "binary file matches" message (or drop it).
+export LC_ALL=C
 echo "secret-scan: gitleaks not found — using built-in pattern fallback (brew install gitleaks for full coverage)" >&2
 
 PATTERNS=(
@@ -44,9 +47,22 @@ if [[ "$MODE" == "staged" ]]; then
   SOURCE=$(git diff --staged --unified=0 | grep -E '^\+' | grep -vE '^\+\+\+' \
     | grep -viE "$FAKE_FILTER" || true)
 else
-  SOURCE=$(git ls-files -z | xargs -0 grep -InE "$REGEX" \
-    --exclude='*.example' --exclude='secret-scan.sh' 2>/dev/null \
+  # grep's errors used to go to /dev/null, so a file it couldn't read passed unscanned.
+  # They go to a temp file instead; anything but a tracked file deleted from the work tree
+  # (ENOENT) makes the scan incomplete.
+  ERRS=$(mktemp "${TMPDIR:-/tmp}/secret-scan.XXXXXX")
+  trap 'rm -f "$ERRS"' EXIT
+  SOURCE=$(git ls-files -z | xargs -0 grep -d skip -InE "$REGEX" \
+    --exclude='*.example' --exclude='secret-scan.sh' 2>"$ERRS" \
     | grep -viE "$FAKE_FILTER" || true)
+  # captured rather than piped to `grep -q`, whose early exit would SIGPIPE the producer
+  # and (with pipefail) make a long error list look like none
+  BAD=$(grep -v ': No such file or directory$' "$ERRS" || true)
+  if [[ -n "$BAD" ]]; then
+    echo "secret-scan: could not read every tracked file — scan incomplete:" >&2
+    printf '%s\n' "$BAD" >&2
+    exit 2
+  fi
   if [[ -n "$SOURCE" ]]; then
     echo "secret-scan: potential secrets found:" >&2
     echo "$SOURCE" | sed 's/\(.\{120\}\).*/\1…/' >&2

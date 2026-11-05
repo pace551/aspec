@@ -2,7 +2,7 @@
 id: STK-PG
 title: PostgreSQL
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -29,7 +29,7 @@ verification:
     layer: G
     rules: [STK-PG-02]
     tiers: [T2, T3, T4]
-  - cmd: "sh -c '! grep -rniIwE \"timestamp\" migrations db/migrations 2>/dev/null | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -i -e ''\btimestamp\b'' --untracked --under migrations --under db/migrations'
     expect: "exit 0 — no bare `timestamp` column type in migrations (timestamptz only)"
     layer: G
     rules: [STK-PG-06]
@@ -55,7 +55,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-PG-07]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # PostgreSQL (STK-PG)
@@ -150,7 +150,7 @@ column. Index JSONB with GIN only after STK-PG-04's EXPLAIN test.
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
 | 1 | `[ -f alembic.ini ] \|\| [ -d migrations ] \|\| [ -d db/migrations ] \|\| [ -f drizzle.config.ts ]` (T2+) | a migration tool is set up | STK-PG-02 |
-| 2 | `! grep -rniIwE "timestamp" migrations db/migrations 2>/dev/null \| grep -q .` | no bare `timestamp` type in migrations (`timestamptz` passes — different word) | STK-PG-06 |
+| 2 | `grep-gate.py forbid -i -e '\btimestamp\b'` under `migrations` `db/migrations` | no bare `timestamp` type in migrations (`timestamptz` passes — different word) | STK-PG-06 |
 | 3–7 | attestation checklist (one per rule; -01/-05 at T3+) | explicit yes recorded | STK-PG-01, -03, -04, -05, -07 |
 
 **Remediation:** no migration tool → adopt dbmate (zero-dependency SQL) and baseline
@@ -227,4 +227,5 @@ DROP TABLE orders;
 
 ## Changelog
 
+- **1.0.1** (2026-11-05) — Verification #2 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.

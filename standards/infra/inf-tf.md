@@ -2,7 +2,7 @@
 id: INF-TF
 title: Terraform/OpenTofu on AWS
 family: INF
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -29,11 +29,11 @@ verification:
     expect: "exit 0 — fmt/validate clean; tflint+checkov clean when installed (warns when absent)"
     layer: G
     rules: [INF-TF-04]
-  - cmd: "sh -c '! git ls-files | grep -qE \"\\.tfstate(\\.backup)?$\"'"
+  - cmd: 'sh -c ''! git ls-files -- "*.tfstate" "*.tfstate.backup" | grep -q .'''
     expect: "exit 0 — no state file has ever been tracked"
     layer: G
     rules: [INF-TF-02]
-  - cmd: "sh -c '! git ls-files \"*.tf\" | grep -q . || git ls-files | grep -q \"\\.terraform\\.lock\\.hcl$\"'"
+  - cmd: 'sh -c ''! git ls-files -- "*.tf" | grep -q . || git ls-files -- "*.terraform.lock.hcl" | grep -q .'''
     expect: "exit 0 — repos with .tf files commit a provider lockfile (tolerated absent before first init)"
     layer: G
     rules: [INF-TF-08]
@@ -63,7 +63,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [INF-TF-09]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Terraform/OpenTofu on AWS (INF-TF)
@@ -180,7 +180,7 @@ a move, not a destroy/create.
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
 | 1 | `bash "$GOVERNANCE_DIR/checks/inf-tf-scan.sh"` | exit 0 — fmt/validate/tflint/checkov clean (documented warnings when tools absent) | INF-TF-04 |
-| 2 | `! git ls-files \| grep -qE "\.tfstate(\.backup)?$"` | no tracked state files | INF-TF-02 |
+| 2 | `! git ls-files -- "*.tfstate" "*.tfstate.backup" \| grep -q .` | no tracked state files | INF-TF-02 |
 | 3 | tracked `.tf` files ⇒ tracked `.terraform.lock.hcl` | lockfile committed | INF-TF-08 |
 | 4 | tracked `.tf` files ⇒ `backend "s3"` present (T3+) | remote state configured | INF-TF-03 |
 | 5 | tracked `.tf` files ⇒ `default_tags` present (T2+) | mandatory tags wired | INF-TF-06 |
@@ -238,6 +238,7 @@ data "aws_ssm_parameter" "api_key" {
 
 ## Changelog
 
+- **1.0.3** (2026-11-05) — Verifications #2 (tracked state) and #3 (lockfile) matches by `git ls-files` pathspec. `git ls-files | grep …$` saw paths under a non-ASCII directory quoted (`"…\303\274…"`), so a tracked `.tfstate` there passed and a committed `.terraform.lock.hcl` there failed. No rule changes.
 - **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

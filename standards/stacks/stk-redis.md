@@ -2,7 +2,7 @@
 id: STK-REDIS
 title: Redis/Valkey
 family: STK
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: required
@@ -23,7 +23,7 @@ triggers:
   - distributed lock
 requires: []
 verification:
-  - cmd: "sh -c '! grep -rnIE \"[.]keys[(][^)]\" src app lib 2>/dev/null | grep -q .'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''[.]keys[(][^)]'' --untracked --under src --under app --under lib'
     expect: "exit 0 — no KEYS-pattern calls in production code (dict.keys() takes no args, so it never matches)"
     layer: G
     rules: [STK-REDIS-03]
@@ -56,7 +56,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-REDIS-08]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Redis/Valkey (STK-REDIS)
@@ -169,7 +169,7 @@ lock. Redlock across nodes is out of scope at this scale.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `! grep -rnIE "[.]keys[(][^)]" src app lib 2>/dev/null \| grep -q .` | no pattern-arg `.keys(` calls in prod code | STK-REDIS-03 |
+| 1 | `grep-gate.py forbid -e '[.]keys[(][^)]'` under `src` `app` `lib` | no pattern-arg `.keys(` calls in prod code | STK-REDIS-03 |
 | 2–8 | attestation checklist (one per rule; -06 at T3+) | explicit yes recorded | STK-REDIS-01, -02, -04, -05, -06, -07, -08 |
 
 **Remediation:** `.keys(` hit → replace with `scan_iter` (or an index set written at
@@ -231,4 +231,5 @@ Invalidation doc line for this entity (in the project README):
 
 ## Changelog
 
+- **1.0.1** (2026-11-05) — Verification #1 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.

@@ -15,6 +15,7 @@ function, which xargs cannot exec.
 from __future__ import annotations
 
 import importlib.util
+import os
 import re
 import subprocess
 import tempfile
@@ -107,11 +108,11 @@ def git_repo(files: dict[str, str]) -> tempfile.TemporaryDirectory:
 
 
 def passes(cmd: str, cwd: str) -> bool:
-    """Run a verification cmd the way run-verification.py does (bash -c, project root)."""
-    return (
-        subprocess.run(["bash", "-c", cmd], cwd=cwd, capture_output=True, check=False).returncode
-        == 0
-    )
+    """Run a verification cmd the way run-verification.py does (bash -c, project root,
+    GOVERNANCE_DIR set)."""
+    env = {**os.environ, "GOVERNANCE_DIR": str(ROOT)}
+    proc = subprocess.run(["bash", "-c", cmd], cwd=cwd, env=env, capture_output=True, check=False)
+    return proc.returncode == 0
 
 
 class VerificationCmdTests(unittest.TestCase):

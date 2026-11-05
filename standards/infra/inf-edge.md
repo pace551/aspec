@@ -2,7 +2,7 @@
 id: INF-EDGE
 title: Networking & Edge
 family: INF
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: advisory
@@ -27,15 +27,15 @@ triggers:
   - public bucket
 requires: []
 verification:
-  - cmd: "sh -c '! git grep -qE \"acl[[:space:]]*=[[:space:]]*\\\"public-read\" -- \"*.tf\"'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''acl\s*=\s*"public-read'' -- ''*.tf'''
     expect: "exit 0 — no public-read bucket ACLs in tracked .tf"
     layer: G
     rules: [INF-EDGE-05]
-  - cmd: "sh -c '! git grep -qE \"from_port[[:space:]]*=[[:space:]]*22([^0-9]|$)\" -- \"*.tf\"'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e ''from_port\s*=\s*22([^0-9]|$)'' -- ''*.tf'''
     expect: "exit 0 — no security-group rule opens port 22 (SSM Session Manager replaces SSH)"
     layer: G
     rules: [INF-EDGE-06]
-  - cmd: "sh -c '! git grep -q \"aws_nat_gateway\" -- \"*.tf\"'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e aws_nat_gateway -- ''*.tf'''
     expect: "exit 0 — no NAT gateway; presence requires the user's recorded consent (waiver)"
     layer: G
     rules: [INF-EDGE-07]
@@ -63,7 +63,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [INF-EDGE-05]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Networking & Edge (INF-EDGE)
@@ -158,9 +158,9 @@ exists at all.
 
 | # | Command | Passes when | Backs rules |
 |---|---|---|---|
-| 1 | `! git grep -qE 'acl\s*=\s*"public-read' -- "*.tf"` | no public-read ACLs | INF-EDGE-05 |
-| 2 | `! git grep -qE 'from_port\s*=\s*22([^0-9]|$)' -- "*.tf"` | no SG opens port 22 | INF-EDGE-06 |
-| 3 | `! git grep -q aws_nat_gateway -- "*.tf"` | no NAT gateway (presence ⇒ consent waiver) | INF-EDGE-07 |
+| 1 | `grep-gate.py forbid -e 'acl\s*=\s*"public-read' -- '*.tf'` | no public-read ACLs | INF-EDGE-05 |
+| 2 | `grep-gate.py forbid -e 'from_port\s*=\s*22([^0-9]|$)' -- '*.tf'` | no SG opens port 22 | INF-EDGE-06 |
+| 3 | `grep-gate.py forbid -e aws_nat_gateway -- '*.tf'` | no NAT gateway (presence ⇒ consent waiver) | INF-EDGE-07 |
 | 4-8 | attestation checklist (one per rule; -01/-02/-03 at T3+, -04 at T4) | explicit yes recorded | INF-EDGE-01…05 |
 
 **Remediation:** public-read ACL → block-public-access on, serve via CloudFront OAC
@@ -246,5 +246,6 @@ data "aws_iam_policy_document" "site_read" {
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Verifications #1-#3 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.

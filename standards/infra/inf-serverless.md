@@ -2,7 +2,7 @@
 id: INF-SERVERLESS
 title: Serverless (Lambda + API Gateway)
 family: INF
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: advisory
@@ -27,11 +27,11 @@ verification:
     expect: "exit 0 — no parallel SAM/CDK/Serverless-Framework stack alongside tofu"
     layer: G
     rules: [INF-SERVERLESS-02]
-  - cmd: "sh -c 'for k in memory_size timeout; do git grep -lz \"resource \\\"aws_lambda_function\\\"\" -- \"*.tf\" 2>/dev/null | xargs -0 -r grep -L \"$k\" | grep -q . && exit 1; done; exit 0'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" require -e memory_size -e timeout --if ''resource "aws_lambda_function"'' -- ''*.tf'''
     expect: "exit 0 — every .tf file defining a Lambda sets memory_size and timeout"
     layer: G
     rules: [INF-SERVERLESS-04]
-  - cmd: "sh -c '! git grep -q \"aws_lambda_provisioned_concurrency_config\" -- \"*.tf\"'"
+  - cmd: '"$GOVERNANCE_DIR/.venv/bin/python" "$GOVERNANCE_DIR/checks/grep-gate.py" forbid -e aws_lambda_provisioned_concurrency_config -- ''*.tf'''
     expect: "exit 0 — no provisioned concurrency; presence requires the user's recorded consent (waiver)"
     layer: G
     rules: [INF-SERVERLESS-07]
@@ -61,7 +61,7 @@ verification:
     layer: A
     rules: [INF-SERVERLESS-10]
     tiers: [T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Serverless (Lambda + API Gateway) (INF-SERVERLESS)
@@ -265,6 +265,7 @@ resource "aws_apigatewayv2_stage" "api" {
 
 ## Changelog
 
+- **1.0.4** (2026-11-05) — Verifications #2 and #3 now runs `checks/grep-gate.py`. The grep one-liner passed when a file couldn't be read: grep's error went to `/dev/null` or past a `! … | grep -q .`, and `git grep` exits 1 ("no match") after "failed to stat". grep-gate exits 2 (scan incomplete) instead, and selects files by `git ls-files`, so paths with spaces or non-ASCII stay whole. No rule changes.
 - **1.0.1** (2026-07-22) — Selection fix: `stacks` narrowed to this standard's own key so auxiliary keys (web/typescript/aws) don't cross-select it into unrelated projects (Phase-4 budget test finding).
 
 - **1.0.0** (2026-07-22) — Initial version.

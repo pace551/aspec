@@ -95,29 +95,29 @@
     "version": "1.0.1"
   },
   "INF-CONTAINERS": {
-    "hash": "2bec7d62197c2053f3ce322d9c8ad19eac677812de4e2159ae1fcce48f21d085",
-    "last_review": "2026-07-22",
-    "version": "1.0.4"
+    "hash": "5f025408d62f3d22bee02fa55a4ac0c46066635786545c866ea0c1e6749d464a",
+    "last_review": "2026-11-05",
+    "version": "1.0.5"
   },
   "INF-EDGE": {
-    "hash": "4540bb1530711dba408ce7b671b6ec901b9a3a7aae217f7ef6a28f54fec0b255",
-    "last_review": "2026-07-22",
-    "version": "1.0.1"
+    "hash": "36cac5d28c2ff51c262d9fe1e31ec0fe23bcc992d95920094a2b97ee0e2f5eca",
+    "last_review": "2026-11-05",
+    "version": "1.0.2"
   },
   "INF-ENVS": {
-    "hash": "160a01f5d27bd22337c23fd799380ca0d80742c4c567f38d57c115742bdc1013",
-    "last_review": "2026-07-22",
-    "version": "1.0.2"
-  },
-  "INF-SERVERLESS": {
-    "hash": "980a0388199fff000442b5ba6ef41dd7d60775703c8385edab14a2b58ead289f",
-    "last_review": "2026-07-22",
+    "hash": "3fdf7ccc78527a07423b8566f51ba51c4ad93eb26f1c0151a8fb355aceaf1f8e",
+    "last_review": "2026-11-05",
     "version": "1.0.3"
   },
+  "INF-SERVERLESS": {
+    "hash": "20dd1cb76adb39cce80b0b5413c5121b88476aea0439f3f9cb82f7506141c28c",
+    "last_review": "2026-11-05",
+    "version": "1.0.4"
+  },
   "INF-TF": {
-    "hash": "80a7a89bd74b3f103a71fc1832d73a3019ae58424d1bde54a2cf51cd07fb80d6",
-    "last_review": "2026-07-22",
-    "version": "1.0.2"
+    "hash": "16271bc7349a7018e775576c5d368485f70184344812ada088c7c33eec7adf25",
+    "last_review": "2026-11-05",
+    "version": "1.0.3"
   },
   "LEG-COMMERCIAL": {
     "hash": "1d710653dcd1c0ffeb9ce024eaeed7d7af10d6f7183d64fae0709ee95f4834bb",
@@ -155,9 +155,9 @@
     "version": "1.0.1"
   },
   "OPS-OBS": {
-    "hash": "581f80a45ec4cb54dba71c715fce17fc76d71b24c012cb7477f12ad0c468b223",
-    "last_review": "2026-07-22",
-    "version": "1.0.0"
+    "hash": "10bef4bced0a7ce3424e68f0971b3f566c3a4863012ec9554174ecd7acc59d8d",
+    "last_review": "2026-11-05",
+    "version": "1.0.1"
   },
   "OPS-PERF": {
     "hash": "83197c281b1277a98342ea630f6141f55774ef85fe089c1ffc4aff7d1d33670f",
@@ -215,9 +215,9 @@
     "version": "1.0.2"
   },
   "STK-DDB": {
-    "hash": "8fb21e7bcf120be456109b456710ff2d69711e6736eb5292b67d1047cf3d0970",
-    "last_review": "2026-07-22",
-    "version": "1.0.1"
+    "hash": "7796c30aca653546ebd892142229c664926b95ab8b12da94362d34e5f74973c3",
+    "last_review": "2026-11-05",
+    "version": "1.0.2"
   },
   "STK-GO": {
     "hash": "366c7e029a7cee60926d0fb78c89963dda8501428aaa13cef196c5ddfc0db147",
@@ -230,24 +230,24 @@
     "version": "1.0.1"
   },
   "STK-NEXT": {
-    "hash": "53148b42d6599bf1d850b6e71883690a43c6060bfdedb6da559da6e5e13d3048",
-    "last_review": "2026-07-22",
-    "version": "1.0.1"
+    "hash": "4a1f0244b4db597fb50117bc10bdcdc5f85ee33613ea523f8eaf96f09e3f60f3",
+    "last_review": "2026-11-05",
+    "version": "1.0.2"
   },
   "STK-PG": {
-    "hash": "e558a5b4e78ca5b758ca77634f13aa04a1b1749fd449527827f8034da2e08232",
-    "last_review": "2026-07-22",
-    "version": "1.0.0"
+    "hash": "8d0b8295648d8f5934abe014f04fcaf81a66d62d18ef2e3bcf3b1ab5dd2e0d9d",
+    "last_review": "2026-11-05",
+    "version": "1.0.1"
   },
   "STK-PY": {
-    "hash": "5421c205bcb7862068def22fde1293098d1d4b6e46f3e7691f0717c6dbff22c8",
-    "last_review": "2026-07-22",
-    "version": "1.0.4"
+    "hash": "648cdf322d11a2cf8084abe840f63301030e0924a54f772c12bc2d38bc6c3d8b",
+    "last_review": "2026-11-05",
+    "version": "1.0.5"
   },
   "STK-REDIS": {
-    "hash": "ce020dd5ed48350c65afccc8c60b2dd5ffdba5bcb6771f7e23773522979e5681",
-    "last_review": "2026-07-22",
-    "version": "1.0.0"
+    "hash": "a9a5085e272badc43c798b9be9f52a918bf1d432084c1a3175f5f51ed583f8a9",
+    "last_review": "2026-11-05",
+    "version": "1.0.1"
   },
   "STK-RUST": {
     "hash": "2af371f69f216df788333eab4bd5c0c5dc69accfd4d5590a59d96971ae5ab056",
@@ -260,9 +260,9 @@
     "version": "1.0.1"
   },
   "STK-SWIFT": {
-    "hash": "ce4432f4b5ae7adf016d7287aff7f995ba466868430baba1c97a7414a290e27b",
-    "last_review": "2026-07-22",
-    "version": "1.0.1"
+    "hash": "d954792ca6978a3c4114d1c49d407e96a17e518a6a0544911663de71f2118c32",
+    "last_review": "2026-11-05",
+    "version": "1.0.2"
   },
   "STK-TS": {
     "hash": "e500810889d077799ff314d500f3cfce4434c7c7685ba74e77414353c53ffaef",
@@ -270,9 +270,9 @@
     "version": "1.0.2"
   },
   "STK-VITE": {
-    "hash": "7f50c20690009cab09c4192cfd88c8968dbbda12629c19c28f26e3a86a09adb4",
-    "last_review": "2026-07-22",
-    "version": "1.0.1"
+    "hash": "c18518ff7caff7721d7c1b98a2348227fda20d14f71619dc6cd363101a81f6d6",
+    "last_review": "2026-11-05",
+    "version": "1.0.2"
   },
   "TST-FIXTURES": {
     "hash": "a2b7b71b755d1edc18c56231b9795ddd33ceaf78e15bbec6e833316d4aff7daa",

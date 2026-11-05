@@ -2,7 +2,7 @@
 id: STK-PY
 title: Python Stack
 family: STK
-version: 1.0.4
+version: 1.0.5
 status: active
 tiers:
   T1: required
@@ -29,7 +29,7 @@ verification:
     expect: "exit 0"
     layer: G
     rules: [STK-PY-03]
-  - cmd: "sh -c 'if [ -d src ]; then .venv/bin/bandit -r src -q; elif [ -f pyproject.toml ]; then .venv/bin/bandit -c pyproject.toml -r . -q; else .venv/bin/bandit -r . -q; fi'"
+  - cmd: "sh -c 'if [ -d src ]; then .venv/bin/bandit -r src -q; elif [ -f pyproject.toml ]; then .venv/bin/bandit -c pyproject.toml -r . -q -x \".svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,/.venv/,/venv/,/node_modules/\"; else .venv/bin/bandit -r . -q -x \".svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,/.venv/,/venv/,/node_modules/\"; fi'"
     expect: "exit 0 (skips justified per STK-PY-04)"
     layer: G
     rules: [STK-PY-04]
@@ -64,7 +64,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [STK-PY-08]
-last_review: 2026-07-22
+last_review: 2026-11-05
 ---
 
 # Python Stack (STK-PY)
@@ -135,7 +135,10 @@ never blanket `ignore` lists added to make CI green.
 **Tiers**: all required — **Layer**: G
 
 `bandit -r src -q`; a script collection (STK-PY-01) scans the repo with its
-`[tool.bandit] exclude_dirs`: `bandit -c pyproject.toml -r . -q`. Skips are declared per-project (e.g. oracle's
+`[tool.bandit] exclude_dirs`: `bandit -c pyproject.toml -r . -q -x <excludes>`, where
+`<excludes>` is bandit's default list plus `/.venv/,/venv/,/node_modules/` (`-x` replaces
+the defaults), so virtualenvs and `node_modules/` stay out of a repo-wide scan whatever
+the config says. Skips are declared per-project (e.g. oracle's
 `-s B101,B107,B110,B112`) and each skipped check gets a one-line justification in the
 project `CLAUDE.md` or CI file. `# nosec` inline requires a trailing comment saying why.
 SQL construction, `subprocess`, `pickle`, and `yaml.load` findings are never skipped —
@@ -254,6 +257,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "bandit>=1.7", "pip-audit>=2.6
 
 ## Changelog
 
+- **1.0.5** (2026-11-05) — STK-PY-04's repo-wide bandit scan (a script collection, or a project without `src/`) adds `-x` with bandit's default excludes plus `/.venv/,/venv/,/node_modules/`: without a `[tool.bandit] exclude_dirs` entry for them, bandit scanned the project's virtualenv and `node_modules/` and failed on third-party code. Matches `checks/sec-sast.sh`. No rule changes.
 - **1.0.4** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.3** (2026-11-04) — STK-PY-01's `src/` layout applies to packages; a script collection (standalone scripts run by path, none importing another first-party module) keeps its scripts in one directory with tests beside them. STK-PY-04's check scans `src/`, or otherwise the repo with `-c pyproject.toml` so a script collection's `[tool.bandit]` exclusions apply (`checks/sec-sast.sh` likewise). Adds no requirement: `src/` projects behave as before.
 - **1.0.2** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
