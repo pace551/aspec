@@ -30,8 +30,10 @@ and list what was added.
 
 ### 3. CI (tier-dependent, per DEV-CI)
 
-- **T1**: no CI files — the git hooks are the gates. Skip.
+- **T1**: no CI files — the git hooks are the gates. Skip, unless it's a published
+  package (below).
 - **T2**: hooks + optionally the test workflow only; ask nothing, default to hooks-only.
+  A published package builds CI anyway (below).
 - **T3/T4**: copy `$GOV/templates/ci/{stack}.yml` → `.github/workflows/ci.yml`; prune
   jobs DEV-CI doesn't require for the tier; keep `{{…}}`-free (stack templates are
   concrete — if a placeholder survives, resolve it from the scaffold's scripts).

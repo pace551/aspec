@@ -16,8 +16,10 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 import subprocess  # nosec B404 - argv-only subprocess use, audited below
 import sys
+import tomllib
 from pathlib import Path
 
 import yaml
@@ -154,6 +156,144 @@ def xargs_reads_nul(args: list[str]) -> bool:
 
 def unsafe_xargs(text: str) -> bool:
     return any(not xargs_reads_nul(m.group(1).split()) for m in XARGS_RE.finditer(text))
+
+
+# A framework file named where users and agents read about it: checks/, templates/ or
+# skills/, bare, after $GOV/ / $GOVERNANCE_DIR/ (quoted or not), or as a relative link
+# (../checks/x). Not inside a URL or another project path.
+REF_RE = re.compile(
+    r"(?<![\w./$-])"
+    r"(?P<prefix>\$\{?GOV(?:ERNANCE_DIR)?\}?\"?/|(?:\.\./)+)?"
+    r"(?P<ref>(?:checks|templates|skills)/[\w.\-/]+)"
+    r"(?P<tail>[*?\[{<][\w.*?\[\]\-/{}<>]*)?"
+)
+ADR_RE = re.compile(r"\bADR-(\d{4})\b")
+CODE_RE = re.compile(r"<(code|pre)>(.*?)</\1>|```(.*?)```|`([^`\n]+)`", re.DOTALL)
+PIP_INSTALL_RE = re.compile(r"\bpip3?\s+install\b(.*)")
+PEP508_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*(?:\[[^\]]*\])?(?:[<>=!~].*)?$")
+PIP_VALUE_FLAGS = {
+    "-r", "--requirement", "-c", "--constraint", "--group", "-e", "--editable",
+    "-i", "--index-url", "--extra-index-url", "-t", "--target", "--prefix", "-f",
+    "--find-links",
+}  # fmt: skip
+
+
+def reference_files(root: Path) -> list[Path]:
+    """Where framework paths are named for readers: skills, docs, standards, the
+    constitution, templates' prose, README and CLAUDE.md."""
+    files = [*(root / "skills").rglob("*.md"), *(root / "standards").rglob("*.md")]
+    files += [*(root / "constitution").rglob("*.md"), *(root / "templates").rglob("*.md")]
+    files += [p for p in (root / "docs").rglob("*") if p.is_file()]
+    files += [p for p in (root / "README.md", root / "CLAUDE.md") if p.exists()]
+    return sorted(files)
+
+
+def dangling_refs(text: str, root: Path, source: Path | None = None) -> list[str]:
+    """Framework paths and ADR numbers in text that don't exist under root. source is
+    the file text came from: relative links resolve from it, and ADR numbers are only
+    checked outside standards/ and templates/ (those talk about a project's own ADRs)."""
+    missing = []
+    base = root.resolve()
+    for m in REF_RE.finditer(text):
+        ref, prefix, tail = m["ref"], m["prefix"] or "", m["tail"] or ""
+        if tail.startswith("?") and text[m.end() : m.end() + 1] == "=":
+            tail = ""  # a URL query, not a glob
+        if prefix.startswith(".."):  # a relative link: re-anchor it at the framework root
+            if source is None:
+                continue
+            anchor = (source.parent / prefix).resolve()
+            if not anchor.is_relative_to(base):
+                continue  # points outside the framework
+            ref = (anchor / ref).relative_to(base).as_posix()
+        elif not prefix:
+            # a bare templates/<x> may be the project's own (Jinja, email templates): it
+            # is the framework's only when templates/<x> is one of the framework's entries
+            top, _, rest = ref.partition("/")
+            if (
+                top == "templates"
+                and rest
+                and not (root / "templates" / rest.split("/")[0]).exists()
+            ):
+                continue
+        if tail[:1] in ("*", "?", "["):  # a glob: something must match it
+            pattern = (ref + tail).rstrip("./")
+            # a lone trailing `?` may end a sentence instead: either reading will do
+            if tail == "?" and (root / ref.rstrip("./")).exists():
+                continue
+            if not any(root.glob(pattern)):
+                missing.append(pattern)
+            continue
+        if tail and "/" in ref:  # a placeholder mid-name: check its directory
+            ref = ref.rsplit("/", 1)[0]
+        ref = ref.rstrip("./")
+        if not (root / ref).exists():
+            missing.append(ref)
+    rel_parts = source.resolve().relative_to(root.resolve()).parts if source else ()
+    if not rel_parts or rel_parts[0] not in ("standards", "templates"):
+        for m in ADR_RE.finditer(text):
+            if not any((root / "decisions").glob(f"[aA][dD][rR]-{m.group(1)}-*.md")):
+                missing.append(m.group(0))
+    return sorted(set(missing))
+
+
+def norm_pkg(name: str) -> str:
+    return re.split(r"[<>=!~\[;\s]", name, maxsplit=1)[0].lower().replace("_", "-")
+
+
+def pyproject_packages(root: Path) -> set[str]:
+    """Every package pyproject.toml pins: dependencies, extras and dependency groups."""
+    data = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    project = data.get("project", {})
+    specs = list(project.get("dependencies", []))
+    for extra in project.get("optional-dependencies", {}).values():
+        specs += extra
+    for group in data.get("dependency-groups", {}).values():
+        specs += [s for s in group if isinstance(s, str)]
+    return {norm_pkg(s) for s in specs}
+
+
+def pip_args(rest: str) -> list[str]:
+    """The arguments of one shell command: quotes kept together (a PEP 508 marker's `;`
+    stays inside its argument), stopping at the first unquoted `;`, `&&`, `||` or `|`."""
+    lexer = shlex.shlex(rest, posix=True, punctuation_chars=";&|")
+    lexer.whitespace_split = True
+    args = []
+    try:
+        for tok in lexer:
+            if tok and set(tok) <= set(";&|"):
+                break
+            args.append(tok)
+    except ValueError:  # unbalanced quotes: take what was read
+        pass
+    return args
+
+
+def unpinned_pip_installs(text: str, pinned: set[str]) -> list[str]:
+    """Packages a `pip install` command names that the toolchain doesn't pin. Only code
+    (backticks, fenced blocks, <code>/<pre>) is read: prose isn't a command."""
+    found = []
+    for code in CODE_RE.finditer(text):
+        snippet = next(g for g in code.groups()[1:] if g is not None)
+        for line in snippet.replace("\\\n", " ").splitlines():
+            for m in PIP_INSTALL_RE.finditer(line):
+                skip = False
+                for raw in pip_args(m.group(1)):
+                    tok = raw.strip("\"'()")
+                    if not tok:
+                        continue
+                    if skip:
+                        skip = False
+                    elif tok in PIP_VALUE_FLAGS:
+                        skip = True
+                    elif (
+                        tok.startswith("-")
+                        or tok == "pip"
+                        or not PEP508_NAME_RE.match(norm_pkg(tok))
+                    ):
+                        continue
+                    elif norm_pkg(tok) not in pinned:
+                        found.append(norm_pkg(tok))
+    return found
 
 
 def published_errors(meta: dict, rel: str) -> list[str]:
@@ -384,6 +524,18 @@ def main() -> int:
                     f"{skill.relative_to(ROOT)}: pipes a file list to xargs without -0 — "
                     "paths with spaces split; emit NUL-separated names and use xargs -0"
                 )
+
+        # Reference integrity: no stale framework path, ADR or pip package in what
+        # users and agents read
+        pinned = pyproject_packages(ROOT)
+        for path in reference_files(ROOT):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            rel = path.relative_to(ROOT)
+            for ref in dangling_refs(text, ROOT, path):
+                errors.append(f"{rel}: names {ref}, which doesn't exist in the framework")
+            if rel.parts[0] == "docs":
+                for pkg in unpinned_pip_installs(text, pinned):
+                    errors.append(f"{rel}: pip-installs {pkg}, which pyproject.toml doesn't pin")
 
     if only:
         # Partial mode: requires-resolution against not-yet-written IDs is expected

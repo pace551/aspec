@@ -68,6 +68,24 @@ carry their own per-file changelogs.
     volumes are never entered, and exit 2 for anything else they can't read. Outside a
     git work tree they walk instead, with the same rule; a git failure inside one is an
     incomplete scan, not a reason to walk.
+- `checks/lint-framework.py` checks references. Every `checks/…`, `templates/…` and
+  `skills/…` path named in skills, docs, standards, the constitution, templates' prose,
+  README and CLAUDE.md must exist: bare, after `$GOV/` or `$GOVERNANCE_DIR/` (quoted or
+  not), or as a relative link. A glob must match something, and a bare `templates/<x>`
+  counts only when `<x>` is a framework entry, since projects have Jinja and email
+  templates of their own. Every `ADR-NNNN` outside standards and templates must have a
+  file in `decisions/`, and a `pip install` in docs' code may only name packages
+  `pyproject.toml` pins. Stale docs that still named a removed step or tool were a
+  recurring Devin finding.
+- New `checks/test_tier_matrix.py`. For every tier × published flag × stack with a CI
+  template, wherever `select-standards.py` selects DEV-CI at T3/T4 weight, that stack's
+  `templates/ci/<stack>.yml` must pass `dev-ci-present.sh` at that tier (#29: a published
+  T1 package got DEV-CI at T3 weight but not the CI to match). It also checks that
+  DEV-CI-01's job table, `dev-ci-present.sh` and `templates/ci/_fragments/` name the same
+  jobs, that every scaffold stack has a CI template (or a stated reason: swiftui verifies
+  locally by design, which leaves a T3+ or published Swift project with no template for
+  DEV-CI), and that `/bootstrap-repo`'s T1 and T2 rules defer to its published-package
+  rule, which they now say outright.
 
 ## 0.3.1 — 2026-11-05
 
