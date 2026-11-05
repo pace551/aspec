@@ -5,6 +5,8 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+## 0.3.1 — 2026-11-05
+
 - File lists reach `xargs` NUL-separated, so paths with spaces aren't split. `/evolve-standards`
   found no learning notes at all: every note `/harvest-learnings` writes is named
   `YYYY-MM-DD governance <slug>.md`, and its candidate search also piped to `rg`, which
