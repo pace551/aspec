@@ -5,6 +5,14 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Release PRs no longer wait for a maintainer to approve their CI runs. GitHub holds the
+  `pull_request` runs of any PR that `GITHUB_TOKEN` opens or pushes to, so
+  `.github/workflows/release.yml` now mints a short-lived GitHub App installation token
+  (`actions/create-github-app-token`) for release-please and for the release-date amend
+  push. The App's client ID is the `RELEASE_APP_CLIENT_ID` repository variable and its
+  private key the `RELEASE_APP_PRIVATE_KEY` secret. `GITHUB_TOKEN` keeps only
+  `contents: write`, for editing the release notes.
+
 ## 0.3.0 — 2026-11-05
 
 - Framework scripts run on a supported Python. `checks/install.sh` now builds the
