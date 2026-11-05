@@ -2,7 +2,7 @@
 
 ```yaml
 tier: T1
-classified: 2026-11-04
+classified: 2026-11-05
 tier_override: null
 published_package: true
 stacks: [python]
@@ -20,10 +20,10 @@ standards:
   - {id: SEC-SAST, version: 1.0.3}
   - {id: SEC-SECRETS, version: 1.0.3}
   - {id: SEC-SUPPLY, version: 1.0.2}
-  - {id: STK-PY, version: 1.0.3}
+  - {id: STK-PY, version: 1.0.4}
   - {id: TST-FIXTURES, version: 1.0.2}
   - {id: TST-POLICY, version: 1.0.1}
-  - {id: TST-RATCHET, version: 1.0.3}
+  - {id: TST-RATCHET, version: 1.0.4}
   - {id: TST-VERIFY, version: 1.0.1}
 waivers: []
 external_action_approvals:

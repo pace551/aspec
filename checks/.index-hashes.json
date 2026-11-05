@@ -24,16 +24,16 @@
     "version": "1.0.0"
   },
   "ARC-ERRORS": {
-    "hash": "0792bfdf59dc9af57cc4b2e81582f0a9cbf9c336d1e869b4fcc354d7ec01cec5",
-    "version": "1.0.1"
+    "hash": "c9a2a85f8b84d185af3cc491090818513e38d6eaafe1ebc5b6e1930a2924d115",
+    "version": "1.0.2"
   },
   "ARC-IDEMPOTENCY": {
     "hash": "d8746f24da78cf44779efa5379cb088b6eb6d64f1a5a26d722540a04ae63f573",
     "version": "1.0.0"
   },
   "ARC-MODULARITY": {
-    "hash": "ee852dcf7b4583b889e081b906c21cfb9c5045d5bcad97da2fc7c274fc6997a7",
-    "version": "1.0.1"
+    "hash": "3959031e031d32af897aea872c6a79196840b067321ee68d6ccc0681d0b66ee2",
+    "version": "1.0.2"
   },
   "ARC-PATTERNS": {
     "hash": "38d74eebbdc373cbeafdc4017c9241cd8a6eea1ba19680bab4ab5d8fdedc47bf",
@@ -176,8 +176,8 @@
     "version": "1.0.1"
   },
   "STK-GO": {
-    "hash": "36499c2d22da087de4ee39d011e61087baf0a40f07b47fd9bf6a6368972dcbbf",
-    "version": "1.0.1"
+    "hash": "392dadc6df249e9344f9cd1ec62b8918a7db06c5200b67a4b9e36f6246c08ae0",
+    "version": "1.0.2"
   },
   "STK-HTMX": {
     "hash": "e81d8266b448967eadc09ac9d8d9cfbcfe6e71980e125ce1fa12e9c1f3cefd4d",
@@ -192,16 +192,16 @@
     "version": "1.0.0"
   },
   "STK-PY": {
-    "hash": "edf188d4eead4bff9f939b966d08d89863978696041d8191504797f3a07e5fd6",
-    "version": "1.0.3"
+    "hash": "9edc60646bc2a5562c88a7f1f22b87b87cc7d60169045659152cc224778d64e8",
+    "version": "1.0.4"
   },
   "STK-REDIS": {
     "hash": "aabf22fba858bcdd317c0db8b0a2186579e313babab8b6367e3428afffdaeb22",
     "version": "1.0.0"
   },
   "STK-RUST": {
-    "hash": "8092f2c032f8a6fe0bdcb919a36bea7110214c4461fe8931cc054c5ad08dcd9a",
-    "version": "1.0.1"
+    "hash": "8851635749341f99438248975bf45cd335c2d03c6d576d1756d013b11eadd158",
+    "version": "1.0.2"
   },
   "STK-SQLITE": {
     "hash": "474516efbe775c6ab6fb8ef92c4b8a4f88bb9997c1a34144f95d9c65c006d336",
@@ -212,8 +212,8 @@
     "version": "1.0.1"
   },
   "STK-TS": {
-    "hash": "62e78b75dd010c44dcef5e23c72d8d0353907194d87150af9c87aceb2a58dda2",
-    "version": "1.0.1"
+    "hash": "ab860968c37c4d3a97ab8601abc8cf30bd3a34b2408fc66b476a90e4dba106a4",
+    "version": "1.0.2"
   },
   "STK-VITE": {
     "hash": "30db2d8c632c8710126f19aef68f4bcaa020542f7ef042fa3c05094350d1f235",
@@ -232,8 +232,8 @@
     "version": "1.0.1"
   },
   "TST-RATCHET": {
-    "hash": "845f0297dbf8541c43592ee07df9080a9a6457d782750d5b358a0243840924bc",
-    "version": "1.0.3"
+    "hash": "0c9b4b0e01c1aa9c48a2a90514e1f38d627dfcaa9c2bd72e0075134463b42dd4",
+    "version": "1.0.4"
   },
   "TST-VERIFY": {
     "hash": "09f390a94cc27a64a3125bb363251a60eda842c91f66ffff9044d0b80cb9dafe",

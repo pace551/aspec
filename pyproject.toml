@@ -10,9 +10,12 @@ requires-python = ">=3.11"
 dependencies = []
 
 # Exact pins: the framework's own tooling is run, not depended on (STK-PY-06).
+# runtime: what checks/*.py need when skills and standards run them (installed into the
+# governance clone's .venv by checks/install.sh); dev: runtime plus the lint/test toolchain.
 [dependency-groups]
+runtime = ["pyyaml==6.0.3"]
 dev = [
-  "pyyaml==6.0.3",
+  {include-group = "runtime"},
   "ruff==0.17.1",
   "bandit==1.9.4",
   "pip-audit==2.10.1",

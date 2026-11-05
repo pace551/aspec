@@ -2,7 +2,7 @@
 id: STK-TS
 title: TypeScript/Node Stack
 family: STK
-version: 1.0.1
+version: 1.0.2
 status: active
 tiers:
   T1: required
@@ -47,7 +47,7 @@ verification:
     expect: "exit 0 — tests green (--passWithNoTests tolerates a fresh scaffold; TST-POLICY governs test existence)"
     layer: G
     rules: [STK-TS-04]
-  - cmd: "sh -c 'node_modules/.bin/vitest run --coverage --passWithNoTests >/dev/null 2>&1; python3 \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
+  - cmd: "sh -c 'node_modules/.bin/vitest run --coverage --passWithNoTests >/dev/null 2>&1; \"$GOVERNANCE_DIR/.venv/bin/python\" \"$GOVERNANCE_DIR/checks/coverage-ratchet.py\" --check'"
     expect: "coverage ≥ committed .coverage-baseline (read-only check)"
     layer: G
     rules: [STK-TS-04]
@@ -265,5 +265,6 @@ myproj/
 
 ## Changelog
 
+- **1.0.2** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.

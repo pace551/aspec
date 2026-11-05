@@ -209,8 +209,8 @@ decisions/        ADRs for framework-shape choices (why a dedicated repo, why ti
 **Maintenance commands** (run from this repo):
 
 ```bash
-python3 checks/build-index.py      # regenerate catalog after standard edits
-python3 checks/lint-framework.py   # full self-lint — must be clean before commit
+.venv/bin/python checks/build-index.py      # regenerate catalog after standard edits
+.venv/bin/python checks/lint-framework.py   # full self-lint — must be clean before commit
 checks/install.sh                  # refresh installed skills after editing skills/
 checks/install.sh --hooks          # wire the global Claude Code hooks (asks nothing twice — idempotent)
 ```

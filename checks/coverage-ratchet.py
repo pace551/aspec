@@ -7,6 +7,10 @@ raised to the new value (ratchet up); if it's lower, exit 1. No coverage data at
 exits 3 (NO_DATA) — deliberately not 2, which Python itself uses for "can't open
 file" and argparse errors, so a missing script can never pass as "no data yet".
 
+Unlike the other checks/ scripts, this one is vendored into projects (.governance/) and
+run by their own `python3`, which can be an end-of-life Python (3.9 on macOS); keep it
+stdlib-only and 3.9-compatible (test_governance_python.py checks that).
+
 Reads coverage from (first match wins):
   1. --value <float>            explicit percentage
   2. coverage.json              (pytest-cov / coverage.py:  totals.percent_covered)

@@ -57,7 +57,7 @@ The fresh scaffold MUST pass its own gates:
 
 ```bash
 scripts/lint.sh && scripts/test.sh
-python3 $GOV/checks/run-verification.py --project .
+$GOV/.venv/bin/python $GOV/checks/run-verification.py --project .
 ```
 
 Then prove the hook bites: stage a file containing a fake canary secret

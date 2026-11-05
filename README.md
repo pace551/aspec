@@ -41,8 +41,8 @@ walkthrough (GOVERNANCE.md anatomy, waivers, evolution loop, troubleshooting).
 ## Maintenance
 
 ```bash
-python3 checks/build-index.py     # regenerate index.json + INDEX.md
-python3 checks/lint-framework.py  # full self-lint (schema, rules, freshness)
+.venv/bin/python checks/build-index.py     # regenerate index.json + INDEX.md
+.venv/bin/python checks/lint-framework.py  # full self-lint (schema, rules, freshness)
 checks/install.sh                 # install skills (+ optionally hooks) globally
 ```
 

@@ -5,6 +5,17 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- Framework scripts run on a supported Python. `checks/install.sh` now builds the
+  governance clone's `.venv` with Python 3.11+ and the pinned `runtime` dependency group
+  (PyYAML), and syncs an existing one to those pins on every run; the skills (`/govern`, `/verify-compliance`,
+  `/bootstrap-repo`, `/evolve-standards`) and the verification commands of 7 standards
+  (TST-RATCHET, ARC-MODULARITY, ARC-ERRORS, STK-PY/TS/GO/RUST; patch bumps) launch
+  `checks/*.py` through `"$GOVERNANCE_DIR/.venv/bin/python"` instead of the first
+  `python3` on PATH, which on macOS is an end-of-life 3.9 that no test covered.
+  `lint-framework` rejects a bare `python3` launch of a framework script in standards and
+  skills. `coverage-ratchet.py`, vendored into projects and run by their own `python3`,
+  stays 3.9-compatible and is tested on 3.9 where available. **Existing installs:** pull
+  the governance clone and re-run `checks/install.sh` once to create the venv.
 - The framework's own Python is a declared STK-PY script collection: `pyproject.toml`
   pins its toolchain (`[dependency-groups] dev`) and holds the house ruff config
   (STK-PY-03). `checks/` is formatted with `ruff format`, and the lint gate (hook and
