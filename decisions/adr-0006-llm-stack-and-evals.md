@@ -81,8 +81,17 @@ replace the matching parts of it:
   working-tree content (`git hash-object --stdin-paths`, after the repo's eol and clean
   filters), not a sha256 of raw bytes, so autocrlf and LFS checkouts of the same commit
   agree. A symlink contributes the sha256 of its target, also when `core.symlinks=false`
-  checks it out as a file holding the target. A submodule contributes its recorded commit
-  id.
+  checks it out as a file holding the target. A submodule is hashed like the parent,
+  file by file and recursively. A clean one (work tree equal to its HEAD, no untracked
+  files) contributes its HEAD commit, and one that isn't checked out contributes the
+  commit the parent records, so clones with and without `git submodule update` agree.
+  Otherwise it contributes `dirty:` plus the hash of its files. Moving or editing a
+  submodule therefore makes results stale before the gitlink is staged, and untracked
+  files inside it count as untracked inputs. (An earlier draft hashed `git diff` text,
+  which missed untracked and nested-submodule changes and varied with diff config.)
+  Every git call drops git's local environment variables (`git rev-parse
+  --local-env-vars`: a hook's `GIT_DIR` would redirect calls inside a submodule to the
+  parent), and runs with `core.fsmonitor=false` and `GIT_NO_LAZY_FETCH=1`.
 - **`--stamp` refuses already-stamped results.** The runner writes a fresh, unstamped
   file on every run, so stale results can't be made fresh without a rerun.
 - **`.eval-baseline` records each suite's kind, cases and runs (cases × trials)** as well
@@ -101,6 +110,8 @@ replace the matching parts of it:
   any stderr (trace output, deprecation notices). git runs with `LC_ALL=C`, so the
   warning isn't translated.
 - **`--update-baseline` refuses untracked files under the inputs**, as `--stamp` does.
+- **A suite not yet in `.eval-baseline` fails at T2+** (warns at T1). Otherwise nothing
+  gates it until someone baselines it, and even a 0.0 suite would pass.
 
 ## Alternatives considered
 

@@ -5,6 +5,16 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- **AI-EVALS 1.1.0**: two holes Devin Review found after #49 merged. A suite that
+  isn't in `.eval-baseline` yet now fails `eval-ratchet.py --check` at T2+ (it warns at
+  T1): before, nothing gated it, and even a 0.0 suite passed. A submodule listed in
+  `evals/inputs` is now hashed file by file like the parent, recursively (a clean one
+  contributes its HEAD commit). Before, it contributed the gitlink in the parent's
+  index, so checking out a new submodule commit or editing inside it left results fresh
+  until someone ran `git add`. Untracked files inside a submodule now count as untracked
+  inputs. Every git call drops git's local environment variables (a hook's `GIT_DIR`
+  redirected calls inside a submodule to the parent) and runs with `core.fsmonitor=false`
+  and `GIT_NO_LAZY_FETCH=1`.
 - **AI-EVALS** (ADR-0006): a new standard for projects that call an LLM, plus the `llm`
   stack key that selects it. `/govern` sets `llm` when the dependencies name an LLM SDK by
   exact package name, and AI-EVALS is then pinned at every tier with no trigger word
@@ -25,7 +35,7 @@ carry their own per-file changelogs.
   `evals/inputs` into it (it refuses results that are already stamped). `--check` fails
   on fewer than 10 cases and on a safety suite below 1.0 or relabelled. At T2+ it also
   fails on stale results or untracked input files, on fewer than 3 trials, and on a
-  suite that is missing, ran fewer cases or times than its baseline, or dropped below the
+  suite that is missing, not yet baselined, ran fewer cases or times than its baseline, or dropped below the
   committed `.eval-baseline` by more than a noise band sized by the baseline's runs. At
   T1 those T2+ failures only warn. `--update-baseline` raises the bar deliberately, and
   lowering it needs `--allow-lower` plus a waiver. The gate refuses symlinked results and

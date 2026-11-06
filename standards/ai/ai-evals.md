@@ -2,7 +2,7 @@
 id: AI-EVALS
 title: LLM and Agent Evaluations
 family: AI
-version: 1.0.0
+version: 1.1.0
 status: active
 tiers:
   T1: required
@@ -150,8 +150,9 @@ the runner's fresh `evals/results.json`, and any later change to those files mak
 results stale. Stamping refuses results that are already stamped, an entry that matches
 no tracked file, and untracked files under an entry, so every clone computes the same
 hash. Each suite is compared with the committed `.eval-baseline`, which records its
-kind, pass rate, cases and runs (cases × trials). A drop counts only beyond a noise band
-sized by the baseline's runs, so a 20 × 3 suite at 1.0 still passes at 58/60. Raising
+kind, pass rate, cases and runs (cases × trials); a suite not in it yet fails until it
+is reviewed and baselined. A drop counts only beyond a noise band sized by the
+baseline's runs, so a 20 × 3 suite at 1.0 still passes at 58/60. Raising
 the baseline is a deliberate `--update-baseline` and commit. Lowering a suite, removing
 it, cutting its cases or runs, or relabelling a safety suite needs `--allow-lower` and a
 waiver (C9), as for `TST-RATCHET-03`. The recorded run is the first complete run after
@@ -207,7 +208,9 @@ usage. That is a finding about the evals, not noise.
 Exit 1 is a finding; exit 2 means the gate couldn't read an input (an incomplete scan,
 never a pass).
 
-**Remediation:** `stale` → rerun the evals (the runner writes a fresh, unstamped file),
+**Remediation:** `not in .eval-baseline yet` → review the new suite's transcripts, then
+`--update-baseline` and commit · `stale` → rerun the evals (the runner writes a fresh,
+unstamped file),
 then `eval-ratchet.py --stamp` · `untracked files` / `matches no tracked file` → commit,
 gitignore or fix the path in `evals/inputs` · `fewer than its baseline` or `was a safety
 suite` → restore the suite, or accept it with `--update-baseline --allow-lower` and a
@@ -296,4 +299,9 @@ git add evals/results.json .eval-baseline
 
 ## Changelog
 
+- **1.1.0** (2026-11-06) — AI-EVALS-05: a suite not yet in `.eval-baseline` fails at T2+
+  until it is reviewed and baselined (new requirement). `eval-ratchet.py` hashes a
+  submodule file by file like the parent (clean: its HEAD commit), so moving or editing
+  it, untracked files inside it included, makes results stale before the gitlink is
+  staged (Devin Review of #49).
 - **1.0.0** (2026-11-06) — Initial version (ADR-0006).
