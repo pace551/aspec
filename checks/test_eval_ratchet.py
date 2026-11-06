@@ -9,6 +9,7 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
 import sys
 import unittest
@@ -330,11 +331,15 @@ class EdgeCaseTests(unittest.TestCase):
             self.assertEqual(run(t, "--update-baseline").returncode, 0)
             self.assertEqual(run(t, "--check").returncode, 0)
             sub = Tree(t.root / "prompts" / "vendored")
-            sub.write({"README": "bumped\n"}).commit()
-            t.git("add", "prompts/vendored")
-            proc = run(t, "--check")
-            self.assertEqual(proc.returncode, 1, proc.stdout)
-            self.assertIn("stale", proc.stdout)
+            sub.write({"README": "edited, not committed\n"})
+            for case in ("dirty submodule", "new commit, gitlink not staged", "staged"):
+                if case == "new commit, gitlink not staged":
+                    sub.commit()
+                elif case == "staged":
+                    t.git("add", "prompts/vendored")
+                proc = run(t, "--check")
+                self.assertEqual(proc.returncode, 1, case)
+                self.assertIn("stale", proc.stdout, case)
 
     def test_allow_lower_without_update_is_a_usage_error(self):
         with tree() as t:
@@ -422,17 +427,19 @@ class GateTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 1)
             self.assertIn("triage", proc.stdout)
 
-    def test_new_suite_passes_with_a_note(self):
+    def test_new_suite_needs_a_baseline_at_t2(self):
         with tree() as t:
             ready(t)
-            set_rate(t, "triage", 1.0)
             path = t.root / "evals/results.json"
             data = json.loads(path.read_text())
-            data["suites"]["extraction"] = suite("capability", rate=0.3)
+            data["suites"]["extraction"] = suite("capability", rate=0.0)
             path.write_text(json.dumps(data))
             proc = run(t, "--check")
-            self.assertEqual(proc.returncode, 0, proc.stdout)
+            self.assertEqual(proc.returncode, 1, proc.stdout)
             self.assertIn("extraction", proc.stdout)
+            proc = run(t, "--check", "--tier", "T1")
+            self.assertEqual(proc.returncode, 0, proc.stdout)
+            self.assertIn("WARN", proc.stdout)
 
     def test_trials_floor_by_tier(self):
         suites = {"triage": suite(cases=12, trials=1)}
@@ -643,6 +650,26 @@ class HashEdgeTests(unittest.TestCase):
             t.nested_repo("vendored").commit()
             self.assertEqual(run(t, "--stamp").returncode, 0)
 
+    def test_uninitialized_submodule_hashes_its_recorded_commit(self):
+        # a clone without `git submodule update` agrees with one that has it
+        with tree() as t:
+            project(t)
+            t.nested_repo("prompts/vendored").commit()
+            run(t, "--stamp")
+            run(t, "--update-baseline")
+            shutil.rmtree(t.root / "prompts/vendored/.git")
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 0, proc.stdout)
+
+    def test_broken_submodule_is_incomplete(self):
+        with tree() as t:
+            project(t)
+            t.nested_repo("prompts/vendored").commit()
+            shutil.rmtree(t.root / "prompts/vendored/.git")
+            (t.root / "prompts/vendored/.git").write_text("gitdir: /nonexistent\n")
+            self.assertEqual(run(t, "--stamp").returncode, 2)
+            self.assertEqual(run(t, "--check").returncode, 2)
+
     def test_newline_in_an_input_path_fails(self):
         with tree() as t:
             project(t, **{"prompts/a\nb.md": "x\n"})
@@ -664,6 +691,97 @@ class HashEdgeTests(unittest.TestCase):
             with t.locked("prompts/sub"):
                 proc = run(t, "--check")
             self.assertEqual(proc.returncode, 2, proc.stdout)
+
+
+class SubmoduleTests(unittest.TestCase):
+    """A submodule hashes like the parent: file by file, recursively, config-free."""
+
+    def stamped(self, t: Tree) -> Tree:
+        project(t)
+        t.nested_repo("prompts/vendored").commit()
+        self.assertEqual(run(t, "--stamp").returncode, 0)
+        self.assertEqual(run(t, "--update-baseline").returncode, 0)
+        return t
+
+    def test_untracked_file_in_a_submodule_is_reported(self):
+        with tree() as t:
+            self.stamped(t)
+            (t.root / "prompts/vendored/new.md").write_text("new\n")
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("prompts/vendored/new.md", proc.stdout)
+
+    def test_dirty_submodule_hash_ignores_diff_config(self):
+        with tree() as t:
+            project(t)
+            t.nested_repo("prompts/vendored").commit()
+            sub = Tree(t.root / "prompts/vendored")
+            sub.write({"README": "dirty at stamp time\n"})
+            self.assertEqual(run(t, "--stamp").returncode, 0)
+            self.assertEqual(run(t, "--update-baseline").returncode, 0)
+            sub.git("config", "color.diff", "always")
+            sub.git("config", "diff.noprefix", "true")
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 0, proc.stdout)
+
+    def test_hook_git_dir_does_not_redirect_submodule_calls(self):
+        with tree() as t:
+            self.stamped(t)
+            proc = subprocess.run(
+                [sys.executable, str(GATE), "--check"],
+                cwd=t.root,
+                capture_output=True,
+                text=True,
+                env=clean_env(GIT_DIR=str(t.root / ".git")),
+                check=False,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+
+    def test_nested_submodule_edit_is_stale_even_when_already_dirty(self):
+        with tree() as t:
+            project(t)
+            outer = Tree(t.root / "prompts/vendored")
+            outer.write({"README": "outer\n"}).commit()
+            outer.nested_repo("lib")
+            inner = Tree(t.root / "prompts/vendored/lib")
+            inner.write({"a.md": "a\n"}).commit()  # lib tracks README and a.md
+            outer.commit()
+            t.commit()
+            inner.write({"a.md": "dirty at stamp time\n"})
+            self.assertEqual(run(t, "--stamp").returncode, 0)
+            self.assertEqual(run(t, "--update-baseline").returncode, 0)
+            self.assertEqual(run(t, "--check").returncode, 0)
+            inner.write({"README": "a second edit\n"})
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 1, proc.stdout)
+            self.assertIn("stale", proc.stdout)
+
+    def test_sha256_submodule_with_a_symlink_is_clean(self):
+        # a clean checkout must hash like an uninitialized clone of the same commit
+        with tree() as t:
+            t.git("init", "-q", "--object-format=sha256")
+            project(t)
+            sub = Tree(t.root / "prompts/vendored")
+            sub.root.mkdir(parents=True)
+            sub.git("init", "-q", "--object-format=sha256")
+            sub.write({"README": "x\n"})
+            (sub.root / "link.md").symlink_to("README")
+            sub.commit()
+            t.commit()
+            self.assertEqual(run(t, "--stamp").returncode, 0)
+            self.assertEqual(run(t, "--update-baseline").returncode, 0)
+            shutil.rmtree(sub.root / ".git")
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 0, proc.stdout)
+
+    def test_clean_submodule_at_another_commit_is_stale(self):
+        with tree() as t:
+            self.stamped(t)
+            sub = Tree(t.root / "prompts/vendored")
+            sub.write({"README": "v2\n"}).commit()
+            proc = run(t, "--check")
+            self.assertEqual(proc.returncode, 1)
+            self.assertIn("stale", proc.stdout)
 
 
 class SymlinkTests(unittest.TestCase):

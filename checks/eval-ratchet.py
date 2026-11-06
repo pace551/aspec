@@ -20,8 +20,12 @@ algorithm, for runner authors who want to check it:
             the blob id `git hash-object --stdin-paths` gives its working-tree content
             (after the repo's eol and clean filters, so autocrlf and LFS clones agree);
             for a symlink, the hex sha256 of its target (also when core.symlinks=false
-            checks it out as a file holding the target); for a submodule, its recorded
-            commit id. A tracked file missing from the work tree is left out
+            checks it out as a file holding the target); for a submodule, its HEAD
+            commit when its work tree matches HEAD with no untracked files, the commit
+            the parent records when it isn't checked out, and otherwise "dirty:" plus
+            this same algorithm applied to all of its tracked files (recursively). A
+            tracked file missing from the work tree is left out. Untracked files inside
+            a submodule count as untracked inputs
   inputs_sha256 = hex sha256 of the concatenation
 
 Only tracked files are hashed, so every clone computes the same hash. An untracked,
@@ -43,9 +47,10 @@ The gate (--check) fails when, at every tier:
   .eval-baseline is malformed; a results file or the baseline is a symlink.
 and at T2+ also when (at T1 these only warn, as AI-EVALS-03/05 are advisory there):
   the results are stale or untracked files sit under evals/inputs; a suite ran fewer than
-  3 trials; .eval-baseline is missing; a baseline suite is missing from the results or
-  ran fewer cases or times than its baseline; a suite is below its baseline by more than
-  max(0.02, 2·sqrt(2·p(1−p)/n)), n = the baseline's runs, p = (baseline·n + 1)/(n + 2).
+  3 trials; .eval-baseline is missing; a suite is not in it yet; a baseline suite is
+  missing from the results or ran fewer cases or times than its baseline; a suite is
+  below its baseline by more than max(0.02, 2·sqrt(2·p(1−p)/n)), n = the baseline's
+  runs, p = (baseline·n + 1)/(n + 2).
 
 Usage: eval-ratchet.py [--project DIR] [--tier T1|T2|T3|T4]
                        [--check | --stamp | --update-baseline [--allow-lower]]
@@ -78,8 +83,22 @@ EPS = 1e-9
 STRICT_TIERS = {"T2", "T3", "T4"}
 GITLINK = "160000"
 SYMLINK = "120000"
-# git translates its warnings; the incomplete-scan check matches the English text
-GIT_ENV = {**os.environ, "LC_ALL": "C", "LANGUAGE": "C"}
+# `git rev-parse --local-env-vars`: set for a hook (GIT_DIR, GIT_INDEX_FILE, ...), they
+# would redirect `git -C <submodule>` to the parent repo
+LOCAL_GIT_VARS = {
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_CONFIG", "GIT_CONFIG_PARAMETERS",
+    "GIT_CONFIG_COUNT", "GIT_OBJECT_DIRECTORY", "GIT_DIR", "GIT_WORK_TREE",
+    "GIT_IMPLICIT_WORK_TREE", "GIT_GRAFT_FILE", "GIT_INDEX_FILE", "GIT_NO_REPLACE_OBJECTS",
+    "GIT_REPLACE_REF_BASE", "GIT_PREFIX", "GIT_SHALLOW_FILE", "GIT_COMMON_DIR",
+}  # fmt: skip
+# untranslated warnings (the incomplete-scan check matches English), and no network
+# fetches for a partial clone's missing blobs
+GIT_ENV = {
+    **{k: v for k, v in os.environ.items() if k not in LOCAL_GIT_VARS},
+    "LC_ALL": "C",
+    "LANGUAGE": "C",
+    "GIT_NO_LAZY_FETCH": "1",
+}
 
 
 class Finding(Exception):
@@ -208,98 +227,151 @@ def read_inputs(root: Path) -> list[str]:
     return entries
 
 
-def git_ls(root: Path, *args: str) -> list[str]:
-    proc = subprocess.run(  # nosec B603 B607 - git ls-files, argv only, no shell
-        ["git", "--literal-pathspecs", "ls-files", "-z", *args],
-        cwd=root,
+def git(repo: Path, *args: str, stdin: bytes | None = None) -> bytes:
+    """Run git in repo: argv only, local GIT_* variables dropped (a hook's GIT_DIR would
+    point every call at the parent), fsmonitor and lazy fetches off, untranslated."""
+    proc = subprocess.run(  # nosec B603 B607 - git, argv only, no shell
+        ["git", "-c", "core.fsmonitor=false", *args],
+        cwd=repo,
+        input=stdin,
         capture_output=True,
         env=GIT_ENV,
         check=False,
     )
     # git only warns about an unreadable untracked directory and exits 0; other stderr
-    # (trace output, config deprecation notices) doesn't mean files are missing
+    # (trace output, config deprecation notices) doesn't mean anything is missing
     if proc.returncode != 0 or b"could not open directory" in proc.stderr:
-        raise Incomplete(f"git ls-files: {proc.stderr.decode(errors='replace').strip()}")
-    return [f for f in proc.stdout.decode("utf-8", "surrogateescape").split("\0") if f]
+        sub = next(a for a in args if not a.startswith("-"))
+        raise Incomplete(f"git {sub} in {repo}: {proc.stderr.decode(errors='replace').strip()}")
+    return proc.stdout
 
 
-def tracked_entries(root: Path, entries: list[str]) -> dict[str, tuple[str, str]]:
-    """path -> (mode, object id) for every tracked file under the entries. An entry that
-    matches no tracked file is a finding: a typo would otherwise drop a dependency from
-    the hash without a word."""
+def git_ls(repo: Path, *args: str) -> list[str]:
+    out = git(repo, "--literal-pathspecs", "ls-files", "-z", *args)
+    return [f for f in out.decode("utf-8", "surrogateescape").split("\0") if f]
+
+
+def ls_tracked(repo: Path, entries: list[str], strict: bool) -> dict[str, tuple[str, str]]:
+    """path -> (mode, object id) for every tracked file under the entries. With strict,
+    an entry that matches no tracked file is a finding: a typo would otherwise drop a
+    dependency from the hash without a word."""
     files: dict[str, tuple[str, str]] = {}
     for entry in entries:
-        lines = git_ls(root, "-s", "--cached", "--", entry)
-        if not lines:
-            raise Finding(
-                f"{INPUTS}: {entry!r} matches no tracked file (commit it or fix the path)"
-            )
+        lines = git_ls(repo, "-s", "--cached", "--", entry)
+        if strict and not lines:
+            raise Finding(f"{INPUTS}: {entry!r} matches no tracked file (commit it or fix it)")
         for line in lines:
             meta, _, path = line.partition("\t")
             mode, obj, _stage = meta.split(" ")
             files[path] = (mode, obj)
-    for name in NEVER_HASHED:
-        files.pop(name, None)
-    if not files:
-        raise Finding(f"{INPUTS} selects no files")
     return files
 
 
-def untracked(root: Path, entries: list[str]) -> list[str]:
-    found = git_ls(root, "--others", "--exclude-standard", "--", *entries)
-    return sorted(set(found) - NEVER_HASHED)
-
-
-def blob_ids(root: Path, paths: list[str]) -> list[str]:
+def blob_ids(repo: Path, paths: list[str]) -> list[str]:
     """The blob id git would store for each working-tree file, after the repo's eol
     conversion and clean filters (LFS included), so every clone of a commit agrees."""
     if not paths:
         return []
     if any("\n" in p for p in paths):
         raise Finding("an input path contains a newline; rename it")
-    proc = subprocess.run(  # nosec B603 B607 - git hash-object, argv only, no shell
-        ["git", "hash-object", "--stdin-paths"],
-        cwd=root,
-        input="".join(f"{p}\n" for p in paths).encode("utf-8", "surrogateescape"),
-        capture_output=True,
-        env=GIT_ENV,
-        check=False,
-    )
-    ids = proc.stdout.decode().split()
-    if proc.returncode != 0 or len(ids) != len(paths):
-        raise Incomplete(f"git hash-object: {proc.stderr.decode(errors='replace').strip()}")
+    stdin = "".join(f"{p}\n" for p in paths).encode("utf-8", "surrogateescape")
+    ids = git(repo, "hash-object", "--stdin-paths", stdin=stdin).decode().split()
+    if len(ids) != len(paths):
+        raise Incomplete(f"git hash-object in {repo}: {len(ids)} ids for {len(paths)} paths")
     return ids
 
 
-def inputs_hash(root: Path, entries: list[str]) -> str:
+def symlink_blob_id(target: bytes, object_format: str) -> str:
+    """The id git gives a symlink's blob in a repo of this object format (sha1 or
+    sha256), to compare with HEAD's tree."""
+    algo = hashlib.new(object_format, usedforsecurity=False)
+    algo.update(b"blob %d\0" % len(target) + target)
+    return algo.hexdigest()
+
+
+def digests_of(
+    repo: Path, files: dict, prefix: str, stray: list[str], object_format: str
+) -> tuple[dict, dict]:
+    """(digest, git object id) per tracked file of repo. Digests feed the hash; object
+    ids are compared with a submodule's HEAD tree to tell whether it is clean."""
     digests: dict[str, str] = {}
+    objects: dict[str, str] = {}
     blobs: list[str] = []
-    for rel, (mode, obj) in sorted(tracked_entries(root, entries).items()):
+    for rel, (mode, obj) in sorted(files.items()):
         if mode == GITLINK:
-            digests[rel] = obj  # a submodule: its recorded commit
+            digests[rel] = objects[rel] = submodule_digest(
+                repo / rel, obj, f"{prefix}{rel}/", stray
+            )
             continue
-        path = root / rel
+        path = repo / rel
         try:
             st = path.lstat()
-            if stat.S_ISLNK(st.st_mode):
-                digests[rel] = hashlib.sha256(os.fsencode(os.readlink(path))).hexdigest()
-            elif mode == SYMLINK and stat.S_ISREG(st.st_mode):
-                # a symlink checked out as a file holding its target (core.symlinks=false):
-                # the same bytes, so the same digest as a real link
-                digests[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
+            if stat.S_ISLNK(st.st_mode) or (mode == SYMLINK and stat.S_ISREG(st.st_mode)):
+                # a symlink, or one checked out as a file holding its target
+                # (core.symlinks=false): the same bytes, so the same digest
+                target = (
+                    os.fsencode(os.readlink(path))
+                    if stat.S_ISLNK(st.st_mode)
+                    else path.read_bytes()
+                )
+                digests[rel] = hashlib.sha256(target).hexdigest()
+                objects[rel] = symlink_blob_id(target, object_format)
             elif stat.S_ISREG(st.st_mode):
                 blobs.append(rel)
             else:
-                digests[rel] = "not-a-file"  # e.g. a directory where a file is tracked
+                digests[rel] = objects[rel] = "not-a-file"  # e.g. a dir where a file is tracked
         except FileNotFoundError:
             continue  # tracked but deleted: dropping it from the hash marks the change
         except OSError as exc:
-            raise Incomplete(f"{rel}: {exc.strerror or exc}") from exc
-    digests.update(zip(blobs, blob_ids(root, blobs), strict=True))
+            raise Incomplete(f"{prefix}{rel}: {exc.strerror or exc}") from exc
+    for rel, blob in zip(blobs, blob_ids(repo, blobs), strict=True):
+        digests[rel] = objects[rel] = blob
+    return digests, objects
+
+
+def combine(digests: dict[str, str]) -> str:
     h = hashlib.sha256()
     for rel in sorted(digests):
         h.update(rel.encode("utf-8", "surrogateescape") + b"\0" + digests[rel].encode() + b"\n")
     return h.hexdigest()
+
+
+def submodule_digest(path: Path, recorded: str, prefix: str, stray: list[str]) -> str:
+    """A submodule hashes like the parent, file by file (and recursively). A clean one
+    (work tree equal to its HEAD, no untracked files) contributes just its HEAD commit,
+    and one that isn't checked out the commit the parent records, so clones with and
+    without `git submodule update` agree. Untracked files inside it are reported."""
+    if not (path / ".git").exists():
+        return recorded
+    head = git(path, "rev-parse", "HEAD").decode().strip()
+    inner = git_ls(path, "--others", "--exclude-standard")
+    stray += [f"{prefix}{f}" for f in inner]
+    object_format = git(path, "rev-parse", "--show-object-format").decode().strip()
+    files = ls_tracked(path, ["."], False)
+    digests, objects = digests_of(path, files, prefix, stray, object_format)
+    tree = {}
+    for line in (
+        git(path, "ls-tree", "-r", "-z", "HEAD").decode("utf-8", "surrogateescape").split("\0")
+    ):
+        if line:
+            meta, _, rel = line.partition("\t")
+            tree[rel] = meta.split(" ")[2]
+    if not inner and objects == tree:
+        return head
+    return "dirty:" + combine(digests)
+
+
+def inputs_state(root: Path, entries: list[str]) -> tuple[str, list[str]]:
+    """(inputs_sha256, untracked files under the entries, submodules included)."""
+    files = ls_tracked(root, entries, True)
+    for name in NEVER_HASHED:
+        files.pop(name, None)
+    if not files:
+        raise Finding(f"{INPUTS} selects no files")
+    stray = git_ls(root, "--others", "--exclude-standard", "--", *entries)
+    stray = [f for f in stray if f not in NEVER_HASHED]
+    digests, _ = digests_of(root, files, "", stray, "sha1")  # top-level object ids unused
+    return combine(digests), sorted(stray)
 
 
 def load_baseline(root: Path) -> dict[str, dict] | None:
@@ -335,11 +407,10 @@ def check(root: Path, tier: str) -> int:
     strict = tier in STRICT_TIERS
     data = load_results(root)
     entries = read_inputs(root)
-    current = inputs_hash(root, entries)
+    current, stray = inputs_state(root, entries)
     suites = data["suites"]
     fails: list[str] = []
     warns: list[str] = []
-    notes: list[str] = []
 
     def problem(msg: str, always: bool = False) -> None:
         (fails if strict or always else warns).append(msg)
@@ -352,7 +423,7 @@ def check(root: Path, tier: str) -> int:
             f"results are stale: files in {INPUTS} changed since the last --stamp; "
             "rerun the evals, then --stamp"
         )
-    if stray := untracked(root, entries):
+    if stray:
         problem(
             f"untracked files under {INPUTS} entries ({', '.join(stray[:5])}"
             f"{', …' if len(stray) > 5 else ''}): commit or gitignore them"
@@ -407,14 +478,15 @@ def check(root: Path, tier: str) -> int:
                     f"(n={base['runs']})"
                 )
         for name in sorted(set(suites) - set(baseline)):
-            notes.append(f"suite {name!r} is not in {BASELINE} yet: --update-baseline after review")
+            problem(
+                f"suite {name!r} is not in {BASELINE} yet, so nothing gates it: review its "
+                "results, then --update-baseline and commit"
+            )
 
     for msg in fails:
         print(f"eval-ratchet: FAIL — {msg}")
     for msg in warns:
         print(f"eval-ratchet: WARN — {msg} (advisory at {tier})")
-    for msg in notes:
-        print(f"eval-ratchet: note — {msg}")
     if fails:
         return 1
     print(f"eval-ratchet: OK ({len(suites)} suite(s), {tier})")
@@ -428,13 +500,13 @@ def stamp(root: Path) -> int:
             f"{RESULTS} is already stamped: rerun the evals (the runner writes a fresh, "
             "unstamped file), then --stamp"
         )
-    entries = read_inputs(root)
-    if stray := untracked(root, entries):
+    digest, stray = inputs_state(root, read_inputs(root))
+    if stray:
         raise Finding(
             f"untracked files under {INPUTS} entries ({', '.join(stray[:5])}): commit or "
             "gitignore them before stamping, so every clone computes the same hash"
         )
-    data["inputs_sha256"] = inputs_hash(root, entries)
+    data["inputs_sha256"] = digest
     write_atomic(root / RESULTS, json.dumps(data, indent=2) + "\n")
     print(f"eval-ratchet: stamped {RESULTS} ({data['inputs_sha256'][:12]}…)")
     return 0
@@ -442,13 +514,13 @@ def stamp(root: Path) -> int:
 
 def update_baseline(root: Path, allow_lower: bool) -> int:
     data = load_results(root)
-    entries = read_inputs(root)
-    if stray := untracked(root, entries):
+    digest, stray = inputs_state(root, read_inputs(root))
+    if stray:
         raise Finding(
             f"untracked files under {INPUTS} entries ({', '.join(stray[:5])}): commit or "
             "gitignore them before raising the baseline"
         )
-    if data.get("inputs_sha256") != inputs_hash(root, entries):
+    if data.get("inputs_sha256") != digest:
         raise Finding(
             "results are stale or unstamped: rerun the evals and --stamp before --update-baseline"
         )
