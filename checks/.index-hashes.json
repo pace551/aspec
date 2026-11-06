@@ -130,9 +130,9 @@
     "version": "1.0.2"
   },
   "LEG-LICENSING": {
-    "hash": "1278b5db67b3d58c8288a4931e75449b75d4bfd95a6d4086003cfcdf72a3454d",
-    "last_review": "2026-07-22",
-    "version": "1.0.3"
+    "hash": "c501626bb541eb27d88cc885e59a3072431235b9ef68fdfe44d7fd4b50380822",
+    "last_review": "2026-11-06",
+    "version": "1.0.4"
   },
   "OPS-ALERTS": {
     "hash": "dfe08fee3968cf9c203e1929b32f95d284df4f423e41322b3bda02b43005741e",
@@ -195,9 +195,9 @@
     "version": "1.0.2"
   },
   "SEC-SAST": {
-    "hash": "6f0b4b6d28d43cd600c2e75aba6d43b01790b595e7455ad1478baa6458a2cc39",
-    "last_review": "2026-07-22",
-    "version": "1.0.3"
+    "hash": "c78e726734376fcd89121d65e2f994afcf15dbe1dbbaa03da7000941c3b9f262",
+    "last_review": "2026-11-06",
+    "version": "1.0.4"
   },
   "SEC-SECRETS": {
     "hash": "03908ed617ecb3b29647aadb27a2b3268e9ac493d4575f0cddf2612101e48220",
@@ -205,9 +205,9 @@
     "version": "1.0.3"
   },
   "SEC-SUPPLY": {
-    "hash": "a22308530991fe6b3ff4ce476b9871ee08c7dd5b2733a19e187e8029a8eb633b",
-    "last_review": "2026-07-22",
-    "version": "1.0.2"
+    "hash": "bf4a447c02c2bb8de0f0b7a6345b414ce49b3db099d1853be5c5a6cf63df78a7",
+    "last_review": "2026-11-06",
+    "version": "1.0.3"
   },
   "SEC-THREAT": {
     "hash": "02a5bc91c591129fc33e8ce10d136761daf45dd2a908e8ecdee075d968989f75",
@@ -295,9 +295,9 @@
     "version": "1.0.1"
   },
   "TST-RATCHET": {
-    "hash": "a1bef5563c5065405c713eeace32dcb8ace0167ee231a6a29602728c79b4895c",
-    "last_review": "2026-07-22",
-    "version": "1.0.4"
+    "hash": "c6c0dd7f8327dc2ffeb74e3f801fbaebf28b89e973ebd9609f07c258419023f3",
+    "last_review": "2026-11-06",
+    "version": "1.0.5"
   },
   "TST-VERIFY": {
     "hash": "59d58726e84b4bdbd7de6499db4c3ddd5f2bb5a5d718615ba99fb0a3d52da4d2",

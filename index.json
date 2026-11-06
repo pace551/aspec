@@ -743,7 +743,7 @@
       "id": "LEG-LICENSING",
       "title": "Licensing",
       "family": "LEG",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -770,9 +770,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-06",
       "path": "standards/legal/leg-licensing.md",
-      "tokens_est": 2486
+      "tokens_est": 2619
     },
     {
       "id": "OPS-ALERTS",
@@ -1410,7 +1410,7 @@
       "id": "SEC-SAST",
       "title": "Static Application Security Testing",
       "family": "SEC",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1436,9 +1436,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-06",
       "path": "standards/security/sec-sast.md",
-      "tokens_est": 2308
+      "tokens_est": 2781
     },
     {
       "id": "SEC-SECRETS",
@@ -1478,7 +1478,7 @@
       "id": "SEC-SUPPLY",
       "title": "Supply Chain Security",
       "family": "SEC",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1505,9 +1505,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-06",
       "path": "standards/security/sec-supply.md",
-      "tokens_est": 2558
+      "tokens_est": 2705
     },
     {
       "id": "SEC-THREAT",
@@ -2135,7 +2135,7 @@
       "id": "TST-RATCHET",
       "title": "Coverage Ratchet",
       "family": "TST",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -2160,9 +2160,9 @@
         "A",
         "G"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-06",
       "path": "standards/testing/tst-ratchet.md",
-      "tokens_est": 2418
+      "tokens_est": 2522
     },
     {
       "id": "TST-VERIFY",

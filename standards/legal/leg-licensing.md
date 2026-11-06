@@ -2,7 +2,7 @@
 id: LEG-LICENSING
 title: Licensing
 family: LEG
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: advisory
@@ -42,7 +42,7 @@ verification:
     layer: A
     rules: [LEG-LICENSING-04]
     tiers: [T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-06
 ---
 
 # Licensing (LEG-LICENSING)
@@ -65,7 +65,10 @@ distribution.
 
 Install the `templates/ci/_fragments/license-audit.yml` fragment: it runs the per-stack scanner
 (`pip-licenses` for Python, `license-checker` for npm, `go-licenses` for Go, `cargo-deny`
-for Rust) and fails on any license outside the allowlist. The audit runs on every dependency change, not
+for Rust, the scaffold's `scripts/license-audit.py` for Swift) and fails on any license
+outside the allowlist. No tool reports SwiftPM licenses (deps.dev has no SwiftPM data), so
+for Swift a person records each dependency's license in `licenses.allow`, per source URL
+and version, and the script fails on anything unreviewed or not allowed. The audit runs on every dependency change, not
 annually — the dangerous moment is adoption. Advisory below T4 because obligations bind
 on distribution/commercial use, but running it early at T3 is cheap insurance against
 ripping out a load-bearing dependency later.
@@ -197,6 +200,7 @@ license_decisions:
 
 ## Changelog
 
+- **1.0.4** (2026-11-06) — LEG-LICENSING-01 names Swift's audit: the scaffold's `scripts/license-audit.py`. No tool reports SwiftPM licenses, so `licenses.allow` records each dependency's reviewed license per source URL and version. No rule changes.
 - **1.0.0** (2026-07-22) — Initial version.
 - **1.0.1** (2026-10-06) — Replaced personal name references with generic "the user" wording for public release. No rule changes.
 - **1.0.2** (2026-10-29) — Worked Example replaced with the `templates/ci/python.yml`

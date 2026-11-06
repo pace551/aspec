@@ -13,18 +13,18 @@ standards:
   - {id: DEV-DEPS, version: 1.0.1}
   - {id: DEV-GIT, version: 1.0.3}
   - {id: DEV-REVIEW, version: 1.0.1}
-  - {id: LEG-LICENSING, version: 1.0.3}
+  - {id: LEG-LICENSING, version: 1.0.4}
   - {id: OPS-FINOPS, version: 1.0.0}
   - {id: OPS-RELEASE, version: 1.0.0}
   - {id: SEC-CRYPTO, version: 1.0.2}
   - {id: SEC-INPUT, version: 1.0.2}
-  - {id: SEC-SAST, version: 1.0.3}
+  - {id: SEC-SAST, version: 1.0.4}
   - {id: SEC-SECRETS, version: 1.0.3}
-  - {id: SEC-SUPPLY, version: 1.0.2}
+  - {id: SEC-SUPPLY, version: 1.0.3}
   - {id: STK-PY, version: 1.0.5}
   - {id: TST-FIXTURES, version: 1.0.2}
   - {id: TST-POLICY, version: 1.0.1}
-  - {id: TST-RATCHET, version: 1.0.4}
+  - {id: TST-RATCHET, version: 1.0.5}
   - {id: TST-VERIFY, version: 1.0.1}
 waivers: []
 external_action_approvals:
