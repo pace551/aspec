@@ -1,7 +1,12 @@
 {
   "AI-ARCH": {
-    "hash": "7dfc28736e7e1c32470ae9781eda93ed9d7afe5b8979a6a28a012eaa3531fb8b",
-    "last_review": "2026-07-22",
+    "hash": "74f1b6e4c292f789a310bf1378877e197d52946ec86c8347eaa73304435e1fb0",
+    "last_review": "2026-11-06",
+    "version": "1.0.1"
+  },
+  "AI-EVALS": {
+    "hash": "2df29c003b96f7aea8c672ff8102dc978e42ac435afc7ab24b519bddee775f36",
+    "last_review": "2026-11-06",
     "version": "1.0.0"
   },
   "AI-MODELS": {

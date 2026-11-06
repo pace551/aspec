@@ -2,7 +2,7 @@
 id: AI-ARCH
 title: LLM Application Architecture
 family: AI
-version: 1.0.0
+version: 1.0.1
 status: active
 tiers:
   T1: advisory
@@ -57,7 +57,7 @@ verification:
     layer: A
     rules: [AI-ARCH-07]
     tiers: [T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-06
 ---
 
 # LLM Application Architecture (AI-ARCH)
@@ -96,7 +96,9 @@ the score doesn't regress. "Looks better on the one example I tried" is not evid
 (Constitution C2 applies to prompts too). The house example is oracle's
 in-session-LLM-vs-baseline grading: the LLM signal is scored against a dumb baseline on
 held-out cases, so an "improvement" has to beat something real. Eval cases are fixtures —
-no live PII in them (`DATA-PRIVACY-03`).
+no live PII in them (`DATA-PRIVACY-03`). See also `AI-EVALS`, which applies to projects on
+the `llm` stack and spells out agent grading, repeated trials and a mechanical regression
+gate.
 
 ### AI-ARCH-03 — Context MUST be assembled deliberately under a measured token budget
 
@@ -222,3 +224,5 @@ def call_llm(fields: dict) -> Verdict | None:
 ## Changelog
 
 - **1.0.0** (2026-07-22) — Initial version.
+- **1.0.1** (2026-11-06) — AI-ARCH-02 points to `AI-EVALS` (ADR-0006). See-also only: no
+  requirement or tier change.

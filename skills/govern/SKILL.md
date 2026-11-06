@@ -34,7 +34,13 @@ From the repo (or the plan, for greenfield): `pyproject.toml`→python ·
 `go.mod`→go · `Cargo.toml`→rust · `Package.swift`/`*.xcodeproj`→swiftui ·
 `*.tf`→terraform,aws · `Dockerfile`→containers · lambda/serverless config→serverless,aws ·
 sqlite/postgresql/dynamodb/redis usage in deps or config→that key · any browser-facing
-surface→web. Use the exact keys from `$GOV/checks/stack-keys.json`; `select-standards.py`
+surface→web · an LLM SDK in the deps, matched by exact package name (`anthropic`,
+`@anthropic-ai/sdk`, `claude-agent-sdk`, `@anthropic-ai/claude-agent-sdk`, `openai`,
+`langchain`, `langchain-*`, `@langchain/*`, `langgraph`, `llama-index`, `litellm`,
+`pydantic-ai`, `dspy`, `ai` (exactly; Vercel AI SDK), `google-genai`, `mistralai`,
+`ollama`)→llm. Code that calls a model over raw HTTP, or a planned LLM feature, is also
+`llm`; ask when unsure. A `prompts/` directory alone is not a signal (ADR-0006).
+Use the exact keys from `$GOV/checks/stack-keys.json`; `select-standards.py`
 rejects any other key (usage error, exit 2) — fix the key, never drop it.
 
 ### 3. Select standards (deterministic — do not browse standards/ by hand)

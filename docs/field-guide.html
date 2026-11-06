@@ -201,7 +201,7 @@
   <strong>secure, tested, observable, and cost-sane by default</strong> — with effort scaled to how much
   the project actually matters, and a hard, deterministic definition of "done."</p>
   <div class="stats">
-    <div class="stat"><b>67</b><span>standards</span></div>
+    <div class="stat"><b>68</b><span>standards</span></div>
     <div class="stat"><b>403</b><span>numbered rules</span></div>
     <div class="stat"><b>4</b><span>tiers</span></div>
     <div class="stat"><b>5</b><span>slash-command skills</span></div>
@@ -301,7 +301,7 @@
       </div>
       <div class="dg-box">
         <b>Machine index <span class="mono">index.json</span></b>
-        <p>Generated catalog of all 67 standards' frontmatter. Never hand-edited; never loaded wholesale.</p>
+        <p>Generated catalog of all 68 standards' frontmatter. Never hand-edited; never loaded wholesale.</p>
       </div>
       <div class="dg-box">
         <b>Selector <span class="mono">select-standards.py</span></b>
@@ -387,7 +387,7 @@ verification:              # executed by /verify-compliance; exit 0 = pass
 ---
 ## Abstract → Normative Rules (RFC-2119, e.g. SEC-SECRETS-01)
 ## Verification → Worked Example → Anti-Patterns → Changelog</code></pre>
-  <p>A framework linter (<code>lint-framework.py</code>) holds all 67 files to this schema — every rule
+  <p>A framework linter (<code>lint-framework.py</code>) holds all 68 files to this schema — every rule
   required at any tier must be backed by a hard/gate check or an explicit attestation marker. The
   linter itself is mutation-tested, because a green linter you've never seen fail proves nothing.</p>
 </section>
@@ -602,7 +602,7 @@ bash checks/install.sh --hooks</code></pre>
   <h3>Verify the installation</h3>
 <pre><code># The framework should lint itself clean
 .venv/bin/python checks/lint-framework.py
-# → lint-framework: clean (67 standards)
+# → lint-framework: clean (68 standards)
 
 # The selector should find standards
 .venv/bin/python checks/select-standards.py --tier T1 --stacks python \
