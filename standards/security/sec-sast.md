@@ -2,7 +2,7 @@
 id: SEC-SAST
 title: Static Application Security Testing
 family: SEC
-version: 1.0.3
+version: 1.0.4
 status: active
 tiers:
   T1: advisory
@@ -38,7 +38,7 @@ verification:
     layer: G
     rules: [SEC-SAST-01]
     tiers: [T4]
-  - cmd: "attest: the SAST job from templates/ci/_fragments/sast.yml (or equivalent) runs in this project's CI"
+  - cmd: "attest: the SAST job from templates/ci/_fragments/sast.yml (or equivalent) runs in this project's CI, and its findings block a merge (the job fails on them, or a branch rule requires code scanning results)"
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [SEC-SAST-02]
@@ -51,7 +51,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [SEC-SAST-04]
-last_review: 2026-07-22
+last_review: 2026-11-06
 ---
 
 # Static Application Security Testing (SEC-SAST)
@@ -79,9 +79,11 @@ shared fragment. Dependency CVEs are SEC-SUPPLY's job, not this one's.
 | typescript | eslint security plugins + semgrep | `semgrep scan --config p/security-audit` | `eslint-plugin-security` (+ typescript-eslint) live in the project's own lint config; semgrep is the runnable gate |
 | go | go vet + gosec | `go vet ./... && gosec ./...` | vet is the floor, gosec the security pass |
 | rust | clippy | `cargo clippy -- -D warnings` | `cargo audit` is SEC-SUPPLY-01, not SAST — the boundary is code analysis here, dependency CVEs there |
+| swift | CodeQL, in CI | `templates/ci/swiftui.yml`'s `sast` job; `sec-sast.sh` checks that a job in the repository's workflows runs CodeQL on Swift, isn't switched off (`if: false`, or a workflow run only by hand), and sends its results somewhere (uploaded to code scanning, or named by a later step); that its findings then block a merge is SEC-SAST-02's attestation, since no reading of a workflow can settle it. CodeQL's default setup leaves no workflow to check: use the job | no Swift SAST scanner is free to run locally on private code: CodeQL's CLI license excludes it and semgrep's free engine finds little in Swift. CodeQL is free on public repos; private ones need GitHub Advanced Security |
 
 `checks/sec-sast.sh` selects by manifest (`pyproject.toml`/`package.json`/`go.mod`/
-`Cargo.toml`) and runs everything that matches. Degradation contract: missing scanner at
+`Cargo.toml`, and `Package.swift`, an Xcode project or a workspace for Swift) and runs everything that
+matches. Degradation contract: missing scanner at
 T1/T2 → documented warning, pass (this fallback is explicitly sanctioned); at T3/T4
 (`--tier T3|T4`) → clear message, exit 1. Fresh scaffolds with nothing to scan pass at
 T1/T2 and fail at T3+ by design.
@@ -94,7 +96,11 @@ Local runs rot the moment they become optional. T3+ projects include the shared 
 fragment `templates/ci/_fragments/sast.yml` (maintained by the CI-templates workstream)
 in their workflow — or an equivalent job invoking `sec-sast.sh --tier T3` — so every PR
 is scanned, not just the ones where someone remembered. The CI image installs the
-required scanner; "not installed on the runner" is a build failure, not a skip.
+required scanner; "not installed on the runner" is a build failure, not a skip. A finding
+must block the merge, as a failing `sec-sast.sh` would (SEC-SAST-01): either the job
+fails on it, or (for results uploaded to GitHub code scanning, as CodeQL does by
+default) a branch rule requires code scanning results. That rule is a repository setting
+the checkout can't show, which is why this rule is attested.
 
 ### SEC-SAST-03 — Findings MUST be fixed or suppressed individually with a written justification
 
@@ -126,7 +132,7 @@ choice was made, not that the answer is yes.
 | 1 | `bash "$GOVERNANCE_DIR/checks/sec-sast.sh"` (T1/T2) | exit 0 — clean, or documented missing-scanner warning | SEC-SAST-01 |
 | 2 | `… sec-sast.sh --tier T3` (T3) | exit 0 — clean; missing scanner fails | SEC-SAST-01 |
 | 3 | `… sec-sast.sh --tier T4` (T4) | exit 0 — clean; missing scanner fails | SEC-SAST-01 |
-| 4 | attest: CI runs the sast.yml fragment (T3+) | explicit yes recorded | SEC-SAST-02 |
+| 4 | attest: CI runs the sast.yml fragment (T3+), and its findings block a merge | explicit yes recorded | SEC-SAST-02 |
 | 5 | attest: suppressions individually justified | explicit yes recorded | SEC-SAST-03 |
 | 6 | attest: semgrep considered | explicit yes recorded | SEC-SAST-04 |
 
@@ -187,6 +193,7 @@ subprocess.run(["osascript", "-e", FIXED_SCRIPT])  # nosec B603 — argv list, c
 
 ## Changelog
 
+- **1.0.4** (2026-11-06) — Per-stack table: Swift (`templates/ci/swiftui.yml`). Its SAST is CodeQL in CI, because no Swift scanner is free to run locally on private code; `sec-sast.sh` now recognizes Swift projects and checks that a workflow job runs CodeQL on Swift instead of failing them as "no recognized manifest" at T3+; a job whose results go nowhere (kept, and neither sent on nor mentioned by a later step) doesn't count. SEC-SAST-02's attestation now spells out that findings must block a merge (a failing job, or a branch rule requiring code scanning results), which SEC-SAST-01's "MUST pass" already required of an equivalent job. No new requirements.
 - **1.0.3** (2026-11-04) — Per-stack table: Python script collections (STK-PY-01) run bandit over the repo with `[tool.bandit]` exclusions instead of `src/`, matching STK-PY-04 and `sec-sast.sh`. No rule changes.
 - **1.0.2** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.

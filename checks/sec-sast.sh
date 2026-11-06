@@ -11,6 +11,14 @@
 #   go.mod                    -> go vet + gosec
 #   Cargo.toml                -> cargo clippy -D warnings
 #                                (cargo-audit belongs to SEC-SUPPLY / sec-sca.sh, not here)
+#   Package.swift / *.xcodeproj / *.xcworkspace
+#                             -> CodeQL, in CI: no Swift SAST scanner is free to run
+#                                locally on private code (CodeQL's CLI license excludes
+#                                it; semgrep's free engine finds little in Swift), so
+#                                swift-project.py checks that a workflow job that isn't
+#                                switched off runs CodeQL on Swift and sends its results
+#                                somewhere (templates/ci/swiftui.yml's sast job); that
+#                                findings block a merge is SEC-SAST-02's attestation
 #
 # Degradation contract (same spirit as secret-scan.sh, but tier-aware):
 #   default / --tier T1|T2 : missing scanner -> documented warning, exit 0 (fallback is
@@ -37,10 +45,12 @@ case "$TIER" in
   T3|T4) STRICT=1 ;;
   *) echo "sec-sast: bad tier '$TIER' (expected T1..T4)" >&2; exit 2 ;;
 esac
+GOV="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT" 2>/dev/null || { echo "sec-sast: cannot cd to '$PROJECT'" >&2; exit 2; }
 
 FAIL=0
 RAN=0
+SKIPPED=0 # a stack was found but its scan skipped (lenient tier)
 
 run() {
   echo "sec-sast: running: $*"
@@ -55,7 +65,20 @@ missing() { # $1 = scanner name, $2 = install hint
     FAIL=1
   else
     echo "sec-sast: WARNING — '$1' not installed; skipping (lenient at tier $TIER). Install: $2" >&2
+    SKIPPED=1
   fi
+}
+
+# Swift: Package.swift, an Xcode project, or a workspace (Tuist and modular apps keep their
+# projects in subdirectories). What the check needs to know about one comes from
+# swift-project.py, shared with sec-sca.sh.
+swift_project() {
+  [[ -f Package.swift ]] || compgen -G './*.xcodeproj' >/dev/null || compgen -G './*.xcworkspace' >/dev/null
+}
+swift_helper() { # $1 = sca|codeql
+  local py="$GOV/.venv/bin/python"
+  [[ -x "$py" ]] || { echo "sec-sast: $py missing — run checks/install.sh" >&2; exit 2; }
+  "$py" "$GOV/checks/swift-project.py" "$1"
 }
 
 # ---- Python: bandit ----
@@ -122,8 +145,30 @@ if [[ -f Cargo.toml ]]; then
   fi
 fi
 
-if [[ $RAN -eq 0 && $FAIL -eq 0 ]]; then
-  echo "sec-sast: no recognized manifest (pyproject.toml/package.json/go.mod/Cargo.toml) — nothing scanned" >&2
+# ---- Swift: CodeQL runs in CI; check an enabled workflow job runs it on Swift ----
+if swift_project; then
+  rc=0
+  CODEQL_SWIFT=$(swift_helper codeql) || rc=$?
+  if [[ $rc -eq 0 ]]; then
+    echo "sec-sast: Swift SAST is CodeQL in CI ($CODEQL_SWIFT). Whether its findings block a merge (a step failing on them, or a code-scanning branch rule) can't be read from the workflow: confirm it under the SEC-SAST-02 attestation"
+    RAN=1
+  elif [[ $rc -eq 3 ]]; then
+    hint="add templates/ci/swiftui.yml's sast job (free on public repos; private repos need GitHub Advanced Security)"
+    if [[ $STRICT -eq 1 ]]; then
+      echo "sec-sast: FAIL — Swift project but no job in the repository's workflows runs CodeQL on Swift (one switched off with if: false, run only by hand, or whose results go nowhere doesn't count) (tier $TIER; SEC-SAST-01): $hint" >&2
+      FAIL=1
+    else
+      echo "sec-sast: WARNING — Swift project but no job in the repository's workflows runs CodeQL on Swift (one switched off with if: false, run only by hand, or whose results go nowhere doesn't count) (lenient at tier $TIER): $hint" >&2
+      SKIPPED=1
+    fi
+  else
+    echo "sec-sast: workflows unreadable — scan incomplete" >&2
+    exit 2
+  fi
+fi
+
+if [[ $RAN -eq 0 && $FAIL -eq 0 && $SKIPPED -eq 0 ]]; then
+  echo "sec-sast: no recognized manifest (pyproject.toml/package.json/go.mod/Cargo.toml/Package.swift) — nothing scanned" >&2
   if [[ $STRICT -eq 1 ]]; then
     echo "sec-sast: FAIL — tier $TIER requires a SAST scan; add the stack's scanner (SEC-SAST-01)" >&2
     exit 1

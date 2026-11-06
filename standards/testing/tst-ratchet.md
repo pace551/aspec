@@ -2,7 +2,7 @@
 id: TST-RATCHET
 title: Coverage Ratchet
 family: TST
-version: 1.0.4
+version: 1.0.5
 status: active
 tiers:
   T1: advisory
@@ -41,7 +41,7 @@ verification:
     layer: A
     rules: [TST-RATCHET-04]
     tiers: [T2, T3, T4]
-last_review: 2026-07-22
+last_review: 2026-11-06
 ---
 
 # Coverage Ratchet (TST-RATCHET)
@@ -107,6 +107,7 @@ stack produces one:
 | Python (`STK-PY`) | `.venv/bin/pytest --cov --cov-report=json` | `coverage.json` (`totals.percent_covered`) |
 | TypeScript (`STK-TS`) | `vitest run --coverage` with the `json-summary` reporter | `coverage/coverage-summary.json` (`total.lines.pct`) |
 | Go (`STK-GO`) | `go test ./... -coverprofile=coverage.out` | `coverage.out` (via `go tool cover -func`) |
+| Swift (`STK-SWIFT`) | `scripts/test.sh` → `scripts/coverage.sh` (`swift test --enable-code-coverage`, exported with `xcrun llvm-cov export -format=lcov`; needs full Xcode) | `lcov.info` |
 | Anything lcov-emitting | c8, genhtml pipelines | `lcov.info` (LH/LF aggregate) |
 
 Because precedence is first-match, a stale `coverage.json` left over from an experiment
@@ -177,6 +178,7 @@ test job so `coverage.json` already exists.
 
 ## Changelog
 
+- **1.0.5** (2026-11-06) — Per-stack table: Swift's `scripts/test.sh` writes `lcov.info` (via `scripts/coverage.sh`: `swift test --enable-code-coverage` exported with `llvm-cov`) where full Xcode is installed. No rule changes.
 - **1.0.4** (2026-11-05) — Framework scripts run on the governance repo's `.venv` (`"$GOVERNANCE_DIR/.venv/bin/python"`, built by `checks/install.sh` with Python 3.11+) instead of the first `python3` on PATH, which can be an end-of-life Python. No rule changes.
 - **1.0.3** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.2** (2026-10-27) — "No coverage data" is now exit 3 instead of 2, because Python also

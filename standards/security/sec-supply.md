@@ -2,7 +2,7 @@
 id: SEC-SUPPLY
 title: Supply Chain Security
 family: SEC
-version: 1.0.2
+version: 1.0.3
 status: active
 tiers:
   T1: advisory
@@ -56,7 +56,7 @@ verification:
     expect: "explicit yes in GOVERNANCE.md attestations"
     layer: A
     rules: [SEC-SUPPLY-05]
-last_review: 2026-07-22
+last_review: 2026-11-06
 ---
 
 # Supply Chain Security (SEC-SUPPLY)
@@ -84,6 +84,7 @@ write.
 | typescript | `npm audit --audit-level=high` (needs `package-lock.json`) | `osv-scanner -r .` for pnpm/yarn/bun lockfiles |
 | go | `govulncheck ./...` (call-graph aware: flags reachable vulns only) | `osv-scanner -r .` |
 | rust | `cargo audit` | — |
+| swift | `osv-scanner scan source --lockfile` on each `Package.resolved` (the package's and Xcode's; v2.4.0+) | — (remote packages that no `Package.resolved` pins, or a CocoaPods/Carthage lockfile, can't be audited: they fail at T3+) |
 
 `checks/sec-sca.sh` runs the right one by manifest, lenient at T1/T2 (missing scanner →
 documented warning), strict at T3+ (`--tier T3|T4` → missing scanner fails). A finding
@@ -208,6 +209,7 @@ A per-CVE waiver, the only sanctioned shape for a lingering finding:
 
 ## Changelog
 
+- **1.0.3** (2026-11-06) — Per-stack table: Swift, osv-scanner (v2.4.0+) on each `Package.resolved` (the package's and Xcode's); remote packages that no lockfile pins, or CocoaPods/Carthage lockfiles, fail at T3+ as unauditable. `sec-sca.sh` now runs it for Swift projects instead of failing them as "no recognized manifest" at T3+. No rule changes.
 - **1.0.2** (2026-11-04) — Adds `published: required` (ADR-0005): its risk ships with the package, so published packages apply it at T3 weight. No change for projects that aren't published packages.
 - **1.0.1** (2026-10-27) — Portability: framework check scripts referenced via `$GOVERNANCE_DIR` (exported by run-verification.py) instead of a hardcoded home-directory path.
 - **1.0.0** (2026-07-22) — Initial version.
