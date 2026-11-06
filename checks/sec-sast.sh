@@ -18,7 +18,7 @@
 #                                swift-project.py checks that a workflow job that isn't
 #                                switched off runs CodeQL on Swift and sends its results
 #                                somewhere (templates/ci/swiftui.yml's sast job); that
-#                                findings block a merge is SEC-SAST-02's attestation
+#                                findings block a merge is SEC-SAST-05's attestation
 #
 # Degradation contract (same spirit as secret-scan.sh, but tier-aware):
 #   default / --tier T1|T2 : missing scanner -> documented warning, exit 0 (fallback is
@@ -150,7 +150,7 @@ if swift_project; then
   rc=0
   CODEQL_SWIFT=$(swift_helper codeql) || rc=$?
   if [[ $rc -eq 0 ]]; then
-    echo "sec-sast: Swift SAST is CodeQL in CI ($CODEQL_SWIFT). Whether its findings block a merge (a step failing on them, or a code-scanning branch rule) can't be read from the workflow: confirm it under the SEC-SAST-02 attestation"
+    echo "sec-sast: Swift SAST is CodeQL in CI ($CODEQL_SWIFT). Whether its findings block a merge (a pull-request check goes red on them and red isn't merged) can't be read from the workflow: confirm it under the SEC-SAST-05 attestation"
     RAN=1
   elif [[ $rc -eq 3 ]]; then
     hint="add templates/ci/swiftui.yml's sast job (free on public repos; private repos need GitHub Advanced Security)"

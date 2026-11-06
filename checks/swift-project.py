@@ -208,9 +208,9 @@ def results_go_somewhere(steps: list[dict], analyze: int) -> bool:
     """False only when the analyze step at `analyze` keeps its results (upload: never,
     false or failure-only, as codeql-action reads it) and no later step sends them on or
     mentions them: no upload-sarif, and no part of the output path, nor sarif-output, in
-    any value (run, env, with). Whether the results then block a merge, through a failing
-    step or a code-scanning branch rule, is SEC-SAST-02's attestation: no static reading
-    of a workflow can tell."""
+    any value (run, env, with). Whether the results then block a merge (a failing step or
+    code scanning's results check goes red, and red isn't merged) is SEC-SAST-05's
+    attestation: no static reading of a workflow can tell."""
     options = steps[analyze].get("with") or {}
     upload = options.get("upload", "")
     # YAML reads an unquoted false as a boolean; GitHub hands the action the string "false"

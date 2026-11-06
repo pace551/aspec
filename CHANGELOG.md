@@ -41,24 +41,36 @@ carry their own per-file changelogs.
   lowering it needs `--allow-lower` plus a waiver. The gate refuses symlinked results and
   baseline files and writes atomically, so a hostile repo can't aim its writes elsewhere. AI-ARCH-02 now points to AI-EVALS (1.0.1, see-also only).
 
+- **SEC-SAST-05** (SEC-SAST 1.1.0): SAST findings must block a merge at T3+, attested.
+  SEC-SAST-02 asks only that SAST runs in CI; a scan that can't stop a merge is
+  decoration. A finding must turn a pull-request check red (the SAST job fails, or code
+  scanning's results check does for results uploaded from a pull-request run), and red
+  isn't merged (DEV-CI-04, and required status checks at T4 per DEV-CI-05).
+  `/bootstrap-repo` lists the setup at handover.
+  **Action needed:** SEC-SAST 1.1.0 is a minor bump, so a project pinned to SEC-SAST 1.0.x
+  fails `/verify-compliance` until it re-runs `/govern` (ADR-0004). T3/T4 projects and
+  published packages (ADR-0005) then record an answer for SEC-SAST-05; others only
+  re-pin.
+
 - `/verify-compliance` no longer fails Swift projects on SEC-SAST-01 and SEC-SUPPLY-01.
   `checks/sec-sca.sh` and `checks/sec-sast.sh` picked their scanner by manifest and knew
   no `Package.swift`, so at T3+ a Swift project hit "no recognized manifest" and failed,
   even with `templates/ci/swiftui.yml` running both gates in CI. Both now read a Swift
   project (`Package.swift`, an Xcode project or a workspace) through the new
-  `checks/swift-project.py`. `sec-sca.sh` runs osv-scanner on each
-  `Package.resolved` that pins packages, nested ones included; remote packages that no lockfile pins, and
-  CocoaPods/Carthage lockfiles, can't be audited and fail at T3+. No Swift SAST scanner
-  is free to run locally on private code, so `sec-sast.sh` checks that a job in the
+  `checks/swift-project.py`. `sec-sca.sh` runs osv-scanner on each `Package.resolved` that
+  pins packages, nested ones included; remote packages that no lockfile pins, and
+  CocoaPods/Carthage lockfiles, can't be audited and fail at T3+. No Swift SAST scanner is
+  free to run locally on private code, so `sec-sast.sh` checks that a job in the
   repository's workflows runs CodeQL on Swift and isn't switched off (`if: false` on the
   job or a CodeQL step, or a workflow run only by hand); the workflows are parsed, so a
   commented-out job doesn't count either, and neither does one whose results go nowhere
   (kept with `upload: never`, `false` or `failure-only`, and neither sent on by
-  `upload-sarif` nor named by any later step). That findings then block a
-  merge, through a failing step or a code-scanning branch rule, can't be read from a
-  workflow: SEC-SAST-02's attestation now says so, and `sec-sast.sh` points at it. The per-stack tables in SEC-SAST 1.0.4,
-  SEC-SUPPLY 1.0.3, LEG-LICENSING 1.0.4 and TST-RATCHET 1.0.5 gain their Swift rows
-  (patch bumps, no rule changes).
+  `upload-sarif` nor named by any later step). That findings then block a merge (a
+  pull-request check goes red on them and red isn't merged) can't be read from a workflow:
+  SEC-SAST-05's attestation covers it (above), and `sec-sast.sh` points at it. The
+  per-stack tables in SEC-SAST, SEC-SUPPLY 1.0.3, LEG-LICENSING 1.0.4 and TST-RATCHET
+  1.0.5 gain their Swift rows (patch bumps, except SEC-SAST's, which ships in 1.1.0 with
+  SEC-SAST-05 above).
 
 - `templates/ci/swiftui.yml`: hosted CI for the swiftui stack, for public repositories,
   where GitHub's standard macOS runners and CodeQL are free. A T3+ or published Swift
