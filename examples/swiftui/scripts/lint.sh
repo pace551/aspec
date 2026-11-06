@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 
 ran=0
 if command -v swiftformat >/dev/null 2>&1; then
-  swiftformat --lint Sources Tests
+  swiftformat Sources Tests --lint # paths first: SwiftFormat 0.64 rejected `--lint Sources Tests`
   ran=1
 fi
 if command -v swiftlint >/dev/null 2>&1; then

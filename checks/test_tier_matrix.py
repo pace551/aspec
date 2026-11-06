@@ -44,10 +44,6 @@ NO_CI_TEMPLATE = {
     "containers": "additive: rides on a language stack's CI (iac-scan fragment)",
     "data": "additive: data-store fragments merged into a language stack",
     "terraform": "additive: rides on a language stack's CI (iac-scan fragment)",
-    "swiftui": (
-        "STK-SWIFT verifies locally (stk-swift-verify.sh), no hosted macOS CI by design. "
-        "Known gap: a T3+ or published Swift project still gets DEV-CI with no template"
-    ),
 }
 
 

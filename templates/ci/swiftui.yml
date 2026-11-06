@@ -1,0 +1,157 @@
+# CI — swiftui stack (STK-SWIFT). Concrete composition of templates/ci/_fragments/*.
+# /bootstrap-repo copies this to .github/workflows/ci.yml and prunes jobs the project's
+# tier doesn't require (DEV-CI): T3+ runs everything; license-audit is T4.
+#
+# For PUBLIC repositories. STK-SWIFT-06 keeps Swift off hosted CI to save money, but
+# GitHub's standard macOS runners (macos-latest) are free for public repos, and so is
+# CodeQL. On a private repo, macOS minutes are billed and CodeQL needs GitHub Advanced
+# Security: adopting this there is a spend decision (C6), not a default.
+#
+# For an SPM package (the scaffold's shape). An Xcode app project needs xcodebuild in
+# typecheck, test and sast instead of swift build/test; sca and license-audit already
+# read Xcode's lockfiles.
+#
+# Jobs that need the Swift toolchain run on macos-latest (lint, typecheck, test, sast);
+# gitleaks, coverage-ratchet (on the test job's lcov.info), sca and license-audit run on
+# ubuntu-latest, so the suite runs on macOS once.
+#
+# Scripts contract (_common/README.md): the jobs run scripts/lint.sh, scripts/test.sh
+# (tests + lcov.info via scripts/coverage.sh), scripts/lockfile-check.py, scripts/sca.sh
+# and scripts/license-audit.py, the same commands the git hooks and developers run.
+#
+# fragment: typecheck.yml — `swift build`: the compiler is Swift's typechecker. Also
+#   runs scripts/lockfile-check.py: whatever `swift package resolve` pins (transitive
+#   remote packages included) must match the committed Package.resolved, or sca and
+#   license-audit would never see it (SEC-SUPPLY-02).
+# fragment: sast.yml — CodeQL for Swift (semgrep's Swift rules mostly need its paid Pro
+#   engine). Results aren't uploaded (that would clash with CodeQL default setup); the
+#   job fails on any result instead.
+# fragment: sca.yml — scripts/sca.sh runs osv-scanner (v2.4.0+ reads Package.resolved by
+#   default and checks it against OSV's SwiftURL advisories).
+# fragment: license-audit.yml — scripts/license-audit.py: no tool reports SwiftPM
+#   licenses, so licenses.allow records each dependency's reviewed license.
+# Action pins are major-version tags; at T3+ SEC-SUPPLY upgrades them to commit SHAs.
+
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege for GITHUB_TOKEN (SEC-AUTHZ-04); jobs widen only what they need.
+permissions:
+  contents: read
+
+jobs:
+  # fragment: lint.yml — {{CMD_LINT}} = scripts/lint.sh (swiftformat --lint + swiftlint
+  # --strict; installed here so the script runs them instead of degrading)
+  lint:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install swiftformat and swiftlint
+        run: brew install swiftformat swiftlint
+      - name: Format + lint
+        run: scripts/lint.sh
+
+  typecheck:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Typecheck (swift build)
+        run: swift build
+      - name: Remote dependencies pinned in a committed, current Package.resolved
+        run: python3 scripts/lockfile-check.py
+
+  # fragment: test.yml — {{CMD_TEST_COV}} = scripts/test.sh (with Xcode: swift test with
+  # coverage, exported as lcov.info)
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tests with coverage
+        run: scripts/test.sh
+      - name: Upload coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: lcov.info
+          if-no-files-found: error
+
+  # fragment: coverage-ratchet.yml — TST-RATCHET (T2+); CI only checks, never writes.
+  # Reads the test job's lcov.info: no second macOS run.
+  coverage-ratchet:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage
+      - name: Ratchet check
+        run: python3 .governance/coverage-ratchet.py --check
+
+  # fragment: gitleaks.yml — SEC-SECRETS-01 (layer G); full history scan.
+  gitleaks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # gitleaks-action comments on PR lines with leaks
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # fragment: sast.yml — {{CMD_SAST}} = CodeQL Swift analysis.
+  sast:
+    runs-on: macos-latest
+    # contents: read is enough with upload: never (ASPEC's swiftui-template workflow runs
+    # the same steps on it); a private repo may also need actions: read.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: swift
+          build-mode: manual
+      - name: Build for analysis
+        run: swift build
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:swift
+          upload: never
+          output: codeql-results
+      - name: Fail on CodeQL results
+        run: |
+          n=$(jq '[.runs[].results[]] | length' codeql-results/*.sarif)
+          if [ "$n" -ne 0 ]; then
+            jq -r '.runs[].results[] | "\(.ruleId): \(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine) \(.message.text)"' codeql-results/*.sarif
+            echo "sast: $n CodeQL result(s)" >&2
+            exit 1
+          fi
+          echo "sast: CodeQL clean"
+
+  # fragment: sca.yml — {{CMD_SCA}} = scripts/sca.sh: osv-scanner on every SwiftPM
+  # lockfile (SEC-SUPPLY-01); typecheck's lockfile-check makes sure one is committed
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27" # osv-scanner v2.7.0's go.mod minimum
+      - name: Install osv-scanner
+        run: go install github.com/google/osv-scanner/v2/cmd/osv-scanner@v2.7.0
+      - name: Dependency vulnerability audit
+        run: scripts/sca.sh
+
+  # fragment: license-audit.yml — {{CMD_LICENSES}} = scripts/license-audit.py against
+  # licenses.allow (LEG-LICENSING-01, T4)
+  license-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency license audit
+        run: python3 scripts/license-audit.py

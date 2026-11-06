@@ -10,15 +10,20 @@ public final class CounterModel {
     public let range: ClosedRange<Int>
 
     /// Dependencies through init — no singletons, no hidden state (STK-SWIFT-05).
-    public init(count: Int = 0, step: Int = 1, range: ClosedRange<Int> = 0...100) {
+    public init(count: Int = 0, step: Int = 1, range: ClosedRange<Int> = 0 ... 100) {
         precondition(step > 0, "step must be positive")
         self.count = range.contains(count) ? count : range.lowerBound
         self.step = step
         self.range = range
     }
 
-    public var canIncrement: Bool { count + step <= range.upperBound }
-    public var canDecrement: Bool { count - step >= range.lowerBound }
+    public var canIncrement: Bool {
+        count + step <= range.upperBound
+    }
+
+    public var canDecrement: Bool {
+        count - step >= range.lowerBound
+    }
 
     public func increment() {
         guard canIncrement else { return }
