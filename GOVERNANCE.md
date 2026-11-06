@@ -64,7 +64,7 @@ attestations:
   - {rule_id: DEV-CI-04, followed: true, note: "the 'Protect main' ruleset requires the gate checks on every PR; no bypassed merge in #13-#32", date: 2026-11-04}
   - {rule_id: DEV-DEPS-01, followed: false, note: "toolchain pinned exactly in pyproject.toml, but transitive dependencies aren't locked (no lockfile yet)", date: 2026-11-04}
   - {rule_id: DEV-DEPS-03, followed: true, note: "majors read before merging (#13: vitest 4, zod 4); action majors (checkout v7, setup-python v7, gitleaks-action v3) deferred to Dependabot PRs", date: 2026-11-04}
-  - {rule_id: DEV-DEPS-04, followed: true, note: "new CI dep actions/create-github-app-token: GitHub-maintained (actions org), MIT, active (pushed 2026-11-01); the documented way to mint App tokens in Actions", date: 2026-11-04}
+  - {rule_id: DEV-DEPS-04, followed: true, note: "new CI dep actions/create-github-app-token: GitHub-maintained (actions org), MIT, active (pushed 2026-11-01); the documented way to mint App tokens in Actions; swiftui-template.yml adds github/codeql-action and actions/setup-go (both GitHub-maintained, MIT) and osv-scanner v2.7.0 (Google, Apache-2.0, active; release 2026-10-12), all pinned", date: 2026-11-05}
   - {rule_id: DEV-DEPS-05, followed: true, note: "create-github-app-token v3.3.0 and its SHA from GitHub releases; inputs (client-id over deprecated app-id) from its action.yml; GITHUB_TOKEN approval behaviour from GitHub docs", date: 2026-11-04}
   - {rule_id: DEV-DEPS-06, followed: false, note: "no monthly /evolve-standards fast-lane run yet", date: 2026-11-04}
   - {rule_id: DEV-GIT-05, followed: false, note: "every change since #4 went through a PR (the ruleset now requires it); the 2026-09-15 bootstrap commits went straight to main", date: 2026-11-04}

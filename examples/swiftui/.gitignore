@@ -11,3 +11,4 @@ DerivedData/
 .idea/
 .vscode/
 *.log
+lcov.info

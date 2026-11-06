@@ -1,0 +1,7 @@
+# SwiftLint config for scripts/lint.sh (STK-SWIFT). Agrees with SwiftFormat's defaults,
+# which lint.sh also runs: SwiftFormat adds trailing commas to multi-line collections,
+# so SwiftLint requires them instead of forbidding them.
+excluded:
+  - .build
+trailing_comma:
+  mandatory_comma: true

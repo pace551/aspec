@@ -5,6 +5,32 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- `templates/ci/swiftui.yml`: hosted CI for the swiftui stack, for public repositories,
+  where GitHub's standard macOS runners and CodeQL are free. A T3+ or published Swift
+  project was asked for DEV-CI's job set with no template to build it from. Swift work
+  (lint, typecheck, tests with coverage, CodeQL sast) runs once on `macos-latest`;
+  gitleaks, the coverage ratchet, sca (osv-scanner v2.7.0) and license-audit run on
+  Linux. typecheck also runs the new `scripts/lockfile-check.py`: whatever
+  `swift package resolve` pins, transitive remote packages included, must match the
+  `Package.resolved` committed to git, so a dependency can't skip sca and license-audit
+  by going unpinned. The scaffold's `scripts/test.sh` now writes
+  `lcov.info` (via the new `scripts/coverage.sh`) where full Xcode is installed, so the
+  hooks' coverage ratchet works for Swift. New `scripts/sca.sh` scans every SwiftPM
+  lockfile, Xcode's included. New `scripts/license-audit.py`: no tool reports SwiftPM
+  licenses, so `licenses.allow` records each dependency's reviewed license per source
+  URL and version (a fork or a new version is reviewed again).
+  A path-filtered workflow
+  (`.github/workflows/swiftui-template.yml`) runs those commands on `examples/swiftui`
+  and checks that osv-scanner flags a known-vulnerable `Package.resolved`. STK-SWIFT-06
+  still describes local verification as the default; private repos are unchanged.
+  Its first macOS run also found that the scaffold's `scripts/lint.sh` never worked
+  with swiftformat installed: current SwiftFormat rejects `swiftformat --lint Sources
+  Tests` ("--lint argument does not expect a value"), so it now passes the paths first,
+  and the example and scaffold sources are now formatted to SwiftFormat's defaults
+  (with a `.swift-version` so its version-dependent rules apply). A `.swiftlint.yml`
+  makes SwiftLint require the trailing commas SwiftFormat adds, instead of forbidding
+  them: with both installed, `lint.sh` could never pass.
+
 - `checks/build-index.py` refuses a standard whose `version` changed unless its
   `last_review` moved later or is today, and a `last_review` that isn't a date or is
   after today (with a day's slack for time zones). It also leaves the `last_review:`

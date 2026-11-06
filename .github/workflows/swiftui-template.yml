@@ -1,0 +1,106 @@
+# Runs templates/ci/swiftui.yml's commands on the worked example (examples/swiftui) on a
+# real macOS runner, free on this public repo. Its swift, codeql and osv jobs mirror the
+# template's lint/typecheck/test(+coverage), sast and sca jobs; the example's
+# scripts equal the scaffold's (test_swiftui_scaffold.py). The osv job also proves the
+# sca claim on known-bad input: osv-scanner must flag a Package.resolved pinning a
+# swift-nio-http2 with published advisories. license-audit.py is covered by pytest.
+# Runs only when the Swift template, scaffold or example change; not a required check.
+name: swiftui-template
+on:
+  push:
+    branches: [main]
+    paths:
+      - templates/ci/swiftui.yml
+      - templates/scaffolds/swiftui/**
+      - examples/swiftui/**
+      - .github/workflows/swiftui-template.yml
+      - checks/coverage-ratchet.py
+  pull_request:
+    paths:
+      - templates/ci/swiftui.yml
+      - templates/scaffolds/swiftui/**
+      - examples/swiftui/**
+      - .github/workflows/swiftui-template.yml
+      - checks/coverage-ratchet.py
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: examples/swiftui
+
+jobs:
+  swift:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install swiftformat and swiftlint
+        run: brew install swiftformat swiftlint
+      - name: lint (scripts/lint.sh)
+        run: scripts/lint.sh
+      - name: typecheck (swift build)
+        run: swift build
+      - name: lockfile check (scripts/lockfile-check.py)
+        run: python3 scripts/lockfile-check.py
+      - name: test (scripts/test.sh, tests + lcov.info)
+        run: scripts/test.sh
+      - name: lcov.info counts lines and the ratchet reads it
+        run: |
+          grep -q '^LF:[1-9]' lcov.info
+          python3 ../../checks/coverage-ratchet.py --project . --check
+
+  codeql:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          languages: swift
+          build-mode: manual
+          source-root: examples/swiftui
+      - name: Build for analysis
+        run: swift build
+      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          category: /language:swift
+          upload: never
+          output: ${{ github.workspace }}/codeql-results
+      - name: The example has no CodeQL results
+        run: |
+          n=$(jq '[.runs[].results[]] | length' "$GITHUB_WORKSPACE"/codeql-results/*.sarif)
+          echo "CodeQL results: $n"
+          [ "$n" -eq 0 ]
+
+  osv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27"
+      - name: Install osv-scanner (the template's pinned version)
+        run: go install github.com/google/osv-scanner/v2/cmd/osv-scanner@v2.7.0
+      - name: Flags a known-vulnerable Package.resolved
+        run: |
+          d=$(mktemp -d)
+          cat > "$d/Package.resolved" <<'EOF'
+          {
+            "originHash" : "fixture",
+            "pins" : [
+              {
+                "identity" : "swift-nio-http2",
+                "kind" : "remoteSourceControl",
+                "location" : "https://github.com/apple/swift-nio-http2.git",
+                "state" : { "revision" : "0000000000000000000000000000000000000000", "version" : "1.19.0" }
+              }
+            ],
+            "version" : 3
+          }
+          EOF
+          rc=0
+          osv-scanner scan source --lockfile "$d/Package.resolved" || rc=$?
+          echo "osv-scanner exit: $rc"
+          [ "$rc" -eq 1 ]
+      - name: The example (no dependencies) passes scripts/sca.sh
+        run: scripts/sca.sh
