@@ -70,8 +70,11 @@ scaffold — never hand over a repo whose gates don't fire.
 ### 6. STOP — human review
 
 Present: tree of what was created, gates verified (with the canary-rejection evidence),
-CI jobs configured, and what remains manual (e.g. GitHub repo creation, branch
-protection at T3+). Wait for the user before first push or any external action
+CI jobs configured, and what remains manual (e.g. GitHub repo creation; at T4, `main`
+protected per DEV-CI-05: the CI jobs as required status checks, force-pushes and
+deletions blocked, administrators included; if SAST results go to code scanning,
+its severity threshold set to what must block and, at T4, its "Code scanning results"
+check required too (SEC-SAST-05)). Wait for the user before first push or any external action
 (Constitution C7).
 
 ## Rules

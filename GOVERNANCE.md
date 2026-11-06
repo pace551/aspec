@@ -18,7 +18,7 @@ standards:
   - {id: OPS-RELEASE, version: 1.0.0}
   - {id: SEC-CRYPTO, version: 1.0.2}
   - {id: SEC-INPUT, version: 1.0.2}
-  - {id: SEC-SAST, version: 1.0.4}
+  - {id: SEC-SAST, version: 1.1.0}
   - {id: SEC-SECRETS, version: 1.0.3}
   - {id: SEC-SUPPLY, version: 1.0.3}
   - {id: STK-PY, version: 1.0.5}
@@ -86,6 +86,7 @@ attestations:
   - {rule_id: SEC-INPUT-06, followed: true, note: "no URL fetching", date: 2026-11-04}
   - {rule_id: SEC-INPUT-07, followed: true, note: "no HTML rendering", date: 2026-11-04}
   - {rule_id: SEC-SAST-02, followed: true, note: "sast job in framework.yml runs checks/sec-sast.sh (bandit)", date: 2026-11-04}
+  - {rule_id: SEC-SAST-05, followed: true, note: "framework.yml's sast job exits 1 on a bandit finding, and sast is a required status check in main's ruleset (gh api repos/pace551/aspec/rules/branches/main)", date: 2026-11-06}
   - {rule_id: SEC-SAST-03, followed: true, note: "every inline '# nosec' is B404/B603/B607 on an argv-only subprocess call and names its reason on the same line (grep); 1 '# noqa: B905' likewise", date: 2026-11-05}
   - {rule_id: SEC-SAST-04, followed: true, note: "semgrep considered and skipped: bandit covers the only stack here (Python); revisit if checks/ gains another language", date: 2026-11-04}
   - {rule_id: SEC-SECRETS-06, followed: true, note: "release App installed on this repo only, with Contents/Pull requests/Issues write; each run mints a 1-hour installation token that is revoked at job end; GITHUB_TOKEN narrowed to contents: write", date: 2026-11-04}

@@ -1410,7 +1410,7 @@
       "id": "SEC-SAST",
       "title": "Static Application Security Testing",
       "family": "SEC",
-      "version": "1.0.4",
+      "version": "1.1.0",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -1438,7 +1438,7 @@
       ],
       "last_review": "2026-11-06",
       "path": "standards/security/sec-sast.md",
-      "tokens_est": 2781
+      "tokens_est": 3454
     },
     {
       "id": "SEC-SECRETS",

@@ -415,7 +415,7 @@ class SwiftSastTests(unittest.TestCase):
         template = (ROOT / "templates" / "ci" / "swiftui.yml").read_text()
         proc = self.check(template)
         self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
-        self.assertIn("SEC-SAST-02", proc.stdout)
+        self.assertIn("SEC-SAST-05", proc.stdout)
 
     def test_uploaded_results_pass_and_point_at_the_attestation(self):
         # whether code scanning blocks a merge is a repository setting, not in the checkout
@@ -432,7 +432,7 @@ class SwiftSastTests(unittest.TestCase):
                 workflow = CODEQL_SWIFT.replace("analyze@v4\n", "analyze@v4\n" + upload)
                 proc = self.check(workflow)
                 self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
-                self.assertIn("SEC-SAST-02", proc.stdout)
+                self.assertIn("SEC-SAST-05", proc.stdout)
 
     def test_kept_results_must_be_named_by_a_later_step(self):
         def kept(upload: str, after: str = "") -> str:
@@ -473,7 +473,7 @@ class SwiftSastTests(unittest.TestCase):
             "          output: ${{runner.temp}}/results\n"
             '      - run: jq . "$RUNNER_TEMP/results/swift.sarif"\n',
         )
-        # results that go somewhere pass (that they block a merge is SEC-SAST-02's
+        # results that go somewhere pass (that they block a merge is SEC-SAST-05's
         # attestation, which no static reading of a workflow can settle); results that go
         # nowhere fail
         for name, workflow, passes in (
