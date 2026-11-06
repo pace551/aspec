@@ -52,7 +52,8 @@ calibration bar for depth, tone, and length — match them.
    `checks/stack-keys.json`, enforced by lint and by `select-standards.py`):
    `python`, `typescript`, `go`, `rust`, `nextjs`, `vite-react`, `htmx`, `swiftui`,
    `sqlite`, `postgresql`, `dynamodb`, `redis`, `terraform`, `containers`, `serverless`,
-   `aws`, `web` (any browser-facing stack). Cross-cutting standards usually say `all`.
+   `aws`, `web` (any browser-facing stack), `llm` (calls an LLM through an SDK; ADR-0006).
+   Cross-cutting standards usually say `all`.
 9. **Version `1.0.0`, status `active`, `last_review: 2026-07-22`**, changelog entry
    `- **1.0.0** (2026-07-22) — Initial version.`
 10. **House context to honor**: solo developer, macOS, AWS as the cloud, GitHub +

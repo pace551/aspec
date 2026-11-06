@@ -50,7 +50,7 @@ every future task, so this repo holds itself to its own strictest rules.
 
 ```
 constitution/   CONSTITUTION.md (always-loaded invariants), tiers.md, glossary.md
-standards/      67 standards, 11 family dirs — frontmatter is the API
+standards/      68 standards, 11 family dirs — frontmatter is the API
 decisions/      framework ADRs
 templates/      standard/GOVERNANCE/adr/waiver/obsidian templates, ci/, scaffolds/
 skills/         govern, bootstrap-repo, verify-compliance, harvest-learnings, evolve-standards

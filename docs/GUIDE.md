@@ -14,7 +14,7 @@ with it.
 ```
 CONSTITUTION  ──►  always applies, every task (10 articles, ~2 pages)
 TIERS         ──►  how much governance this project gets (T1→T4)
-STANDARDS     ──►  67 rulebooks; only the relevant ones load (selection)
+STANDARDS     ──►  68 rulebooks; only the relevant ones load (selection)
 GOVERNANCE.md ──►  per-project manifest: tier, pinned standards, waivers, attestations
 ENFORCEMENT   ──►  H hooks block actions · G gates block "done" · A attestations record drift
 ```
@@ -41,7 +41,7 @@ ENFORCEMENT   ──►  H hooks block actions · G gates block "done" · A atte
    stacks, infra, operations, process, UX, data, AI, legal). Each has RFC-2119 rules
    with permanent IDs (`SEC-SECRETS-01`), per-tier applicability, executable
    verification commands, a worked example, and an anti-patterns table. You never read
-   all 67 — selection (below) picks the handful that apply.
+   all 68 — selection (below) picks the handful that apply.
 
 4. **GOVERNANCE.md** in each project is the contract: its tier, the standard versions it
    is pinned to, waivers, external-action approvals, attestations, `last_verified`.
@@ -194,7 +194,7 @@ without a version bump — you cannot silently edit a rule.
 
 ```
 constitution/     CONSTITUTION.md · tiers.md · glossary.md (RFC-2119, H/G/A, ID scheme)
-INDEX.md          human catalog of all 67 standards (generated — browse, don't edit)
+INDEX.md          human catalog of all 68 standards (generated — browse, don't edit)
 standards/        the rulebooks; each ≤ ~300 lines, worked examples + anti-patterns
 templates/        standard-template.md (format contract) · AUTHORING.md (how to write one)
                   · GOVERNANCE/adr/waiver templates · ci/ fragments · scaffolds/

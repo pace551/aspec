@@ -1,6 +1,6 @@
 # ADR-0006: Detect LLM projects with an `llm` stack key and gate their evals
 
-- **Status**: proposed
+- **Status**: accepted
 - **Date**: 2026-11-05
 - **Deciders**: the maintainer
 
@@ -66,6 +66,41 @@ inputs and not below a committed baseline. The gate never calls a model.
   new requirement, per ADR-0004). Its tiering and attestation don't change: the
   attestation runs only at T2+. At T1 the rule is advisory, and AI-ARCH is pinned only
   by a trigger.
+
+### Clarified in implementation (2026-11-06)
+
+Pre-push review of the implementation PR closed holes in the contract above. These
+replace the matching parts of it:
+
+- **Only tracked files are hashed.** Each `evals/inputs` entry is a literal path
+  (`git --literal-pathspecs ls-files -z -s --cached -- <entry>`, one call per entry). An
+  entry that matches no tracked file is a finding, so a typo can't drop a dependency.
+  Untracked, non-ignored files under an entry fail `--stamp`, and fail `--check` at T2+:
+  with `--others` in the hash, a stray `.DS_Store` or local draft made every clone
+  compute a different hash. A regular file contributes the blob id git computes for its
+  working-tree content (`git hash-object --stdin-paths`, after the repo's eol and clean
+  filters), not a sha256 of raw bytes, so autocrlf and LFS checkouts of the same commit
+  agree. A symlink contributes the sha256 of its target, also when `core.symlinks=false`
+  checks it out as a file holding the target. A submodule contributes its recorded commit
+  id.
+- **`--stamp` refuses already-stamped results.** The runner writes a fresh, unstamped
+  file on every run, so stale results can't be made fresh without a rerun.
+- **`.eval-baseline` records each suite's kind, cases and runs (cases × trials)** as well
+  as its pass rate. The band uses the baseline's runs. A suite with fewer cases or runs
+  than its baseline, or a safety suite relabelled as another kind, needs `--allow-lower`
+  and a waiver. Otherwise, trimming a suite to one case would widen the band to hide a
+  regression, and relabelling would escape the 1.0 rule. For a safety suite, being
+  shrunk, relabelled or missing fails at every tier.
+- **`--update-baseline` keeps the old bar when a drop is within noise**, so routine
+  updates after a noisy run need no waiver.
+- **The gate refuses symlinks** for `evals/`, `evals/results.json` and `.eval-baseline`,
+  and it writes through a temp file and a rename. A dangling `.eval-baseline` symlink in
+  a hostile repo would otherwise make `--update-baseline` write attacker-chosen text
+  outside the project.
+- **Only git's "could not open directory" warning counts as an incomplete scan**, not
+  any stderr (trace output, deprecation notices). git runs with `LC_ALL=C`, so the
+  warning isn't translated.
+- **`--update-baseline` refuses untracked files under the inputs**, as `--stamp` does.
 
 ## Alternatives considered
 

@@ -13,7 +13,7 @@ walkthrough (GOVERNANCE.md anatomy, waivers, evolution loop, troubleshooting).
 ## How it works
 
 1. **`constitution/CONSTITUTION.md`** — ten invariants, always loaded, every task.
-2. **`standards/`** — 67 standards in 11 families. Each has RFC-2119 rules with stable IDs,
+2. **`standards/`** — 68 standards in 11 families. Each has RFC-2119 rules with stable IDs,
    per-tier applicability, machine-run verification commands, a worked example, and
    anti-patterns. Frontmatter is the API.
 3. **`index.json`** — generated catalog. `/govern` classifies a task's tier, detects

@@ -5,6 +5,32 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+- **AI-EVALS** (ADR-0006): a new standard for projects that call an LLM, plus the `llm`
+  stack key that selects it. `/govern` sets `llm` when the dependencies name an LLM SDK by
+  exact package name, and AI-EVALS is then pinned at every tier with no trigger word
+  needed. Eight rules:
+  - an in-repo eval set built from real failures
+  - outcome-first grading, with transcript checks on properties rather than exact tool
+    sequences
+  - at least 3 isolated trials at T2+
+  - deterministic graders, and calibrated LLM judges
+  - a regression gate
+  - safety suites that must pass every trial
+  - a clean held-out split
+  - production feedback at T3+
+
+  At T1 only the eval set and the safety suites are required. New
+  `checks/eval-ratchet.py` backs them without calling a model. The project's runner
+  writes a fresh `evals/results.json`, and `--stamp` hashes the tracked files listed in
+  `evals/inputs` into it (it refuses results that are already stamped). `--check` fails
+  on fewer than 10 cases and on a safety suite below 1.0 or relabelled. At T2+ it also
+  fails on stale results or untracked input files, on fewer than 3 trials, and on a
+  suite that is missing, ran fewer cases or times than its baseline, or dropped below the
+  committed `.eval-baseline` by more than a noise band sized by the baseline's runs. At
+  T1 those T2+ failures only warn. `--update-baseline` raises the bar deliberately, and
+  lowering it needs `--allow-lower` plus a waiver. The gate refuses symlinked results and
+  baseline files and writes atomically, so a hostile repo can't aim its writes elsewhere. AI-ARCH-02 now points to AI-EVALS (1.0.1, see-also only).
+
 - `templates/ci/swiftui.yml`: hosted CI for the swiftui stack, for public repositories,
   where GitHub's standard macOS runners and CodeQL are free. A T3+ or published Swift
   project was asked for DEV-CI's job set with no template to build it from. Swift work

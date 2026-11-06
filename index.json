@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-11-05",
+  "generated": "2026-11-06",
   "constitution": [
     "constitution/CONSTITUTION.md",
     "constitution/tiers.md"
@@ -10,7 +10,7 @@
       "id": "AI-ARCH",
       "title": "LLM Application Architecture",
       "family": "AI",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "status": "active",
       "tiers": {
         "T1": "advisory",
@@ -36,9 +36,49 @@
       "verification_layers": [
         "A"
       ],
-      "last_review": "2026-07-22",
+      "last_review": "2026-11-06",
       "path": "standards/ai/ai-arch.md",
-      "tokens_est": 2694
+      "tokens_est": 2760
+    },
+    {
+      "id": "AI-EVALS",
+      "title": "LLM and Agent Evaluations",
+      "family": "AI",
+      "version": "1.0.0",
+      "status": "active",
+      "tiers": {
+        "T1": "required",
+        "T2": "required",
+        "T3": "required",
+        "T4": "required"
+      },
+      "published": "n/a",
+      "stacks": [
+        "llm"
+      ],
+      "triggers": [
+        "eval",
+        "evals",
+        "evaluation",
+        "agent",
+        "agentic",
+        "tool use",
+        "trajectory",
+        "transcript",
+        "llm-as-judge",
+        "grader",
+        "red team",
+        "pass@k",
+        "eval-ratchet"
+      ],
+      "requires": [],
+      "verification_layers": [
+        "A",
+        "G"
+      ],
+      "last_review": "2026-11-06",
+      "path": "standards/ai/ai-evals.md",
+      "tokens_est": 4004
     },
     {
       "id": "AI-MODELS",

@@ -490,6 +490,8 @@ NETWORK = (
 COVERED = "covered by {}"
 
 ALLOWED: dict[str, str] = {
+    "AI-EVALS#0": COVERED.format("test_eval_ratchet.py (VerificationCmdTests runs the cmd)"),
+    "AI-EVALS#1": COVERED.format("test_eval_ratchet.py (VerificationCmdTests runs the cmd)"),
     "DEV-BOOTSTRAP#5": COVERED.format("test_git_gate_checks.py (HookCheckTests)"),
     "DEV-CI#2": COVERED.format("test_git_gate_checks.py (HookCheckTests)"),
     "DEV-GIT#1": COVERED.format("test_git_gate_checks.py (LinearHistoryCheckTests)"),

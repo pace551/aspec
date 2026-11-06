@@ -53,6 +53,35 @@ class StackKeyTests(unittest.TestCase):
         self.assertEqual(select("").returncode, 0)
 
 
+class LlmStackTests(unittest.TestCase):
+    """ADR-0006: detecting the llm stack pins AI-EVALS at T1 with no trigger word."""
+
+    def pins(self, stacks: str) -> set[str]:
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(SELECT),
+                "--tier",
+                "T1",
+                "--stacks",
+                stacks,
+                "--brief-text",
+                "personal inbox triage tool",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        return selected_ids(proc)
+
+    def test_llm_stack_pins_ai_evals_at_t1(self):
+        self.assertIn("AI-EVALS", self.pins("python,llm"))
+
+    def test_no_llm_stack_no_ai_evals(self):
+        self.assertNotIn("AI-EVALS", self.pins("python"))
+
+
 class StackKeySourceTests(unittest.TestCase):
     def test_every_standard_stack_is_canonical(self):
         index = json.loads((ROOT / "index.json").read_text())
