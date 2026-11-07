@@ -5,6 +5,8 @@ carry their own per-file changelogs.
 
 ## Unreleased
 
+## 0.4.0 — 2026-11-07
+
 - **AI-EVALS 1.1.0**: two holes Devin Review found after #49 merged. A suite that
   isn't in `.eval-baseline` yet now fails `eval-ratchet.py --check` at T2+ (it warns at
   T1): before, nothing gated it, and even a 0.0 suite passed. A submodule listed in
